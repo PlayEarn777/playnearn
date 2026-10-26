@@ -29,6 +29,7 @@ main{padding:14px;position:relative;z-index:1}
 .choiceRow{display:flex;gap:8px;margin-top:8px}
 .choiceBtn{flex:1;background:#11142e;border:1px solid #2a2f6e;color:#fff;padding:10px;border-radius:10px;cursor:pointer;font-weight:700}
 .choiceBtn.active{background:linear-gradient(135deg,#ffcc33,#ff8c00);color:#1a0f00;border-color:transparent;box-shadow:0 4px 14px rgba(255,140,0,.45)}
+.stakeBtn.active{background:linear-gradient(135deg,#ffcc33,#ff8c00)!important;color:#1a0f00!important;border-color:#ffcc33!important;box-shadow:0 4px 14px rgba(255,140,0,.45)}
 .box{background:linear-gradient(180deg,#1a1f4a,#11142e);border:1px solid #2a2f6e;border-radius:14px;padding:14px}
 .toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:#0f1330;border:1px solid #ffcc33;color:#fff;padding:10px 16px;border-radius:999px;display:none;z-index:99}
 .bottomNav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,10,30,.98);border-top:1px solid #2a2f6e;display:flex;justify-content:space-around;padding:6px;z-index:20}
@@ -94,8 +95,10 @@ main{padding:14px;position:relative;z-index:1}
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq36rNVFU-rkGkAcjUkCSod_M2Pw9qBLU1VA65e0Y4ZG1ATu6RxwdW5yw7Bq2uhxotKsJAoaczEM9H8DvGr2gv5tBARkxVwWT0rvGlwaBrOwJ_nKLOjzWxNVIfHWfeo6S7UVsWKrSA7bLE0zX29bTN1VrDD_Nay1NXVTnTN_zxdqJVzSlV4nmyapql6zKKgxO_91qq";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq36zRaQA77XE4c21slrMc4vxEGirN4Mff8yYuc5ntWDD-STfLO3LLKdS5bkU1788FYqfXokLwI_a7Dpr_dhBhxKg-kIR-9muIMBcFc7CyllqHmDGD0CCoDiWwol6RfJ1Ne3eLJYSD2I3Nxn1Q-pMnzbi5AGUi1BbRsHJgtrnT5F_mXbgbGNCPQtbvlvzUVDk43IgW";
 let selBal=0;
+let _updBalInterval=null;
+function startBalSync(){ if(_updBalInterval) clearInterval(_updBalInterval); _updBalInterval=setInterval(()=> syncBal(false), 4000); syncBal(false); }
 let audioCtx=null;
 function getAudio(){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }catch(e){ return null; } }
 let _sfxInts=[], _sfxTouts=[];
@@ -170,15 +173,35 @@ function renderPlay(filter){
   } else {
    pickHTML='<div style="color:#9aa3d1;font-size:10px;margin-top:6px">Tap Play → 3-5s animation</div>';
   }
-  d.innerHTML='<div class="emoji">'+g.emoji+'</div><div style="font-weight:700;margin-top:4px">'+g.name+'</div><div style="color:#9aa3d1;font-size:11px">'+g.cost+'c ×'+g.mult+' • '+g.cat+'</div>'+pickHTML+'<button class="btn" type="button" onclick="play('+g.id+')">▶ Play Betting</button><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;margin-top:6px"><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="window._stake=10;clickSound()">10c</button><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="window._stake=50;clickSound()">50c</button><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="window._stake=100;clickSound()">100c</button><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="window._stake=1000;clickSound()">1k</button></div>';
+  let stakeRow='<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;margin-top:6px"><button class="stakeBtn btn2" type="button" style="padding:6px;font-size:10px" data-v="10" onclick="setStake(this,'+g.id+',10)">10c</button><button class="stakeBtn btn2" type="button" style="padding:6px;font-size:10px" data-v="50" onclick="setStake(this,'+g.id+',50)">50c</button><button class="stakeBtn btn2" type="button" style="padding:6px;font-size:10px" data-v="100" onclick="setStake(this,'+g.id+',100)">100c</button><button class="stakeBtn btn2" type="button" style="padding:6px;font-size:10px" data-v="1000" onclick="setStake(this,'+g.id+',1000)">1k</button></div><div style="display:flex;gap:4px;margin-top:6px"><input type="number" inputmode="numeric" placeholder="Custom c" min="1" id="stakeIn'+g.id+'" style="flex:1;background:#0a0d2a;border:1px solid #2a2f6e;color:#fff;padding:6px 8px;border-radius:8px;font-size:11px" oninput="pendingStake['+g.id+']=parseInt(this.value)||0"/><button class="btn2" type="button" style="padding:6px 10px;font-size:10px" onclick="applyCustom('+g.id+')">✓</button></div>';
+  d.innerHTML='<div class="emoji">'+g.emoji+'</div><div style="font-weight:700;margin-top:4px">'+g.name+'</div><div style="color:#9aa3d1;font-size:11px">'+g.cost+'c ×'+g.mult+' • '+g.cat+'</div>'+pickHTML+'<button class="btn" type="button" onclick="play('+g.id+')">▶ Play Betting</button>'+stakeRow;
   grid.appendChild(d);
  });
 }
+let pendingStake={};
+window.setStake=function(el,gid,v){
+ pendingStake[gid]=parseInt(v);
+ let card=el.closest('.card');
+ if(card){ card.querySelectorAll('.stakeBtn').forEach(b=>b.classList.remove('active')); }
+ el.classList.add('active');
+ let inp=document.getElementById('stakeIn'+gid); if(inp) inp.value=v;
+ clickSound();
+};
+window.applyCustom=function(gid){
+ let inp=document.getElementById('stakeIn'+gid);
+ let v=parseInt(inp?inp.value:0);
+ if(!v || v<1){ toast('Enter custom bet 1c+'); return; }
+ pendingStake[gid]=v;
+ // highlight no preset, custom active
+ let card=inp?inp.closest('.card'):null;
+ if(card){ card.querySelectorAll('.stakeBtn').forEach(b=>b.classList.remove('active')); }
+ toast('Custom '+v+'c set — tap ▶ Play Betting');
+};
 window.pick=function(el,gid,choice){
+ pendingPick[gid]=choice;
  let card=el.closest('.card');
  if(card){ card.querySelectorAll('.choiceBtn').forEach(b=>b.classList.remove('active')); }
  el.classList.add('active');
- pendingPick={game:gid, choice:choice};
  clickSound();
 };
 window.filterPlay=function(cat,el){ document.querySelectorAll('#playearn .tab').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active'); renderPlay(cat); };
@@ -258,7 +281,7 @@ function finishOv(win,g,won,cost,bal,result){
 }
 window.play=async function(id){
  let g=GAMES.find(x=>x.id===id); if(!g) return toast('Game not found');
- let stk=(typeof window._stake!=='undefined' && window._stake ? window._stake : g.cost)||g.cost; window._stake=0;
+ let stk=pendingStake[id]||g.cost;
  let needPick=[1,2,18,27,38];
  let choice="";
  if(needPick.includes(id)){
@@ -307,9 +330,10 @@ window.loadFree=async function(cat){
  }
 };
 function init(){
- renderPlay('all'); syncBal(false); loadFree('all');
+ renderPlay('all'); startBalSync(); loadFree('all');
  try{ let b=document.getElementById('buildInfo'); if(b) b.textContent='v'+Date.now().toString().slice(-6)+' • '+new Date().toLocaleDateString(); }catch(e){}
- setInterval(()=> syncBal(false), 10000);
+ document.addEventListener('visibilitychange',()=>{ if(!document.hidden) syncBal(false); });
+ window.addEventListener('focus',()=> syncBal(false));
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
 </script>
