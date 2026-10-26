@@ -59,6 +59,7 @@ main{padding:14px;position:relative;z-index:1}
  <button class="tab" type="button" onclick="showTab('playearn')">💰 PLAY&EARN (42)</button>
  <button class="tab" type="button" onclick="showTab('freegames')">🌐 FREE GAMES</button>
  <button class="tab" type="button" onclick="showTab('wallet')">💳 Wallet</button>
+ <button class="tab" type="button" onclick="showTab('settings')">⚙️ Settings</button>
 </div>
 <main>
  <section id="home" class="section active">
@@ -79,17 +80,21 @@ main{padding:14px;position:relative;z-index:1}
  <section id="wallet" class="section">
   <div class="box" style="text-align:center"><h3>💳 Wallet</h3><h2 id="balBig" style="font-size:24px;color:#00e6a0">— coins</h2><p id="walletSub" style="color:#9aa3d1;font-size:11px"></p><button class="btn2" type="button" onclick="syncBal(true)">🔄 Sync Real Balance</button></div>
  </section>
+ <section id="settings" class="section">
+  <div class="box" style="text-align:center"><h3>⚙️ Settings — System</h3><p style="color:#9aa3d1;font-size:11px">One tap clears system cache so whole app refreshes from GitHub</p><button class="btn" type="button" style="background:#1a1f4a;border:1px solid #ff5252;color:#ff8a80" onclick="purgeCache()">🗑️ Purge Cache — Clear System</button><p style="color:#ff8a80;font-size:10px;margin-top:6px">Clears Telegram + browser cache + reloads fresh</p></div>
+  <div class="box" style="margin-top:10px"><h3>ℹ️ About</h3><p style="color:#9aa3d1;font-size:11px">Build: <span id="buildInfo" style="color:#ffd966"></span> • Games: 42</p></div>
+ </section>
 </main>
 <div id="ov"><div class="ovCard" id="ovCard"><button class="ovClose" type="button" onclick="forceCloseOv()" aria-label="Close">✕</button><div class="pulseRing"></div><div id="ovVisual" style="min-height:110px;display:flex;align-items:center;justify-content:center"></div><div id="ovTitle" style="font-weight:800;margin-top:10px;font-family:'Cinzel',serif">Game</div><div id="ovSub" style="color:#ffd966;font-size:12px;margin-top:4px">Starting…</div><div class="bar"><div id="ovFill" class="fill"></div></div><div id="ovPct" style="color:#ffcc33;font-size:11px">14%</div><div id="ovExtra" style="color:#9aa3d1;font-size:11px;margin-top:6px"></div></div></div>
 <div class="bottomNav">
- <button class="bNav active" type="button" onclick="showTab('home')"><span>🏠</span>Home</button><button class="bNav" type="button" onclick="showTab('playearn')"><span>💰</span>PLAY&EARN</button><button class="bNav" type="button" onclick="showTab('freegames')"><span>🌐</span>Free</button><button class="bNav" type="button" onclick="showTab('wallet')"><span>💳</span>Wallet</button>
+ <button class="bNav active" type="button" onclick="showTab('home')"><span>🏠</span>Home</button><button class="bNav" type="button" onclick="showTab('playearn')"><span>💰</span>PLAY&EARN</button><button class="bNav" type="button" onclick="showTab('freegames')"><span>🌐</span>Free</button><button class="bNav" type="button" onclick="showTab('wallet')"><span>💳</span>Wallet</button><button class="bNav" type="button" onclick="showTab('settings')"><span>⚙️</span>Settings</button>
 </div>
 <div id="toast" class="toast"></div>
 <script>
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq36aR02ierFv_8cGSs_AAGvxWeO7NE5f-sreDGpUghsBMdteEGwsTJlBbEKP4S5riA-7rJ9EHyWaSmvt35OPBvpk-7-1QtKg1C0G8GVbz-fsMEdqZvTteMlZaJXM8b9Toqr92UwrGlBlyYzmYop5MU56_A5NkGgse4e0J5xM6yoa8Q_M7OJ6Rjw8ICcJzbX1D3RP6";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq36rNVFU-rkGkAcjUkCSod_M2Pw9qBLU1VA65e0Y4ZG1ATu6RxwdW5yw7Bq2uhxotKsJAoaczEM9H8DvGr2gv5tBARkxVwWT0rvGlwaBrOwJ_nKLOjzWxNVIfHWfeo6S7UVsWKrSA7bLE0zX29bTN1VrDD_Nay1NXVTnTN_zxdqJVzSlV4nmyapql6zKKgxO_91qq";
 let selBal=0;
 let audioCtx=null;
 function getAudio(){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }catch(e){ return null; } }
@@ -119,7 +124,20 @@ function getUID(){try{if(TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user&&TG.initD
 function storeUID(uid){ try{ if(uid&&uid>0){ window.__TG_UID=parseInt(uid); localStorage.setItem('playnearn_uid', String(uid)); } }catch(e){}}
 function loadUID(){ try{ let v=localStorage.getItem('playnearn_uid'); if(v&&/^\d+$/.test(v)) { window.__TG_UID=parseInt(v); return parseInt(v);} }catch(e){} return 0; }
 try{if(TG){TG.ready();TG.expand();let u=TG.initDataUnsafe&&TG.initDataUnsafe.user; if(u){document.getElementById('badge').textContent='👤 '+(u.first_name||'')+' • '+u.id; storeUID(u.id);} else { setTimeout(()=>{ try{let u2=TG.initDataUnsafe&&TG.initDataUnsafe.user?TG.initDataUnsafe.user:null; if(u2&&u2.id){storeUID(u2.id); document.getElementById('badge').textContent='👤 '+(u2.first_name||'')+' • '+u2.id; syncBal(false);} }catch(e){} },800);}}}catch(e){} try{ loadUID(); let chk=setInterval(()=>{ if(getUID()>0){ clearInterval(chk); syncBal(false);} },1500); setTimeout(()=>clearInterval(chk),12000);}catch(e){}
-function toast(m){let t=document.getElementById('toast'); t.textContent=m; t.style.display='block'; setTimeout(()=>t.style.display='none',2400);}
+function toast(m){let t=document.getElementById('toast'); if(!t) return; t.textContent=m; t.style.display='block'; setTimeout(()=>t.style.display='none',2400);}
+window.purgeCache=function(){
+ try{
+  localStorage.clear();
+  sessionStorage.clear();
+  if('caches' in window){ caches.keys().then(n=> n.forEach(k=> caches.delete(k))); }
+ }catch(e){}
+ toast('🗑️ Purge Cache — reloading fresh from GitHub…');
+ setTimeout(()=>{
+  let u=location.href.split('?')[0]+'?v='+Date.now()+(getUID()?'&uid='+getUID():'');
+  location.href=u;
+  setTimeout(()=> location.reload(true), 700);
+ }, 900);
+};
 function withUIDParam(url){ let uid=getUID(); if(!uid) uid=loadUID(); if(uid&&url&&url.includes('?')) url+='&uid='+uid; else if(uid) url+='?uid='+uid; return url;}
 async function api(obj){
  let uid=getUID(); if(!uid) uid=loadUID();
@@ -136,7 +154,6 @@ const GAMES=[
 ];
 let pendingPick={game:0, choice:""};
 let curWinG=null, curWon=0, curCost=10, curBal=0, curResult="";
-let isPlaying=false;
 let _autoCloseId=null;
 function renderPlay(filter){
  let grid=document.getElementById('playGrid'); if(!grid) return; grid.innerHTML='';
@@ -189,7 +206,6 @@ function buildVisual(g, resultChoice){
 function showOv(g){
  clearSfx();
  if(_autoCloseId){ clearTimeout(_autoCloseId); _autoCloseId=null; }
- isPlaying=true;
  curWinG=g; curWon=0; curCost=g.cost; curBal=selBal; curResult="";
  let ov=document.getElementById('ov'); if(!ov) return 3200;
  document.getElementById('ovTitle').textContent=g.name+' — Spinning…';
@@ -214,7 +230,6 @@ function hideOv(){
  if(_autoCloseId){ clearTimeout(_autoCloseId); _autoCloseId=null; }
  let ov=document.getElementById('ov'); if(ov) ov.classList.remove('show');
  if(ovTimer){clearInterval(ovTimer);ovTimer=null;}
- isPlaying=false;
 }
 window.forceCloseOv=function(){ hideOv(); };
 function finishOv(win,g,won,cost,bal,result){
@@ -243,7 +258,6 @@ function finishOv(win,g,won,cost,bal,result){
 }
 window.play=async function(id){
  let g=GAMES.find(x=>x.id===id); if(!g) return toast('Game not found');
- if(isPlaying){ toast('Game running — wait 1-2s…'); return; }
  let stk=(typeof window._stake!=='undefined' && window._stake ? window._stake : g.cost)||g.cost; window._stake=0;
  let needPick=[1,2,18,27,38];
  let choice="";
@@ -294,6 +308,7 @@ window.loadFree=async function(cat){
 };
 function init(){
  renderPlay('all'); syncBal(false); loadFree('all');
+ try{ let b=document.getElementById('buildInfo'); if(b) b.textContent='v'+Date.now().toString().slice(-6)+' • '+new Date().toLocaleDateString(); }catch(e){}
  setInterval(()=> syncBal(false), 10000);
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
