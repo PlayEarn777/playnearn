@@ -7,7 +7,7 @@
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Outfit',system-ui}
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Outfit',system-ui;-webkit-tap-highlight-color:transparent}
 :root{--bg:#080a1e;--card:#11142e;--card2:#1a1f4a;--bor:#2a2f6e;--text:#fff;--mut:#9aa3d1;--gold:#ffcc33}
 body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
 body::after{content:'';position:fixed;inset:0;background:radial-gradient(1100px 500px at 20% 0%,rgba(26,31,110,.5),transparent 60%), url('https://cdn.pixabay.com/photo/2016/03/09/09/22/casino-1246323_1280.jpg') center/cover;opacity:.16;pointer-events:none;z-index:-1}
@@ -24,6 +24,7 @@ main{padding:14px;position:relative;z-index:1}
 .card{background:linear-gradient(180deg,#1a1f4a,#11142e);border:1px solid #2a2f6e;border-radius:14px;padding:12px;text-align:center}
 .card .emoji{font-size:28px}
 .btn{width:100%;margin-top:8px;background:linear-gradient(135deg,#ffcc33,#ff6b00);color:#1a0f00;border:0;padding:10px;border-radius:10px;font-weight:800;cursor:pointer}
+.btn:active{transform:scale(.97)}
 .btn2{width:100%;margin-top:8px;background:#1a1f4a;border:1px solid #2a2f6e;color:#fff;padding:10px;border-radius:10px;cursor:pointer}
 .choiceRow{display:flex;gap:8px;margin-top:8px}
 .choiceBtn{flex:1;background:#11142e;border:1px solid #2a2f6e;color:#fff;padding:10px;border-radius:10px;cursor:pointer;font-weight:700}
@@ -38,13 +39,13 @@ main{padding:14px;position:relative;z-index:1}
 .ovCard{background:linear-gradient(180deg,#1a1f4a,#0f1330);border:1px solid #2a3266;border-radius:18px;padding:20px;width:min(380px,92vw);text-align:center;position:relative;overflow:hidden}
 .bar{height:9px;background:#0e1230;border-radius:999px;overflow:hidden;margin:12px 0;border:1px solid #252c5a}
 .fill{height:100%;width:14%;background:linear-gradient(90deg,#ffcc33,#ff6b00);transition:width .35s;box-shadow:0 0 10px rgba(255,204,51,.6)}
+.ovClose{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,204,51,.35);color:#ffcc33;font-size:15px;font-weight:800;display:grid;place-items:center;cursor:pointer;z-index:5}
+.ovClose:active{transform:scale(.92)}
 .coin3d{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff9c4 0%, #ffcc33 35%, #ff8c00 65%, #8d4e00 100%);border:4px solid #ffd700;display:flex;align-items:center;justify-content:center;font-size:48px;margin:0 auto;box-shadow:0 10px 35px rgba(255,204,51,.55), inset 0 3px 12px rgba(255,255,255,.85);animation:coinFlip3d .55s linear infinite}
 @keyframes coinFlip3d{0%{transform:perspective(500px) rotateY(0) rotateX(6deg)}50%{transform:perspective(500px) rotateY(180deg) rotateX(6deg)}100%{transform:perspective(500px) rotateY(360deg) rotateX(6deg)}}
-.diceWrap{display:flex;gap:12px;justify-content:center}
-.diceBox{width:58px;height:58px;background:linear-gradient(145deg,#ffffff,#e8e8e8);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 8px 22px rgba(0,0,0,.4), inset 0 2px 6px rgba(255,255,255,.9);border:2px solid #ddd}
 .confettiReal{position:absolute;width:7px;height:7px;border-radius:2px;animation:confettiDrop 1s linear forwards}
 @keyframes confettiDrop{0%{transform:translateY(-12px) rotate(0deg) translateX(0);opacity:1}100%{transform:translateY(90px) rotate(320deg) translateX(18px);opacity:0}}
-.pulseRing{position:absolute;inset:0;border:2px solid rgba(255,204,51,.45);border-radius:18px;animation:pulseRingAnim 1.1s ease-out infinite}
+.pulseRing{position:absolute;inset:0;border:2px solid rgba(255,204,51,.45);border-radius:18px;animation:pulseRingAnim 1.1s ease-out infinite;pointer-events:none}
 @keyframes pulseRingAnim{0%{transform:scale(.96);opacity:.7}100%{transform:scale(1.08);opacity:0}}
 </style>
 </head>
@@ -61,14 +62,14 @@ main{padding:14px;position:relative;z-index:1}
 </div>
 <main>
  <section id="home" class="section active">
-  <div class="box" style="text-align:center"><h2 style="font-family:'Cinzel',serif">Welcome 💰 PLAY&EARN</h2><p style="color:#9aa3d1;font-size:12px;margin-top:6px">Bot = menu only — all games inside Mini App</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div class="box"><div style="font-size:22px">💰</div><b>PLAY&EARN (42)</b><p style="color:#9aa3d1;font-size:11px">Betting — pick then 3-5s real animation</p><button class="btn" type="button" onclick="showTab('playearn')">▶ Enter</button></div><div class="box"><div style="font-size:22px">🌐</div><b>FREE GAMES (Live API)</b><p style="color:#9aa3d1;font-size:11px">FreeToGame — no coins</p><button class="btn" type="button" onclick="showTab('freegames')">▶ Play Free</button></div></div></div>
+  <div class="box" style="text-align:center"><h2 style="font-family:'Cinzel',serif">Welcome 💰 PLAY&EARN</h2><p style="color:#9aa3d1;font-size:12px;margin-top:6px">Bot = menu only — all games inside Mini App</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div class="box"><div style="font-size:22px">💰</div><b>PLAY&EARN (42)</b><p style="color:#9aa3d1;font-size:11px">Betting — pick then 3-5s animation</p><button class="btn" type="button" onclick="showTab('playearn')">▶ Enter</button></div><div class="box"><div style="font-size:22px">🌐</div><b>FREE GAMES (Live API)</b><p style="color:#9aa3d1;font-size:11px">FreeToGame — no coins</p><button class="btn" type="button" onclick="showTab('freegames')">▶ Play Free</button></div></div></div>
  </section>
  <section id="playearn" class="section">
   <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
    <button class="tab active" type="button" onclick="filterPlay('all',this)">All 42</button><button class="tab" type="button" onclick="filterPlay('slots',this)">Slots</button><button class="tab" type="button" onclick="filterPlay('cards',this)">Cards</button><button class="tab" type="button" onclick="filterPlay('crash',this)">Crash</button><button class="tab" type="button" onclick="filterPlay('classic',this)">Classic</button>
   </div>
   <div id="playGrid" class="grid"></div>
-  <p style="color:#9aa3d1;font-size:11px;text-align:center;margin-top:8px">Each playable game: pick choice (Head/Tail, 1-6, Rock/Paper…) → stake → 3-5s close animation → win/loss per admin.</p>
+  <p style="color:#9aa3d1;font-size:11px;text-align:center;margin-top:8px">Each playable game: pick choice (Head/Tail, 1-6, Rock/Paper…) → stake → 3-5s close animation → win/loss.</p>
  </section>
  <section id="freegames" class="section">
   <div class="box"><h3>🌐 FREE GAMES — Live API</h3><p id="freeHint" style="color:#ffd966;font-size:11px;margin-top:6px"></p></div>
@@ -79,7 +80,7 @@ main{padding:14px;position:relative;z-index:1}
   <div class="box" style="text-align:center"><h3>💳 Wallet</h3><h2 id="balBig" style="font-size:24px;color:#00e6a0">— coins</h2><p id="walletSub" style="color:#9aa3d1;font-size:11px"></p><button class="btn2" type="button" onclick="syncBal(true)">🔄 Sync Real Balance</button></div>
  </section>
 </main>
-<div id="ov"><div class="ovCard" id="ovCard"><div class="pulseRing"></div><div id="ovVisual" style="min-height:110px;display:flex;align-items:center;justify-content:center"></div><div id="ovTitle" style="font-weight:800;margin-top:10px;font-family:'Cinzel',serif">Game</div><div id="ovSub" style="color:#ffd966;font-size:12px;margin-top:4px">Starting…</div><div class="bar"><div id="ovFill" class="fill"></div></div><div id="ovPct" style="color:#ffcc33;font-size:11px">14%</div><div id="ovExtra" style="color:#9aa3d1;font-size:11px;margin-top:6px"></div></div></div>
+<div id="ov"><div class="ovCard" id="ovCard"><button class="ovClose" type="button" onclick="forceCloseOv()" aria-label="Close">✕</button><div class="pulseRing"></div><div id="ovVisual" style="min-height:110px;display:flex;align-items:center;justify-content:center"></div><div id="ovTitle" style="font-weight:800;margin-top:10px;font-family:'Cinzel',serif">Game</div><div id="ovSub" style="color:#ffd966;font-size:12px;margin-top:4px">Starting…</div><div class="bar"><div id="ovFill" class="fill"></div></div><div id="ovPct" style="color:#ffcc33;font-size:11px">14%</div><div id="ovExtra" style="color:#9aa3d1;font-size:11px;margin-top:6px"></div></div></div>
 <div class="bottomNav">
  <button class="bNav active" type="button" onclick="showTab('home')"><span>🏠</span>Home</button><button class="bNav" type="button" onclick="showTab('playearn')"><span>💰</span>PLAY&EARN</button><button class="bNav" type="button" onclick="showTab('freegames')"><span>🌐</span>Free</button><button class="bNav" type="button" onclick="showTab('wallet')"><span>💳</span>Wallet</button>
 </div>
@@ -88,7 +89,7 @@ main{padding:14px;position:relative;z-index:1}
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq3502u7_g9n2hJJ37qS97--oOcF2CeYVuLbfZSCWitZB8O16gs2e55mux2R8GDzDJrSKqhhpryuwEkq-IuWhxQMax7jYq9OGC0HcfNgl5uMP_Ju-mMrLaWLaFuwlApzPaBOvoOoOo-XCV4XmR8KzyfouBQq_U4bZiZwxkSVKfRYTO4ZgHZJrnhKUEaHHABrPukf8w";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq36QHAJaLUDINmUo7q31yVkazKdwU8tAZveN-YWwUA0q6qcseTWeZkhUAFfcAmOei6DXU3D67ca1LGAq1dab2PriK0Cz10hWwZZoBSP2n3a7_PzO3-ngZQTNQydKbYHrjw8DjNdUg_E-nwBJzUVD7hUwktIZUUDdntQVugX8kqeY-0q2RX-3N_Wh724Vb-bgES8KD";
 let selBal=0;
 let audioCtx=null;
 function getAudio(){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }catch(e){ return null; } }
@@ -114,7 +115,6 @@ function tone(freq,dur,type='sine',vol=.18,slide){
 function clickSound(){ tone(880,.08,'sine',.15,1100); }
 function winSound(){ tone(620,.14,'sine',.20,880); regTout(setTimeout(()=>tone(780,.14,'sine',.18,1040),130)); regTout(setTimeout(()=>{ tone(980,.22,'sine',.20,1240); },280)); }
 function loseSound(){ tone(240,.18,'triangle',.14,180); regTout(setTimeout(()=>tone(180,.28,'sine',.12,120),170)); }
-function tickSound(){ tone(1680,.04,'sine',.09); }
 function getUID(){try{if(TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user&&TG.initDataUnsafe.user.id) return parseInt(TG.initDataUnsafe.user.id);}catch(e){} try{let p=new URLSearchParams(location.search);let v=p.get("tgid")||p.get("uid")||p.get("playnearn_uid")||p.get("start_param")||p.get("tgWebAppStartParam"); if(v){ let n=String(v).match(/\d{5,}/); if(n) return parseInt(n[0]); let c=String(v).replace(/\D/g,''); if(c.length>=5) return parseInt(c);} }catch(e){} try{if(window.__TG_UID) return parseInt(window.__TG_UID);}catch(e){} return 0;}
 function storeUID(uid){ try{ if(uid&&uid>0){ window.__TG_UID=parseInt(uid); localStorage.setItem('playnearn_uid', String(uid)); } }catch(e){}}
 function loadUID(){ try{ let v=localStorage.getItem('playnearn_uid'); if(v&&/^\d+$/.test(v)) { window.__TG_UID=parseInt(v); return parseInt(v);} }catch(e){} return 0; }
@@ -132,9 +132,12 @@ async function syncBal(show){ let j=await api({action:'balance'}); if(j&&j.ok){ 
 function updBal(){ document.getElementById('balTop').textContent=selBal+' coins'; document.getElementById('usdTop').textContent='≈ $'+(selBal/RATE).toFixed(2); document.getElementById('balBig').textContent=selBal+' coins'; document.getElementById('walletSub').textContent='≈ $'+(selBal/RATE).toFixed(2)+' — 1$='+RATE+'c'; document.getElementById('rateLbl').textContent='1$='+RATE+'c'; }
 window.showTab=function(id){ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); let el=document.getElementById(id); if(el) el.classList.add('active'); document.querySelectorAll('.tabs .tab').forEach(b=>b.classList.toggle('active', b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))); if(id==='wallet') syncBal(false); if(id==='freegames') loadFree('all'); window.scrollTo({top:0,behavior:'smooth'}); };
 const GAMES=[
- {id:1,name:'Coin Flip',emoji:'🪙',cost:10,mult:1.9,cat:'classic'},{id:2,name:'Dice Duel',emoji:'🎲',cost:10,mult:2.0,cat:'classic'},{id:3,name:'Lucky Slots',emoji:'🎰',cost:15,mult:3.0,cat:'slots'},{id:4,name:'Crash Rocket',emoji:'🚀',cost:20,mult:2.5,cat:'crash'},{id:5,name:'Mines',emoji:'💣',cost:15,mult:2.2,cat:'mines'},{id:6,name:'Plinko',emoji:'🔴',cost:10,mult:1.8,cat:'slots'},{id:7,name:'Wheel Fortune',emoji:'🎡',cost:20,mult:2.8,cat:'slots'},{id:8,name:'Hi-Lo Card',emoji:'🃏',cost:10,mult:2.0,cat:'cards'},{id:9,name:'Roulette Rapid',emoji:'🎯',cost:25,mult:2.5,cat:'slots'},{id:10,name:'Blackjack',emoji:'♠️',cost:20,mult:2.0,cat:'cards'},{id:11,name:'Tower Climb',emoji:'🏗️',cost:15,mult:2.4,cat:'crash'},{id:12,name:'Aviator',emoji:'✈️',cost:25,mult:3.5,cat:'crash'},{id:13,name:'Keno',emoji:'🔢',cost:10,mult:5.0,cat:'slots'},{id:14,name:'Scratch Card',emoji:'🎫',cost:10,mult:2.0,cat:'classic'},{id:15,name:'Poker Flip',emoji:'♣️',cost:15,mult:2.2,cat:'cards'},{id:16,name:'Fruit Slots',emoji:'🍒',cost:10,mult:2.5,cat:'slots'},{id:17,name:'Lucky Numbers',emoji:'🍀',cost:10,mult:4.0,cat:'slots'},{id:18,name:'Rock Paper',emoji:'✊',cost:10,mult:1.9,cat:'classic'},{id:19,name:'Spin & Win',emoji:'🌀',cost:15,mult:2.0,cat:'slots'},{id:20,name:'Guess Number',emoji:'🤔',cost:10,mult:3.0,cat:'classic'},{id:21,name:'Dragon Tiger',emoji:'🐉',cost:20,mult:2.0,cat:'cards'},{id:22,name:'Andar Bahar',emoji:'🃒',cost:15,mult:2.0,cat:'cards'},{id:23,name:'Teen Patti',emoji:'👳',cost:20,mult:2.5,cat:'cards'},{id:24,name:'Baccarat',emoji:'💵',cost:25,mult:1.95,cat:'cards'},{id:25,name:'Sic Bo',emoji:'🎎',cost:15,mult:3.0,cat:'classic'},{id:26,name:'Limbo',emoji:'📈',cost:10,mult:2.0,cat:'crash'},{id:27,name:'Dice Master',emoji:'🎲',cost:10,mult:3.5,cat:'classic'},{id:28,name:'Hilo Turbo',emoji:'🔺',cost:10,mult:1.9,cat:'cards'},{id:29,name:'Mines Pro',emoji:'💥',cost:20,mult:3.0,cat:'mines'},{id:30,name:'Plinko X',emoji:'⚪',cost:10,mult:2.5,cat:'slots'},{id:31,name:'Coin Tower',emoji:'🪙',cost:15,mult:2.4,cat:'crash'},{id:32,name:'Fishing King',emoji:'🎣',cost:15,mult:2.8,cat:'classic'},{id:33,name:'Crash X',emoji:'💹',cost:20,mult:3.2,cat:'crash'},{id:34,name:'Slots Deluxe',emoji:'💎',cost:15,mult:4.0,cat:'slots'},{id:35,name:'Wheel X',emoji:'☸️',cost:20,mult:3.5,cat:'slots'},{id:36,name:'Card War',emoji:'⚔️',cost:10,mult:2.0,cat:'cards'},{id:37,name:'Lucky Wheel',emoji:'🎡',cost:15,mult:2.2,cat:'slots'},{id:38,name:'Dice Blitz',emoji:'🎲',cost:10,mult:2.8,cat:'classic'},{id:39,name:'Coin Rush',emoji:'🪙',cost:10,mult:2.0,cat:'classic'},{id:40,name:'Jackpot Spin',emoji:'💰',cost:25,mult:5.0,cat:'slots'},{id:41,name:'Roulette Euro',emoji:'🎡',cost:25,mult:2.7,cat:'slots'},{id:42,name:'Keno Turbo',emoji:'🔢',cost:10,mult:4.5,cat:'slots'}
+ {id:1,name:'Coin Flip',emoji:'🪙',cost:10,mult:1.9,cat:'classic'},{id:2,name:'Dice Duel',emoji:'🎲',cost:10,mult:2.0,cat:'classic'},{id:3,name:'Lucky Slots',emoji:'🎰',cost:15,mult:3.0,cat:'slots'},{id:4,name:'Crash Rocket',emoji:'🚀',cost:20,mult:2.5,cat:'crash'},{id:5,name:'Mines',emoji:'💣',cost:15,mult:2.2,cat:'mines'},{id:6,name:'Plinko',emoji:'🔴',cost:10,mult:1.8,cat:'plinko'},{id:7,name:'Wheel Fortune',emoji:'🎡',cost:20,mult:2.8,cat:'wheel'},{id:8,name:'Hi-Lo Card',emoji:'🃏',cost:10,mult:2.0,cat:'cards'},{id:9,name:'Roulette Rapid',emoji:'🎯',cost:25,mult:2.5,cat:'roulette'},{id:10,name:'Blackjack',emoji:'♠️',cost:20,mult:2.0,cat:'cards'},{id:11,name:'Tower Climb',emoji:'🏗️',cost:15,mult:2.4,cat:'tower'},{id:12,name:'Aviator',emoji:'✈️',cost:25,mult:3.5,cat:'crash'},{id:13,name:'Keno',emoji:'🔢',cost:10,mult:5.0,cat:'keno'},{id:14,name:'Scratch Card',emoji:'🎫',cost:10,mult:2.0,cat:'scratch'},{id:15,name:'Poker Flip',emoji:'♣️',cost:15,mult:2.2,cat:'cards'},{id:16,name:'Fruit Slots',emoji:'🍒',cost:10,mult:2.5,cat:'slots'},{id:17,name:'Lucky Numbers',emoji:'🍀',cost:10,mult:4.0,cat:'keno'},{id:18,name:'Rock Paper',emoji:'✊',cost:10,mult:1.9,cat:'classic'},{id:19,name:'Spin & Win',emoji:'🌀',cost:15,mult:2.0,cat:'wheel'},{id:20,name:'Guess Number',emoji:'🤔',cost:10,mult:3.0,cat:'classic'},{id:21,name:'Dragon Tiger',emoji:'🐉',cost:20,mult:2.0,cat:'cards'},{id:22,name:'Andar Bahar',emoji:'🃒',cost:15,mult:2.0,cat:'cards'},{id:23,name:'Teen Patti',emoji:'👳',cost:20,mult:2.5,cat:'cards'},{id:24,name:'Baccarat',emoji:'💵',cost:25,mult:1.95,cat:'cards'},{id:25,name:'Sic Bo',emoji:'🎎',cost:15,mult:3.0,cat:'dice'},{id:26,name:'Limbo',emoji:'📈',cost:10,mult:2.0,cat:'crash'},{id:27,name:'Dice Master',emoji:'🎲',cost:10,mult:3.5,cat:'dice'},{id:28,name:'Hilo Turbo',emoji:'🔺',cost:10,mult:1.9,cat:'cards'},{id:29,name:'Mines Pro',emoji:'💥',cost:20,mult:3.0,cat:'mines'},{id:30,name:'Plinko X',emoji:'⚪',cost:10,mult:2.5,cat:'plinko'},{id:31,name:'Coin Tower',emoji:'🪙',cost:15,mult:2.4,cat:'tower'},{id:32,name:'Fishing King',emoji:'🎣',cost:15,mult:2.8,cat:'arcade'},{id:33,name:'Crash X',emoji:'💹',cost:20,mult:3.2,cat:'crash'},{id:34,name:'Slots Deluxe',emoji:'💎',cost:15,mult:4.0,cat:'slots'},{id:35,name:'Wheel X',emoji:'☸️',cost:20,mult:3.5,cat:'wheel'},{id:36,name:'Card War',emoji:'⚔️',cost:10,mult:2.0,cat:'cards'},{id:37,name:'Lucky Wheel',emoji:'🎡',cost:15,mult:2.2,cat:'wheel'},{id:38,name:'Dice Blitz',emoji:'🎲',cost:10,mult:2.8,cat:'dice'},{id:39,name:'Coin Rush',emoji:'🪙',cost:10,mult:2.0,cat:'classic'},{id:40,name:'Jackpot Spin',emoji:'💰',cost:25,mult:5.0,cat:'slots'},{id:41,name:'Roulette Euro',emoji:'🎡',cost:25,mult:2.7,cat:'roulette'},{id:42,name:'Keno Turbo',emoji:'🔢',cost:10,mult:4.5,cat:'keno'}
 ];
 let pendingPick={game:0, choice:""};
+let curWinG=null, curWon=0, curCost=10, curBal=0, curResult="";
+let isPlaying=false;
+let _autoCloseId=null;
 function renderPlay(filter){
  let grid=document.getElementById('playGrid'); if(!grid) return; grid.innerHTML='';
  let list=GAMES.filter(g=>filter==='all'||g.cat===filter);
@@ -142,15 +145,15 @@ function renderPlay(filter){
   let d=document.createElement('div'); d.className='card';
   let pickHTML='';
   if([1].includes(g.id)){
-   pickHTML='<div class="choiceRow"><button class="choiceBtn" type="button" onclick="pick(this,1,\'head\')">👤 HEAD</button><button class="choiceBtn" type="button" onclick="pick(this,1,\'tail\')">👤 TAIL</button></div>';
+   pickHTML='<div class="choiceRow"><button class="choiceBtn" type="button" onclick="pick(this,1,\'head\')">HEAD</button><button class="choiceBtn" type="button" onclick="pick(this,1,\'tail\')">TAIL</button></div>';
   } else if([2,27,38].includes(g.id)){
    pickHTML='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:6px"><button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\'1\')">1</button><button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\'2\')">2</button><button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\'3\')">3</button><button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\'4\')">4</button><button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\'5\')">5</button><button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\'6\')">6</button></div>';
   } else if([18].includes(g.id)){
    pickHTML='<div class="choiceRow"><button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\'rock\')">✊ ROCK</button><button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\'paper\')">✋ PAPER</button><button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\'scissors\')">✌️ SCISSORS</button></div>';
   } else {
-   pickHTML='<div style="color:#9aa3d1;font-size:10px;margin-top:6px">Tap Play → 3-5s real simulation (no pick needed)</div>';
+   pickHTML='<div style="color:#9aa3d1;font-size:10px;margin-top:6px">Tap Play → 3-5s animation</div>';
   }
-  d.innerHTML='<div class="emoji">'+g.emoji+'</div><div style="font-weight:700;margin-top:4px">'+g.name+'</div><div style="color:#9aa3d1;font-size:11px">'+g.cost+'c ×'+g.mult+' • '+g.cat+'</div>'+pickHTML+'<button class="btn" type="button" onclick="clickSound(); play('+g.id+')">▶ Play Betting</button><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;margin-top:6px"><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="quickStake('+g.id+',10)">10c</button><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="quickStake('+g.id+',50)">50c</button><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="quickStake('+g.id+',100)">100c</button><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="quickStake('+g.id+',1000)">1k</button></div>';
+  d.innerHTML='<div class="emoji">'+g.emoji+'</div><div style="font-weight:700;margin-top:4px">'+g.name+'</div><div style="color:#9aa3d1;font-size:11px">'+g.cost+'c ×'+g.mult+' • '+g.cat+'</div>'+pickHTML+'<button class="btn" type="button" onclick="play('+g.id+')">▶ Play Betting</button><div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;margin-top:6px"><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="window._stake=10;clickSound()">10c</button><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="window._stake=50;clickSound()">50c</button><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="window._stake=100;clickSound()">100c</button><button class="btn2" type="button" style="padding:6px;font-size:10px" onclick="window._stake=1000;clickSound()">1k</button></div>';
   grid.appendChild(d);
  });
 }
@@ -162,71 +165,85 @@ window.pick=function(el,gid,choice){
  clickSound();
 };
 window.filterPlay=function(cat,el){ document.querySelectorAll('#playearn .tab').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active'); renderPlay(cat); };
-window.quickStake=function(id,v){ window._stake=v; clickSound(); };
 let _ovTimer=null;
 function ovDur(){ return 3000 + Math.floor(Math.random()*2000); }
 function buildVisual(g, resultChoice){
  const v=document.getElementById('ovVisual'); if(!v) return; v.innerHTML='';
- // Coin close-up: show pick vs result — if user picked HEAD but result TAIL, land on TAIL (lose)
  if(g.id===1){
   let res=(resultChoice||'head').toLowerCase();
   let sym=res==='head'?'👤':'🦅';
-  v.innerHTML='<div class="coin3d">'+sym+'<span style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);font-size:9px;background:rgba(0,0,0,.45);padding:2px 6px;border-radius:999px;border:1px solid rgba(255,255,255,.2)">'+res.toUpperCase()+'</span></div>';
+  let label=res==='head'?'HEAD':'TAIL';
+  v.innerHTML='<div style="text-align:center"><div style="font-size:10px;color:#ffd966;letter-spacing:1px">'+label+'</div><div style="font-size:44px;margin-top:4px">'+sym+'</div><div class="coin3d" style="width:72px;height:72px;font-size:34px;margin-top:8px">'+sym+'</div></div>';
  } else if(g.id===2||g.id===27||g.id===38){
   let res=resultChoice||'4';
-  v.innerHTML='<div style="display:flex;gap:12px;justify-content:center"><div class="diceBox" style="background:linear-gradient(145deg,#fff,#e8e8e8);border-radius:12px;width:58px;height:58px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 8px 22px rgba(0,0,0,.4)">'+res+'</div><div style="color:#ffd966;font-size:11px;align-self:center">→ '+res+'</div></div>';
+  v.innerHTML='<div style="text-align:center"><div style="font-size:10px;color:#ffd966">DICE SHOWS</div><div style="background:linear-gradient(145deg,#fff,#e8e8e8);border-radius:12px;width:58px;height:58px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:8px auto;box-shadow:0 8px 22px rgba(0,0,0,.4)">'+res+'</div></div>';
  } else if(g.id===18){
   let res=resultChoice||'rock';
   let icon=res==='rock'?'✊':(res==='paper'?'✋':'✌️');
-  v.innerHTML='<div style="font-size:42px">'+icon+'</div><div style="color:#ffd966;font-size:11px">'+res.toUpperCase()+'</div>';
+  v.innerHTML='<div style="text-align:center"><div style="font-size:42px">'+icon+'</div><div style="color:#ffd966;font-size:11px">'+res.toUpperCase()+'</div></div>';
  } else {
-  v.innerHTML='<div style="font-size:42px">'+g.emoji+'</div><div style="color:#9aa3d1;font-size:11px;margin-top:6px">'+g.name+' — simulation</div>';
+  let sym=g.emoji||'🎮';
+  v.innerHTML='<div style="text-align:center"><div style="font-size:42px">'+sym+'</div><div style="color:#9aa3d1;font-size:11px;margin-top:6px">'+g.name+'</div><div style="color:#666;font-size:10px;margin-top:4px">Result: '+(resultChoice||'…')+'</div></div>';
  }
 }
-let ovTimer=null;
 function showOv(g){
  clearSfx();
+ if(_autoCloseId){ clearTimeout(_autoCloseId); _autoCloseId=null; }
+ isPlaying=true;
+ curWinG=g; curWon=0; curCost=g.cost; curBal=selBal; curResult="";
  let ov=document.getElementById('ov'); if(!ov) return 3200;
- document.getElementById('ovTitle').textContent=g.name;
+ document.getElementById('ovTitle').textContent=g.name+' — Spinning…';
  document.getElementById('ovSub').textContent='Bet '+g.cost+'c placed…';
- document.getElementById('ovExtra').textContent='Win ×'+g.mult;
+ document.getElementById('ovExtra').textContent='Win ×'+g.mult+' — 3-5s close view';
  document.getElementById('ovFill').style.width='14%';
  document.getElementById('ovPct').textContent='14%';
- // start with neutral before result
  buildVisual(g, '');
  clickSound();
  ov.classList.add('show');
  let total=ovDur();
- let steps=[{p:24,t:'Bet locked…'}, {p:48,t:'Running close animation…'}, {p:70,t:'Almost there…'}, {p:86,t:'Revealing in 3…'}, {p:93,t:'2…'}, {p:98,t:'1…'}];
+ let steps=[{p:26,t:'Bet locked '+g.cost+'c…'}, {p:50,t:'Running close simulation…'}, {p:70,t:'Almost there…'}, {p:86,t:'Revealing in 3…'}, {p:93,t:'2…'}, {p:98,t:'1…'}];
  let stepMs=Math.floor((total-620)/steps.length);
  let idx=0;
- function n(){ if(idx>=steps.length) return; let s=steps[idx++]; document.getElementById('ovSub').textContent=s.t; document.getElementById('ovFill').style.width=s.p+'%'; document.getElementById('ovPct').textContent=s.p+'%'; }
+ function n(){ if(idx>=steps.length) return; let s=steps[idx++]; let sub=document.getElementById('ovSub'); if(sub) sub.textContent=s.t; let f=document.getElementById('ovFill'); if(f) f.style.width=s.p+'%'; let pc=document.getElementById('ovPct'); if(pc) pc.textContent=s.p+'%'; }
  if(ovTimer) clearInterval(ovTimer);
  ovTimer=regInt(setInterval(n, stepMs));
  return total;
 }
-function hideOv(){ clearSfx(); let ov=document.getElementById('ov'); if(ov) ov.classList.remove('show'); if(ovTimer){clearInterval(ovTimer);ovTimer=null;}}
+function hideOv(){
+ clearSfx();
+ if(_autoCloseId){ clearTimeout(_autoCloseId); _autoCloseId=null; }
+ let ov=document.getElementById('ov'); if(ov) ov.classList.remove('show');
+ if(ovTimer){clearInterval(ovTimer);ovTimer=null;}
+ isPlaying=false;
+}
+window.forceCloseOv=function(){ hideOv(); };
 function finishOv(win,g,won,cost,bal,result){
+ if(_autoCloseId){ clearTimeout(_autoCloseId); _autoCloseId=null; }
  document.getElementById('ovFill').style.width='100%'; document.getElementById('ovPct').textContent='100%';
- buildVisual(g, result);
+ curWinG=g; curWon=won; curCost=cost; curBal=bal; curResult=result||'';
+ buildVisual(g, curResult);
+ let title=document.getElementById('ovTitle');
+ let sub=document.getElementById('ovSub');
+ let extra=document.getElementById('ovExtra');
  if(win){
-  document.getElementById('ovTitle').textContent='🎉 WON +'+won+'c';
-  document.getElementById('ovSub').textContent='Result: '+(result||'win').toUpperCase()+' • Bal '+bal+'c';
-  document.getElementById('ovExtra').innerHTML='<span style="color:#00e676;font-weight:800">+'+won+'c credited ✨ Head=WIN</span>';
+  if(title) title.textContent='🎉 WON +'+won+'c';
+  if(sub) sub.textContent='Result: '+(result||'win').toUpperCase()+' • Bal '+bal+'c';
+  if(extra) extra.innerHTML='<span style="color:#00e676;font-weight:800">+'+won+'c credited ✨</span> <span style="color:#9aa3d1">(x'+g.mult+')</span>';
   winSound();
   let card=document.getElementById('ovCard');
-  for(let i=0;i<12;i++){ let c=document.createElement('div'); c.className='confettiReal'; c.style.left=(10+Math.random()*80)+'%'; c.style.top='12px'; c.style.background=['#ffcc33','#00e676','#2979ff'][i%3]; c.style.animationDelay=(Math.random()*0.2)+'s'; card.appendChild(c); setTimeout(()=>c.remove(),1200); }
+  if(card){ for(let i=0;i<12;i++){ let c=document.createElement('div'); c.className='confettiReal'; c.style.left=(10+Math.random()*80)+'%'; c.style.top='12px'; c.style.background=['#ffcc33','#00e676','#2979ff'][i%3]; c.style.animationDelay=(Math.random()*0.2)+'s'; card.appendChild(c); regTout(setTimeout(()=>{ try{c.remove();}catch(e){} },1200)); } }
  } else {
-  document.getElementById('ovTitle').textContent='💥 Lost -'+cost+'c';
-  document.getElementById('ovSub').textContent='Result: '+(result||'lose').toUpperCase()+' • Pick was different • Bal '+bal+'c';
-  document.getElementById('ovExtra').innerHTML='<span style="color:#ff5252">Head vs Tail — you lost</span>';
+  if(title) title.textContent='💥 LOST -'+cost+'c';
+  if(sub) sub.textContent='Result: '+(result||'lose').toUpperCase()+' • Bal '+bal+'c';
+  if(extra) extra.innerHTML='<span style="color:#ff5252">You lost — pick was different</span> <span style="color:#9aa3d1">(cost '+cost+'c)</span>';
   loseSound();
  }
- regTout(setTimeout(hideOv, 2000));
+ // ★ FIX: keep result 1.6s then auto-close, and close button always works
+ _autoCloseId=regTout(setTimeout(hideOv, 1600));
 }
-window.quick=function(id,v){ window._stake=v; clickSound(); };
 window.play=async function(id){
  let g=GAMES.find(x=>x.id===id); if(!g) return toast('Game not found');
+ if(isPlaying){ toast('Game running — wait 1-2s…'); return; }
  let stk=(typeof window._stake!=='undefined' && window._stake ? window._stake : g.cost)||g.cost; window._stake=0;
  let needPick=[1,2,18,27,38];
  let choice="";
@@ -239,6 +256,7 @@ window.play=async function(id){
   }
  }
  if(selBal && selBal < stk){ await syncBal(false); if(selBal < stk){ toast('Need '+stk+'c have '+selBal+'c'); return; }}
+ if(!pendingPick.choice && needPick.includes(id) && !choice){ toast('Pick first'); return; }
  let dur=showOv(g);
  try{
   let payload={action:'play', game:id, stake:stk};
@@ -246,10 +264,16 @@ window.play=async function(id){
   let j=await api(payload);
   if(j&&j.ok){
    selBal=parseInt(j.bal); updBal();
-   setTimeout(()=> finishOv(j.win,g, j.won||0, j.cost||stk, j.bal, j.result), Math.max(400,dur-580));
-  } else { hideOv(); toast(j.error||'Play failed'); if(j.need==='choice') toast('Pick first 👆'); }
+   // render result after 3-5s close animation (dur) — inside finishOv builds fixed display
+   setTimeout(()=> finishOv(j.win,g, j.won||0, j.cost||stk, j.bal, j.result), Math.max(420,dur-580));
+  } else { hideOv(); toast((j&&j.error)? j.error : 'Play failed'); }
  }catch(e){ hideOv(); toast('Connection failed'); }
 };
+// close on overlay background tap (outside card)
+document.addEventListener('click', function(e){
+ let ov=document.getElementById('ov');
+ if(ov && ov.classList.contains('show') && e.target===ov){ hideOv(); }
+});
 window.loadFree=async function(cat){
  let hint=document.getElementById('freeHint'); let grid=document.getElementById('freeGrid');
  if(hint) hint.textContent='Loading FreeToGame live API…';
@@ -269,8 +293,6 @@ window.loadFree=async function(cat){
  }
 };
 function init(){
- let grid=document.getElementById('playGrid');
- // filter buttons already in HTML
  renderPlay('all'); syncBal(false); loadFree('all');
  setInterval(()=> syncBal(false), 10000);
 }
