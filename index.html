@@ -82,7 +82,9 @@ main{padding:14px;position:relative;z-index:1}
   <div class="box" style="text-align:center"><h3>💳 Wallet</h3><h2 id="balBig" style="font-size:24px;color:#00e6a0">— coins</h2><p id="walletSub" style="color:#9aa3d1;font-size:11px"></p><button class="btn2" type="button" onclick="syncBal(true)">🔄 Sync Real Balance</button></div>
  </section>
  <section id="settings" class="section">
-  <div class="box" style="text-align:center"><h3>⚙️ Settings — System</h3><p style="color:#9aa3d1;font-size:11px">One tap clears system cache so whole app refreshes from GitHub</p><button class="btn" type="button" style="background:#1a1f4a;border:1px solid #ff5252;color:#ff8a80" onclick="purgeCache()">🗑️ Purge Cache — Clear System</button><p style="color:#ff8a80;font-size:10px;margin-top:6px">Clears Telegram + browser cache + reloads fresh</p></div>
+  <div class="box" style="text-align:center"><h3>🌍 Language — 100+ Worldwide</h3><p id="lblLanguage" style="color:#9aa3d1;font-size:11px">🌍 Language</p><select id="langSel" onchange="setLanguage(this.value)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select><p style="color:#9aa3d1;font-size:10px;margin-top:6px">Whole system changes instantly — menus, buttons, texts</p></div>
+  <div class="box" style="margin-top:10px;text-align:center"><h3>💱 Currency — 100+ Worldwide</h3><p id="lblCurrency" style="color:#9aa3d1;font-size:11px">💱 Currency</p><select id="curSel" onchange="setCurrency(this.value)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select><p style="color:#9aa3d1;font-size:10px;margin-top:6px">Balance shows coins + $ + your local currency (live rates)</p></div>
+  <div class="box" style="text-align:center;margin-top:10px"><h3>⚙️ Settings — System</h3><p style="color:#9aa3d1;font-size:11px">One tap clears system cache so whole app refreshes from GitHub</p><button class="btn" type="button" style="background:#1a1f4a;border:1px solid #ff5252;color:#ff8a80" onclick="purgeCache()">🗑️ Purge Cache — Clear System</button><p style="color:#ff8a80;font-size:10px;margin-top:6px">Clears Telegram + browser cache + reloads fresh</p></div>
   <div class="box" style="margin-top:10px"><h3>ℹ️ About</h3><p style="color:#9aa3d1;font-size:11px">Build: <span id="buildInfo" style="color:#ffd966"></span> • Games: 42</p></div>
  </section>
 </main>
@@ -95,7 +97,7 @@ main{padding:14px;position:relative;z-index:1}
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq36zRaQA77XE4c21slrMc4vxEGirN4Mff8yYuc5ntWDD-STfLO3LLKdS5bkU1788FYqfXokLwI_a7Dpr_dhBhxKg-kIR-9muIMBcFc7CyllqHmDGD0CCoDiWwol6RfJ1Ne3eLJYSD2I3Nxn1Q-pMnzbi5AGUi1BbRsHJgtrnT5F_mXbgbGNCPQtbvlvzUVDk43IgW";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Pi3xiN0jWJJ1gxpfmOCMW0GuR_p95XyGHeY-SL3hV763yusV3W86JGVvE57poVG8yd1uH6VDHd-7MJUqfxbrwnvwl8Zu3xcDlFNEC89hRo06ZiJ4EO6NtWZal4NkHklHgEZAIfXM-raPNORcVsLjKtrYkdQZ8KCsI5MHka71obwWGO6I278sLufVn9iKwpRUecG";
 let selBal=0;
 let _updBalInterval=null;
 function startBalSync(){ if(_updBalInterval) clearInterval(_updBalInterval); _updBalInterval=setInterval(()=> syncBal(false), 4000); syncBal(false); }
@@ -149,7 +151,14 @@ async function api(obj){
  let payload=Object.assign({},obj,{user_id:uid,uid:uid, start_param:uid});
  try{ let r=await fetch(withUIDParam(API),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); let j=await r.json(); return j; }catch(e){ return {ok:false,error:String(e).slice(0,80)}; }
 }
-async function syncBal(show){ let j=await api({action:'balance'}); if(j&&j.ok){ selBal=parseInt(j.bal); updBal(); if(show) toast('💰 '+selBal+'c ✓'); } else { if(show) toast(j.error||'sync failed'); } }
+async function syncBal(show){
+ let j=await api({action:'balance'});
+ if(j&&j.ok){
+  let b=parseInt(j.bal); if(isNaN(b)) b=parseInt(j.coins); if(isNaN(b)) b=0;
+  selBal=b; updBal();
+  if(show) toast('💰 '+selBal+' coins');
+ } else { if(show) toast((j&&j.error)?j.error:'sync failed'); }
+}
 function updBal(){ document.getElementById('balTop').textContent=selBal+' coins'; document.getElementById('usdTop').textContent='≈ $'+(selBal/RATE).toFixed(2); document.getElementById('balBig').textContent=selBal+' coins'; document.getElementById('walletSub').textContent='≈ $'+(selBal/RATE).toFixed(2)+' — 1$='+RATE+'c'; document.getElementById('rateLbl').textContent='1$='+RATE+'c'; }
 window.showTab=function(id){ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); let el=document.getElementById(id); if(el) el.classList.add('active'); document.querySelectorAll('.tabs .tab').forEach(b=>b.classList.toggle('active', b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))); if(id==='wallet') syncBal(false); if(id==='freegames') loadFree('all'); window.scrollTo({top:0,behavior:'smooth'}); };
 const GAMES=[
@@ -329,7 +338,56 @@ window.loadFree=async function(cat){
   if(grid) grid.innerHTML='<div class="box" style="grid-column:1/-1">Can\'t reach FreeToGame now. Tap Reload.</div>';
  }
 };
+const CUR_LIST=[["USD","$","🇺🇸"],["EUR","€","🇪🇺"],["GBP","£","🇬🇧"],["INR","₹","🇮🇳"],["NPR","₨","🇳🇵"],["PKR","₨","🇵🇰"],["BDT","৳","🇧🇩"],["LKR","₨","🇱🇰"],["CNY","¥","🇨🇳"],["JPY","¥","🇯🇵"],["KRW","₩","🇰🇷"],["RUB","₽","🇷🇺"],["UAH","₴","🇺🇦"],["TRY","₺","🇹🇷"],["SAR","﷼","🇸🇦"],["AED","د.إ","🇦🇪"],["QAR","﷼","🇶🇦"],["KWD","د.ك","🇰🇼"],["BHD","د.ب","🇧🇭"],["OMR","﷼","🇴🇲"],["JOD","د.ا","🇯🇴"],["ILS","₪","🇮🇱"],["EGP","£","🇪🇬"],["MAD","د.م.","🇲🇦"],["DZD","د.ج","🇩🇿"],["TND","د.ت","🇹🇳"],["LYD","ل.د","🇱🇾"],["ZAR","R","🇿🇦"],["NGN","₦","🇳🇬"],["GHS","₵","🇬🇭"],["KES","KSh","🇰🇪"],["TZS","TSh","🇹🇿"],["UGX","USh","🇺🇬"],["ETB","Br","🇪🇹"],["SOS","Sh","🇸🇴"],["RWF","FRw","🇷🇼"],["ZMW","ZK","🇿🇲"],["MZN","MT","🇲🇿"],["AOA","Kz","🇦🇴"],["BWP","P","🇧🇼"],["NAD","$","🇳🇦"],["MUR","₨","🇲🇺"],["MGA","Ar","🇲🇬"],["CDF","FC","🇨🇩"],["SDG","ج.س","🇸🇩"],["AUD","$","🇦🇺"],["NZD","$","🇳🇿"],["CAD","$","🇨🇦"],["MXN","$","🇲🇽"],["BRL","R$","🇧🇷"],["ARS","$","🇦🇷"],["CLP","$","🇨🇱"],["COP","$","🇨🇴"],["PEN","S/","🇵🇪"],["UYU","$U","🇺🇾"],["PYG","₲","🇵🇾"],["BOB","Bs","🇧🇴"],["VES","Bs","🇻🇪"],["GTQ","Q","🇬🇹"],["CRC","₡","🇨🇷"],["PAB","B/.","🇵🇦"],["DOP","RD$","🇩🇴"],["JMD","J$","🇯🇲"],["TTD","TT$","🇹🇹"],["BBD","Bds$","🇧🇧"],["BSD","B$","🇧🇸"],["HTG","G","🇭🇹"],["HNL","L","🇭🇳"],["NIO","C$","🇳🇮"],["BZD","BZ$","🇧🇿"],["SEK","kr","🇸🇪"],["NOK","kr","🇳🇴"],["DKK","kr","🇩🇰"],["ISK","kr","🇮🇸"],["CHF","CHF","🇨🇭"],["PLN","zł","🇵🇱"],["CZK","Kč","🇨🇿"],["HUF","Ft","🇭🇺"],["RON","lei","🇷🇴"],["BGN","лв","🇧🇬"],["RSD","дин","🇷🇸"],["BAM","KM","🇧🇦"],["MKD","ден","🇲🇰"],["ALL","L","🇦🇱"],["MDL","L","🇲🇩"],["BYN","Br","🇧🇾"],["GEL","₾","🇬🇪"],["AMD","դր","🇦🇲"],["AZN","₼","🇦🇿"],["KZT","₸","🇰🇿"],["UZS","so'm","🇺🇿"],["KGS","сом","🇰🇬"],["TJS","SM","🇹🇯"],["TMT","m","🇹🇲"],["MNT","₮","🇲🇳"],["AFN","؋","🇦🇫"],["IRR","﷼","🇮🇷"],["IQD","ع.د","🇮🇶"],["SYP","£","🇸🇾"],["LBP","ل.ل","🇱🇧"],["YER","﷼","🇾🇪"],["SGD","S$","🇸🇬"],["MYR","RM","🇲🇾"],["IDR","Rp","🇮🇩"],["THB","฿","🇹🇭"],["VND","₫","🇻🇳"],["PHP","₱","🇵🇭"],["TWD","NT$","🇹🇼"],["HKD","HK$","🇭🇰"],["MOP","MOP$","🇲🇴"],["BND","B$","🇧🇳"],["KHR","៛","🇰🇭"],["LAK","₭","🇱🇦"],["MMK","K","🇲🇲"],["FJD","FJ$","🇫🇯"],["PGK","K","🇵🇬"],["WST","T","🇼🇸"],["TOP","T$","🇹🇴"],["VUV","VT","🇻🇺"],["SBD","SI$","🇸🇧"],["XPF","F","🇵🇫"]];
+const LANG_LIST=[["🇬🇧 English","en"],["🇨🇳 中文","zh"],["🇷🇺 Русский","ru"],["🇮🇳 हिन्दी","hi"],["🇳🇵 नेपाली","ne"],["🇵🇰 اردو","ur"],["🇧🇩 বাংলা","bn"],["🇸🇦 العربية","ar"],["🇪🇸 Español","es"],["🇹🇷 Türkçe","tr"],["🇫🇷 Français","fr"],["🇩🇪 Deutsch","de"],["🇵🇹 Português","pt"],["🇮🇹 Italiano","it"],["🇯🇵 日本語","ja"],["🇰🇷 한국어","ko"],["🇮🇩 Indonesia","id"],["🇻🇳 Tiếng Việt","vi"],["🇹🇭 ไทย","th"],["🇮🇷 فارسی","fa"],["🇺🇦 Українська","uk"],["🇵🇱 Polski","pl"],["🇳🇱 Nederlands","nl"],["🇸🇪 Svenska","sv"],["🇳🇴 Norsk","no"],["🇩🇰 Dansk","da"],["🇫🇮 Suomi","fi"],["🇬🇷 Ελληνικά","el"],["🇮🇱 עברית","he"],["🇷🇴 Română","ro"],["🇭🇺 Magyar","hu"],["🇨🇿 Čeština","cs"],["🇸🇰 Slovenčina","sk"],["🇧🇬 Български","bg"],["🇷🇸 Српски","sr"],["🇭🇷 Hrvatski","hr"],["🇸🇮 Slovenščina","sl"],["🇲🇾 Melayu","ms"],["🇵🇭 Filipino","tl"],["🇲🇲 မြန်မာ","my"],["🇰🇭 ខ្មែរ","km"],["🇱🇦 ລາວ","lo"],["🇱🇰 සිංහල","si"],["🇮🇳 தமிழ்","ta"],["🇮🇳 తెలుగు","te"],["🇮🇳 ಕನ್ನಡ","kn"],["🇮🇳 മലയാളം","ml"],["🇮🇳 ગુજરાતી","gu"],["🇮🇳 मराठी","mr"],["🇮🇳 ਪੰਜਾਬੀ","pa"],["🇮🇳 ଓଡ଼ିଆ","or"],["🇮🇳 অসমীয়া","as"],["🇵🇰 سنڌي","sd"],["🇦🇫 پښتو","ps"],["🇮🇶 Kurdî","ku"],["🇦🇿 Azərbaycan","az"],["🇬🇪 ქართული","ka"],["🇦🇲 Հայերեն","hy"],["🇺🇿 Oʻzbek","uz"],["🇰🇿 Қазақ","kk"],["🇰🇬 Кыргыз","ky"],["🇹🇯 Тоҷикӣ","tg"],["🇹🇲 Türkmen","tk"],["🇲🇳 Монгол","mn"],["🇪🇪 Eesti","et"],["🇱🇻 Latviešu","lv"],["🇱🇹 Lietuvių","lt"],["🇧🇾 Беларуская","be"],["🇦🇱 Shqip","sq"],["🇲🇰 Македонски","mk"],["🇧🇦 Bosanski","bs"],["🇲🇹 Malti","mt"],["🇮🇸 Íslenska","is"],["🇮🇪 Gaeilge","ga"],["🇪🇸 Català","ca"],["🇭🇹 Kreyòl","ht"],["🇿🇦 Afrikaans","af"],["🇪🇹 አማርኛ","am"],["🇸🇴 Soomaali","so"],["🇰🇪 Kiswahili","sw"],["🇳🇬 Hausa","ha"],["🇳🇬 Yorùbá","yo"],["🇳🇬 Igbo","ig"],["🇿🇦 Zulu","zu"],["🇪🇹 Tigrinya","ti"],["🇭🇰 粵語","yue"],["🇮🇳 Bhojpuri","bho"],["🇪🇬 مصرى","arz"],["🇲🇦 Darija","ary"],["🇩🇿 Kabyle","kab"],["🇸🇬 English-SG","en-sg"],["🇭🇰 English-HK","en-hk"],["🇦🇪 Gulf AR","ar-ae"],["🇧🇳 Jawi","ms-arab"],["🇱🇰 Tamil-LK","ta-lk"],["🇲🇾 Tamil-MY","ta-my"]];
+const I18N={en:{home:"Home",playearn:"PLAY&EARN",freegames:"FREE GAMES",wallet:"Wallet",deposit:"Deposit",settings:"Settings",admin:"Admin",currency:"Currency",language:"Language"},hi:{home:"होम",playearn:"खेलें और कमाएँ",freegames:"फ्री गेम्स",wallet:"वॉलेट",deposit:"जमा",settings:"सेटिंग्स",admin:"एडमिन",currency:"मुद्रा",language:"भाषा"},ne:{home:"गृह",playearn:"खेल र कमाउ",freegames:"निःशुल्क खेल",wallet:"वालेट",deposit:"जम्मा",settings:"सेटिङ",admin:"एडमिन",currency:"मुद्रा",language:"भाषा"},ur:{home:"ہوم",playearn:"کھیلیں اور کمائیں",freegames:"مفت گیمز",wallet:"والٹ",deposit:"جمع",settings:"سیٹنگز",admin:"ایڈمن",currency:"کرنسی",language:"زبان"},bn:{home:"হোম",playearn:"খেলুন ও আয় করুন",freegames:"ফ্রি গেমস",wallet:"ওয়ালেট",deposit:"জমা",settings:"সেটিংস",admin:"অ্যাডমিন",currency:"মুদ্রা",language:"ভাষা"},ar:{home:"الرئيسية",playearn:"العب واربح",freegames:"ألعاب مجانية",wallet:"المحفظة",deposit:"إيداع",settings:"الإعدادات",admin:"المشرف",currency:"العملة",language:"اللغة"},es:{home:"Inicio",playearn:"JUGAR Y GANAR",freegames:"JUEGOS GRATIS",wallet:"Cartera",deposit:"Depósito",settings:"Ajustes",admin:"Admin",currency:"Moneda",language:"Idioma"},fr:{home:"Accueil",playearn:"JOUER & GAGNER",freegames:"JEUX GRATUITS",wallet:"Portefeuille",deposit:"Dépôt",settings:"Réglages",admin:"Admin",currency:"Devise",language:"Langue"},de:{home:"Start",playearn:"SPIELEN & VERDIENEN",freegames:"GRATIS SPIELE",wallet:"Wallet",deposit:"Einzahlung",settings:"Einstellungen",admin:"Admin",currency:"Währung",language:"Sprache"},ru:{home:"Главная",playearn:"ИГРАЙ И ЗАРАБАТЫВАЙ",freegames:"БЕСПЛАТНЫЕ ИГРЫ",wallet:"Кошелёк",deposit:"Депозит",settings:"Настройки",admin:"Админ",currency:"Валюта",language:"Язык"},zh:{home:"首页",playearn:"游戏赚币",freegames:"免费游戏",wallet:"钱包",deposit:"充值",settings:"设置",admin:"管理",currency:"货币",language:"语言"},tr:{home:"Ana Sayfa",playearn:"OYNA & KAZAN",freegames:"ÜCRETSİZ OYUNLAR",wallet:"Cüzdan",deposit:"Yatırım",settings:"Ayarlar",admin:"Yönetici",currency:"Para Birimi",language:"Dil"},pt:{home:"Início",playearn:"JOGAR E GANHAR",freegames:"JOGOS GRÁTIS",wallet:"Carteira",deposit:"Depósito",settings:"Configurações",admin:"Admin",currency:"Moeda",language:"Idioma"},id:{home:"Beranda",playearn:"MAIN & HASILKAN",freegames:"GAME GRATIS",wallet:"Dompet",deposit:"Deposit",settings:"Pengaturan",admin:"Admin",currency:"Mata Uang",language:"Bahasa"},ja:{home:"ホーム",playearn:"プレイ＆アーン",freegames:"無料ゲーム",wallet:"ウォレット",deposit:"入金",settings:"設定",admin:"管理者",currency:"通貨",language:"言語"},ko:{home:"홈",playearn:"플레이&언",freegames:"무료 게임",wallet:"지갑",deposit:"입금",settings:"설정",admin:"관리자",currency:"통화",language:"언어"}};
+let curCode="USD", fxRates={}, langCode="en";
+function curInfo(code){ for(let i=0;i<CUR_LIST.length;i++){ if(CUR_LIST[i][0]===code) return CUR_LIST[i]; } return ["USD","$","🇺🇸"]; }
+function L(k){ let d=I18N[langCode]||I18N["en"]; return (d&&d[k])?d[k]:(I18N["en"][k]||k); }
+function renderCurSel(){
+ let s=document.getElementById('curSel'); if(!s) return; s.innerHTML='';
+ for(let i=0;i<CUR_LIST.length;i++){ let c=CUR_LIST[i]; let o=document.createElement('option'); o.value=c[0]; o.textContent=c[2]+' '+c[0]+' '+c[1]; if(c[0]===curCode) o.selected=true; s.appendChild(o); }
+}
+function renderLangSel(){
+ let s=document.getElementById('langSel'); if(!s) return; s.innerHTML='';
+ for(let i=0;i<LANG_LIST.length;i++){ let l=LANG_LIST[i]; let o=document.createElement('option'); o.value=l[1]; o.textContent=l[0]; if(l[1]===langCode) o.selected=true; s.appendChild(o); }
+}
+function applyLang(){
+ let tabs=document.querySelectorAll('#tabs .tab');
+ let keys=['home','playearn','freegames','wallet','deposit','settings','admin'];
+ let icons=['🏠 ','💰 ','🌐 ','💳 ','💳 ','⚙️ ','👑 '];
+ for(let i=0;i<tabs.length;i++){ if(keys[i]) tabs[i].textContent=icons[i]+L(keys[i]); }
+ let navs=document.querySelectorAll('.bottomNav .bNav');
+ let ico2=['🏠','💰','🌐','💳','⚙️','👑'];
+ for(let i=0;i<navs.length;i++){ if(keys[i]){ navs[i].textContent=''; let sp=document.createElement('span'); sp.textContent=ico2[i]; navs[i].appendChild(sp); navs[i].appendChild(document.createTextNode(L(keys[i]))); } }
+ let lc=document.getElementById('lblCurrency'); if(lc) lc.textContent='💱 '+L('currency');
+ let ll=document.getElementById('lblLanguage'); if(ll) ll.textContent='🌍 '+L('language');
+}
+window.setCurrency=function(v){ curCode=v; try{ localStorage.setItem('pe_cur',v); }catch(e){} updBal(); toast('Currency: '+v); };
+window.setLanguage=function(v){ langCode=v; try{ localStorage.setItem('pe_lang',v); }catch(e){} applyLang(); renderLangSel(); toast('Language: '+v); };
+async function fetchFx(){
+ try{ let r=await fetch('https://open.er-api.com/v6/latest/USD'); let j=await r.json(); if(j&&j.rates&&j.rates[curCode]) fxRates=j.rates; }catch(e){}
+ updBal();
+}
+updBal=function(){
+ let c=curInfo(curCode);
+ let usd=selBal/RATE;
+ let loc=null;
+ if(fxRates[curCode]) loc=(usd*fxRates[curCode]).toFixed(2);
+ let localTxt = loc ? (' ≈ '+c[2]+' '+c[1]+loc) : (curCode==='USD'?'' : ' ≈ local n/a');
+ let bt=document.getElementById('balTop'); if(bt) bt.textContent=selBal+' coins';
+ let ut=document.getElementById('usdTop'); if(ut) ut.textContent='≈ $'+usd.toFixed(2)+localTxt;
+ let bb=document.getElementById('balBig'); if(bb) bb.textContent=selBal+' coins';
+ let ws=document.getElementById('walletSub'); if(ws) ws.textContent='≈ $'+usd.toFixed(2)+localTxt+' — 1$='+RATE+'c';
+ let rl=document.getElementById('rateLbl'); if(rl) rl.textContent=c[2]+' '+c[0]+' • 1$='+RATE+'c';
+};
+function bootLocalization(){
+ try{ curCode=localStorage.getItem('pe_cur')||"USD"; }catch(e){}
+ try{ langCode=localStorage.getItem('pe_lang')||"en"; }catch(e){}
+ renderCurSel(); renderLangSel(); applyLang(); fetchFx();
+}
 function init(){
+ bootLocalization();
  renderPlay('all'); startBalSync(); loadFree('all');
  try{ let b=document.getElementById('buildInfo'); if(b) b.textContent='v'+Date.now().toString().slice(-6)+' • '+new Date().toLocaleDateString(); }catch(e){}
  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) syncBal(false); });
