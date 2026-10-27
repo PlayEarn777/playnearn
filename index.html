@@ -162,7 +162,7 @@ main{padding:14px;position:relative;z-index:1}
    <h3>🧾 Registered Users (Signups)</h3>
    <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Name, username, coins — full control</p>
    <div id="adminAccList" style="margin-top:8px"></div>
-   <button class="btn2" type="button" onclick="adminLoadAccounts()">🔄 Refresh Users</button>
+   <div style="display:flex;gap:6px;margin-top:6px"><button class="btn2" type="button" onclick="adminLoadAccounts()">🔄 Refresh Users</button><button class="btn2" type="button" onclick="adminRebuildIndex()">️ Rebuild List</button></div>
   </div>
   <div class="box" style="margin-top:10px">
    <h3>👤 User Balance Control</h3>
@@ -316,10 +316,10 @@ main{padding:14px;position:relative;z-index:1}
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SAE-g5D3vKeC01sfQ-jC2sjp5oUPZhCNhchd6QLqChfLQ7zsOERLnUN1n-Oj22fUDmZSmV6P-IXFfPnSWOJamjwMDFEh5X63AITz_XqzGhLNhE2KCyUiYr3X9fRzbDTm6cLWUt6p6FkQhDJrfD5brJf5nxc7bVQyCVsE4m6eLiPCX-KTPQiyJaR5mIKhfItSTaP";
-const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SAEVH3louq9TEcloz7CBkNmHYCT2ee8rsCFXahOg87_OJx2cBNo6UIQWmkL3askU4mgMvuOk8CrAtDIpri2umFGySta23WqAPY1Yi8Vf6yTJ-6NSHPed1EGa7spRbFdsWqj8bkk307i7vopLOoTuh706H1LpTMyHsvH6UNDU6DW5nOhAP4wsHFHDk20750zPqZD";
-const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SAEqsuXmZQwdlA-4-SbH_SbL62yT5DSbrs4Ud1E0w_fq1lrGwEFqYWvdSVWks2OTfzzMRyFoSKaNOydlrTjXOM6BEG2KrYiZcGEAONnAADqMuacCf9GfqvskrQ4uPKEk7QcLiAKCJT8Nt1k_UE6CaGiYTLl4CV9GaIXUxoJzbS_JI_UEUk2GSFNKVO5FMRW1nlBhkBbHZuxVkkNbR91Vkr-Qg%3D%3D";
-const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SAEpKfyyo5JHiziHIahY5_ZH3efig4oJC2JizwFdB4JwE3y74YXivCgGyCVS94wH-OdoG63c4swj7M02kJ7izV0BepjZF8rqGBJvYXdqq86SopSXCKsRS6pfy4WBL0pw1tBTvlwIOqAYfgk5REZ6qjed631ew2V5YOfv_02DZ58boHcIG45FO0YgQR2P3Bt82pi";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SN9XYrJRLWTvT1qH3GIGo0G_53y6IJR2mTRTGd8GfvBG_bFjvGQR6rBOO6HScz1qDfeyrSzhWkjnjtUhj-nMrXhJwvl1iWMlmKv_8XcwQHx7I6YdcXfYIo46RcyrTTv79qObYj89oZoPSe6dapBNZFdQ7BXbzW0QAVHcZMokfpB3DAC7OwLpk47jpSseASMvWeb";
+const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SN9Q7DFbLNaTeYGEwLs9_tWn7QMcRH52bMmVSslfbU7WteGqtgrf0jHgNx20CxJU5nl7OGyN6dvJ3166-8QTSM0RHdeCaaeeQ4kqu-62SFkRKcLt2wA34_1-k5NoCj8IT5X9W_jd_jt0674QvmzSw9DwIyyqct5ebL0pQ34xd059SJHAsOsXMC7TFnOregNvSe2";
+const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SN9Dm15kBIV2ah-7UEqG2ENUDizygj4sFQixPJCkEsi86rEqyRnOhphzVE36t0ypPxd3bsPAmfhUI30ShMAE591k8P3x4F8udHh4Gt6-typazFKMdb8iAoNCORTv8_U61hLXH_zKS00TXEuKPRJONBUXWp3nmoIr5JhYNHVaQ6dzpo3ZASfvdHcgZk5sFLSpgFxfrGzX0H4m5I-E4KRXE4b_g%3D%3D";
+const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SN9-eVzdraj7Ff94QcnQnCd0C8BCZuYCsMs44ZjVqcwyMThBVgENdnoiuSaA75g9RHM5sLqw14fjcvlpb2Ure-6KsCPEfGgeh3CAlkgz9VtRw4EQMDhjR9xENO79W17wLFteVU-OV8u-CoCG-1sIpspeFhnUgB69p2uNA_e9tMglzkOvf6UwRUQ3cDlwkKEEE_5";
 let accToken="", accUser=null, accChecking=true;
 let isAdmin=false, isFullAdmin=false;
 let selBal=0;
@@ -376,6 +376,8 @@ async function api(obj){
  try{ let r=await fetch(withUIDParam(API),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); let j=await r.json(); return j; }catch(e){ return {ok:false,error:String(e).slice(0,80)}; }
 }
 let balLoaded=false, lastBalErr='', balOk=false, balStamp='', srvUid='';
+let apiHost='(unknown)';
+try{ apiHost=new URL(API).hostname; }catch(e){ apiHost=String(API).slice(0,40); }
 window.adminTry=function(){
  toast('Checking owner access…');
  adminApi({action:'admin_stats'}).then(function(j){
@@ -750,7 +752,7 @@ updBal=function(){
  let mine=String(getUID()||'');
  let mismatch = balOk && srvUid && mine && srvUid !== mine;
  if(ws) ws.innerHTML = balOk
-  ? ('≈ $'+usd.toFixed(2)+localTxt+' — 1$='+RATE+'c<br><span style="color:#00e676;font-size:10px">✓ live from server • updated '+balStamp+' • ID '+srvUid+'</span>'+(mismatch ? ('<br><span style="color:#ff8a80;font-size:10px">⚠ app ID '+mine+' does NOT match server ID '+srvUid+'</span>') : ''))
+  ? ('≈ $'+usd.toFixed(2)+localTxt+' — 1$='+RATE+'c<br><span style="color:#00e676;font-size:10px">✓ server read ID '+ (srvUid||'?') +' • app sent ID '+ (mine||'?') +' • '+balStamp+'</span><br><span style="color:#9aa3d1;font-size:9px">API: '+apiHost+'</span>'+(mismatch ? ('<br><span style="color:#ff8a80;font-size:10px">⚠ MISMATCH — you are seeing the wrong account</span>') : ''))
   : ('<span style="color:#ff8a80">⚠ '+String(lastBalErr||'balance not loaded')+'<br>app ID '+mine+' • Tap Sync Real Balance to retry</span>');
  let rl=document.getElementById('rateLbl'); if(rl) rl.textContent=c[2]+' '+c[0]+' • 1$='+RATE+'c';
 };
@@ -799,6 +801,12 @@ async function adminLoadAccounts(){
   el.appendChild(card);
  }
 }
+window.adminRebuildIndex=async function(){
+ toast('Rebuilding user list…');
+ let j=await adminApi({action:'rebuild_index'});
+ toast(j&&j.ok ? ('Rebuilt — '+j.total+' known users') : ((j&&j.error)||'failed'));
+ if(j&&j.ok) adminLoadAccounts();
+};
 window.adminAccBlock=async function(tid,on){
  let j=await adminApi({action:'account_block', target:String(tid), blocked:!!on});
  toast(j&&j.ok?(on?'User blocked':'User unblocked'):((j&&j.error)||'failed'));
