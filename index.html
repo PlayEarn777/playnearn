@@ -108,7 +108,9 @@ main{padding:14px;position:relative;z-index:1}
  <button class="tab" type="button" onclick="showTab('playearn')">💰 PLAY&EARN (10)</button>
  <button class="tab" type="button" onclick="showTab('freegames')">🌐 FREE GAMES</button>
  <button class="tab" type="button" onclick="showTab('wallet')">💳 Wallet</button>
+ <button class="tab" type="button" onclick="showTab('deposit')">📥 Deposit</button>
  <button class="tab" type="button" onclick="showTab('settings')">⚙️ Settings</button>
+ <button class="tab" type="button" id="adminTab" style="display:none;background:linear-gradient(135deg,#7c4dff,#e040fb);color:#fff;border-color:#7c4dff" onclick="showTab('admin')">👑 ADMIN</button>
 </div>
 <main>
  <section id="home" class="section active">
@@ -129,6 +131,102 @@ main{padding:14px;position:relative;z-index:1}
  <section id="wallet" class="section">
   <div class="box" style="text-align:center"><h3>💳 Wallet</h3><h2 id="balBig" style="font-size:24px;color:#00e6a0">— coins</h2><p id="walletSub" style="color:#9aa3d1;font-size:11px"></p><button class="btn2" type="button" onclick="syncBal(true)">🔄 Sync Real Balance</button></div>
  </section>
+ <section id="admin" class="section">
+  <div class="box" style="background:linear-gradient(135deg,#2a0a4a,#1a1f4a);border:1px solid #7c4dff;text-align:center">
+   <h2 style="font-family:'Cinzel',serif">👑 ADMIN PANEL</h2>
+   <p id="adminWho" style="color:#b39ddb;font-size:11px;margin-top:4px"></p>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Everything is controlled from here</p>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>📊 Overview</h3>
+   <div id="adminStats" style="font-size:12px;margin-top:6px;color:#9aa3d1">Loading…</div>
+   <button class="btn2" type="button" onclick="adminRefresh()">🔄 Refresh</button>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>🎛️ Global Game Result</h3>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Overrides every game instantly</p>
+   <div style="display:flex;gap:6px;margin-top:8px">
+    <button class="btn2" type="button" onclick="setGlobalMode('normal')">🌐 Normal</button>
+    <button class="btn2" type="button" style="border-color:#00e676" onclick="setGlobalMode('force_win')">✅ All WIN</button>
+    <button class="btn2" type="button" style="border-color:#ff5252" onclick="setGlobalMode('force_loss')">❌ All LOSS</button>
+   </div>
+   <p id="globalModeNow" style="color:#ffd966;font-size:11px;margin-top:6px"></p>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>🎮 Per-Game Control</h3>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">WIN / LOSS / Normal for each of the 10 games</p>
+   <div id="adminGameList" style="margin-top:8px"></div>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>👤 User Balance Control</h3>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Add, remove or set any user's coins</p>
+   <input id="adUserId" inputmode="numeric" placeholder="Telegram user ID" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
+   <button class="btn2" type="button" onclick="adminFindUser()">🔍 Find User</button>
+   <div id="adUserInfo" style="font-size:12px;margin-top:6px;color:#ffd966"></div>
+   <input id="adUserAmt" inputmode="numeric" placeholder="Amount in coins" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
+   <div style="display:flex;gap:6px;margin-top:6px">
+    <button class="btn2" type="button" style="border-color:#00e676" onclick="adminBal('add')">➕ Add</button>
+    <button class="btn2" type="button" style="border-color:#ff5252" onclick="adminBal('remove')">➖ Remove</button>
+    <button class="btn2" type="button" onclick="adminBal('set')">🟰 Set</button>
+   </div>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>📥 Pending Deposits</h3>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Screenshots sent by users — check and approve</p>
+   <div id="adminDepList" style="margin-top:8px"></div>
+   <button class="btn2" type="button" onclick="adminLoadDeposits()">🔄 Refresh Deposits</button>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>📤 Pending Withdraws</h3>
+   <div id="adminWdList" style="margin-top:8px"></div>
+   <button class="btn2" type="button" onclick="adminLoadWithdraws()">🔄 Refresh Withdraws</button>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>💳 Deposit Methods (5–7 options)</h3>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">These appear to users in the Deposit tab</p>
+   <div id="adminDepMethods" style="margin-top:8px"></div>
+   <div style="display:flex;gap:6px;margin-top:8px">
+    <button class="btn2" type="button" onclick="adminAddDepMethod()">➕ Add Method</button>
+    <button class="btn" type="button" onclick="adminSaveDepMethods()">💾 Save Methods</button>
+   </div>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>👥 Admin Team</h3>
+   <p id="adminTeamInfo" style="color:#9aa3d1;font-size:11px;margin-top:4px"></p>
+   <div id="adminTeamList" style="margin-top:8px"></div>
+   <input id="adAddId" inputmode="numeric" placeholder="Telegram ID to add" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
+   <div style="display:flex;gap:6px;margin-top:6px">
+    <button class="btn2" type="button" style="border-color:#ffd54f" onclick="adminAddTeam('equal')">➕ Equal (2)</button>
+    <button class="btn2" type="button" onclick="adminAddTeam('sub')">➕ Sub (10)</button>
+   </div>
+  </div>
+  <div class="box" style="margin-top:10px;margin-bottom:10px">
+   <h3>🔐 Sub-Admin Permissions</h3>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Choose exactly what each sub-admin may do</p>
+   <select id="adSubPick" onchange="adminRenderSubPerms()" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select>
+   <div id="adSubPerms" style="margin-top:8px"></div>
+  </div>
+ </section>
+ <section id="deposit" class="section">
+  <div class="box">
+   <h3>📥 Deposit</h3>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Pick a method, pay, then upload your screenshot for approval</p>
+   <div id="depMethodList" style="margin-top:10px"></div>
+   <input id="depAmount" inputmode="numeric" placeholder="Amount in USD (e.g. 50)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
+   <input id="depProofFile" type="file" accept="image/*" style="width:100%;margin-top:8px;color:#9aa3d1;font-size:11px"/>
+   <button class="btn" type="button" onclick="userSubmitDeposit()">📎 Upload Screenshot & Submit</button>
+   <p id="depMsg" style="color:#ffd966;font-size:11px;margin-top:6px"></p>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>📤 Withdraw</h3>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Choose method, type your details, confirm</p>
+   <div id="wdMethodList" style="margin-top:10px"></div>
+   <input id="wdAmount" inputmode="numeric" placeholder="Amount in coins" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
+   <div id="wdFieldWrap" style="margin-top:8px"></div>
+   <button class="btn" type="button" onclick="userSubmitWithdraw()">📤 Submit Withdraw</button>
+   <p id="wdMsg" style="color:#ffd966;font-size:11px;margin-top:6px"></p>
+  </div>
+ </section>
  <section id="settings" class="section">
   <div class="box" style="text-align:center"><h3>🌍 Language — 100+ Worldwide</h3><p id="lblLanguage" style="color:#9aa3d1;font-size:11px">🌍 Language</p><select id="langSel" onchange="setLanguage(this.value)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select><p style="color:#9aa3d1;font-size:10px;margin-top:6px">Whole system changes instantly — menus, buttons, texts</p></div>
   <div class="box" style="margin-top:10px;text-align:center"><h3>💱 Currency — 100+ Worldwide</h3><p id="lblCurrency" style="color:#9aa3d1;font-size:11px">💱 Currency</p><select id="curSel" onchange="setCurrency(this.value)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select><p style="color:#9aa3d1;font-size:10px;margin-top:6px">Balance shows coins + $ + your local currency (live rates)</p></div>
@@ -138,14 +236,17 @@ main{padding:14px;position:relative;z-index:1}
 </main>
 <div id="ov"><div class="ovCard" id="ovCard"><button class="ovClose" type="button" onclick="forceCloseOv()" aria-label="Close">✕</button><div class="pulseRing"></div><div id="ovVisual" style="min-height:110px;display:flex;align-items:center;justify-content:center"></div><div id="ovTitle" style="font-weight:800;margin-top:10px;font-family:'Cinzel',serif">Game</div><div id="ovSub" style="color:#ffd966;font-size:12px;margin-top:4px">Starting…</div><div class="bar"><div id="ovFill" class="fill"></div></div><div id="ovPct" style="color:#ffcc33;font-size:11px">14%</div><div id="ovExtra" style="color:#9aa3d1;font-size:11px;margin-top:6px"></div></div></div>
 <div class="bottomNav">
- <button class="bNav active" type="button" onclick="showTab('home')"><span>🏠</span>Home</button><button class="bNav" type="button" onclick="showTab('playearn')"><span>💰</span>PLAY&EARN</button><button class="bNav" type="button" onclick="showTab('freegames')"><span>🌐</span>Free</button><button class="bNav" type="button" onclick="showTab('wallet')"><span>💳</span>Wallet</button><button class="bNav" type="button" onclick="showTab('settings')"><span>⚙️</span>Settings</button>
+ <button class="bNav active" type="button" onclick="showTab('home')"><span>🏠</span>Home</button><button class="bNav" type="button" onclick="showTab('playearn')"><span>💰</span>PLAY&EARN</button><button class="bNav" type="button" onclick="showTab('freegames')"><span>🌐</span>Free</button><button class="bNav" type="button" onclick="showTab('wallet')"><span>💳</span>Wallet</button><button class="bNav" type="button" onclick="showTab('deposit')"><span>📥</span>Deposit</button><button class="bNav" type="button" onclick="showTab('settings')"><span>⚙️</span>Settings</button><button class="bNav" type="button" id="bAdminNav" style="display:none;color:#b39ddb" onclick="showTab('admin')"><span>👑</span>Admin</button>
 </div>
 <div id="toast" class="toast"></div>
 <script>
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QSmqyBewfwcsNSzgFej8WruQ_xr4PZGFTv0QJmWaO2qBS5x6MA7NHj06LXHipsHWqDuNhGeU_xbUlJhkuGX9S1Jpe8ec7Wq9NH30c-BtXpU-VXFjFnuifi_Nro_zil318U3u2ZbYZf-i6LOc-2wFoB2tLwe0fxqxu-vLHQnSXLPNCxjiZefNPUMx6qNa7ydrkfD";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QaOhVDEtVpYFsvdsOond8CJKyDwvkxZkjYdB0BHmY9R01SOx5pwytaxhXE3_zfIdbzwUr4iGi60fbQmoajJLhAp0dr0qNQEii-DhJDnTKAqVes3VAwE_lwLEsGWyi_-_bf6xeYBLRMcYh3agDEVJUYnYe4ATrWGiJFfgnvzTKvrDA_KetLLUfIuEWfvOZrcDIvT";
+const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QaOBLyXVbsjY_aW-ZIXf7a8HhbrWB0OtpaaByt8DIJZsJlg6MFs-EpITp_gxfm-ClX2K4INwL9DCOZCuKvc_DKHwa5lT3rU3fGMyDuv6mw0XOknT2CAUdM9B2bpmSuQ__NFFZthJPuJGZ1fBTiQ7ySz6TZTWFw3NuCxo7PHJ4IaXbQuFsD2zfVupZKjbslWQrpG";
+const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QaOvCsb0lNdGrUIepFZx15TXDZ-gMyHaDT-eQklgOWfi9eeKzC8ZUpfLPCD9zWqvN0pgN5N0soaxqtLitUnu1amf6HoDJ05z2hDyLGUeQM2hTWMVN_iZOv2kWjzsW-r3ADX2Kt1sFLPxXzCPsuIEuE_6oZdE3x8H4tMm8IPuN2Tqk3MCCd8_IpeJxExrqRPdrWKDduEYTu78F-S2WOoiGRBbQ%3D%3D";
+let isAdmin=false, isFullAdmin=false;
 let selBal=0;
 let _updBalInterval=null;
 function startBalSync(){ if(_updBalInterval) clearInterval(_updBalInterval); _updBalInterval=setInterval(()=> syncBal(false), 4000); syncBal(false); }
@@ -204,11 +305,14 @@ async function syncBal(show){
  if(j&&j.ok){
   let b=parseInt(j.bal); if(isNaN(b)) b=parseInt(j.coins); if(isNaN(b)) b=0;
   selBal=b; updBal();
+  isAdmin=!!j.is_admin;
+  let at=document.getElementById('adminTab'); if(at) at.style.display=isAdmin?'block':'none';
+  let an=document.getElementById('bAdminNav'); if(an) an.style.display=isAdmin?'flex':'none';
   if(show) toast('💰 '+selBal+' coins');
  } else { if(show) toast((j&&j.error)?j.error:'sync failed'); }
 }
 function updBal(){ document.getElementById('balTop').textContent=selBal+' coins'; document.getElementById('usdTop').textContent='≈ $'+(selBal/RATE).toFixed(2); document.getElementById('balBig').textContent=selBal+' coins'; document.getElementById('walletSub').textContent='≈ $'+(selBal/RATE).toFixed(2)+' — 1$='+RATE+'c'; document.getElementById('rateLbl').textContent='1$='+RATE+'c'; }
-window.showTab=function(id){ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); let el=document.getElementById(id); if(el) el.classList.add('active'); document.querySelectorAll('.tabs .tab').forEach(b=>b.classList.toggle('active', b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))); if(id==='wallet') syncBal(false); if(id==='freegames') loadFree('all'); window.scrollTo({top:0,behavior:'smooth'}); };
+window.showTab=function(id){ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); let el=document.getElementById(id); if(el) el.classList.add('active'); document.querySelectorAll('.tabs .tab').forEach(b=>b.classList.toggle('active', b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))); if(id==='wallet') syncBal(false); if(id==='freegames') loadFree('all'); if(id==='admin'){ adminRefresh(); } if(id==='deposit'){ loadDepMethods(); loadWdMethods(); } window.scrollTo({top:0,behavior:'smooth'}); };
 const GAMES=[
  {id:1,name:'Coin Flip',emoji:'🪙',cost:10,mult:1.9,cat:'classic'},{id:2,name:'Dice Duel',emoji:'🎲',cost:10,mult:2.0,cat:'classic'},{id:3,name:'Lucky Slots',emoji:'🎰',cost:15,mult:3.0,cat:'slots'},{id:4,name:'Crash Rocket',emoji:'🚀',cost:20,mult:2.5,cat:'crash'},{id:5,name:'Mines',emoji:'💣',cost:15,mult:2.2,cat:'mines'},{id:6,name:'Plinko',emoji:'🔴',cost:10,mult:1.8,cat:'plinko'},{id:7,name:'Wheel Fortune',emoji:'🎡',cost:20,mult:2.8,cat:'wheel'},{id:8,name:'Hi-Lo Card',emoji:'🃏',cost:10,mult:2.0,cat:'cards'},{id:9,name:'Roulette Rapid',emoji:'🎯',cost:25,mult:2.5,cat:'roulette'},{id:10,name:'Blackjack',emoji:'♠️',cost:20,mult:2.0,cat:'cards'},{id:11,name:'Tower Climb',emoji:'🏗️',cost:15,mult:2.4,cat:'tower'},{id:12,name:'Aviator',emoji:'✈️',cost:25,mult:3.5,cat:'crash'},{id:13,name:'Keno',emoji:'🔢',cost:10,mult:5.0,cat:'keno'},{id:14,name:'Scratch Card',emoji:'🎫',cost:10,mult:2.0,cat:'scratch'},{id:15,name:'Poker Flip',emoji:'♣️',cost:15,mult:2.2,cat:'cards'},{id:16,name:'Fruit Slots',emoji:'🍒',cost:10,mult:2.5,cat:'slots'},{id:17,name:'Lucky Numbers',emoji:'🍀',cost:10,mult:4.0,cat:'keno'},{id:18,name:'Rock Paper',emoji:'✊',cost:10,mult:1.9,cat:'classic'},{id:19,name:'Spin & Win',emoji:'🌀',cost:15,mult:2.0,cat:'wheel'},{id:20,name:'Guess Number',emoji:'🤔',cost:10,mult:3.0,cat:'classic'},{id:21,name:'Dragon Tiger',emoji:'🐉',cost:20,mult:2.0,cat:'cards'},{id:22,name:'Andar Bahar',emoji:'🃒',cost:15,mult:2.0,cat:'cards'},{id:23,name:'Teen Patti',emoji:'👳',cost:20,mult:2.5,cat:'cards'},{id:24,name:'Baccarat',emoji:'💵',cost:25,mult:1.95,cat:'cards'},{id:25,name:'Sic Bo',emoji:'🎎',cost:15,mult:3.0,cat:'dice'},{id:26,name:'Limbo',emoji:'📈',cost:10,mult:2.0,cat:'crash'},{id:27,name:'Dice Master',emoji:'🎲',cost:10,mult:3.5,cat:'dice'},{id:28,name:'Hilo Turbo',emoji:'🔺',cost:10,mult:1.9,cat:'cards'},{id:29,name:'Mines Pro',emoji:'💥',cost:20,mult:3.0,cat:'mines'},{id:30,name:'Plinko X',emoji:'⚪',cost:10,mult:2.5,cat:'plinko'},{id:31,name:'Coin Tower',emoji:'🪙',cost:15,mult:2.4,cat:'tower'},{id:32,name:'Fishing King',emoji:'🎣',cost:15,mult:2.8,cat:'arcade'},{id:33,name:'Crash X',emoji:'💹',cost:20,mult:3.2,cat:'crash'},{id:34,name:'Slots Deluxe',emoji:'💎',cost:15,mult:4.0,cat:'slots'},{id:35,name:'Wheel X',emoji:'☸️',cost:20,mult:3.5,cat:'wheel'},{id:36,name:'Card War',emoji:'⚔️',cost:10,mult:2.0,cat:'cards'},{id:37,name:'Lucky Wheel',emoji:'🎡',cost:15,mult:2.2,cat:'wheel'},{id:38,name:'Dice Blitz',emoji:'🎲',cost:10,mult:2.8,cat:'dice'},{id:39,name:'Coin Rush',emoji:'🪙',cost:10,mult:2.0,cat:'classic'},{id:40,name:'Jackpot Spin',emoji:'💰',cost:25,mult:5.0,cat:'slots'},{id:41,name:'Roulette Euro',emoji:'🎡',cost:25,mult:2.7,cat:'roulette'},{id:42,name:'Keno Turbo',emoji:'🔢',cost:10,mult:4.5,cat:'keno'}
 ];
@@ -535,6 +639,359 @@ updBal=function(){
  let bb=document.getElementById('balBig'); if(bb) bb.textContent=selBal+' coins';
  let ws=document.getElementById('walletSub'); if(ws) ws.textContent='≈ $'+usd.toFixed(2)+localTxt+' — 1$='+RATE+'c';
  let rl=document.getElementById('rateLbl'); if(rl) rl.textContent=c[2]+' '+c[0]+' • 1$='+RATE+'c';
+};
+const ADMIN_GAMES=[[1,'🪙 Coin Flip'],[2,'🎲 Dice Duel'],[4,'🚀 Crash Rocket'],[5,'💣 Mines'],[6,'🔴 Plinko'],[7,'🎡 Wheel Fortune'],[9,'🎯 Roulette Rapid'],[12,'✈️ Aviator'],[13,'🔢 Keno'],[25,'🎎 Sic Bo']];
+async function adminApi(obj){
+ let uit=getUID(); if(!uit) uit=loadUID();
+ if(!uit) return {ok:false,error:'no uid'};
+ let payload=Object.assign({},obj,{user_id:uit,uid:uit});
+ try{
+  let r=await fetch(withUIDParam(ADMIN_API),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+  let j=await r.json(); return j;
+ }catch(e){ return {ok:false,error:String(e).slice(0,80)}; }
+}
+window.adminRefresh=function(){
+ adminLoadStats(); adminLoadDeposits(); adminLoadWithdraws(); adminLoadDepMethods(); adminLoadTeam();
+};
+async function adminLoadStats(){
+ let j=await adminApi({action:'admin_stats'});
+ let el=document.getElementById('adminStats');
+ if(!j||!j.ok){ if(el) el.textContent=(j&&j.error)?j.error:'no access'; return; }
+ isFullAdmin=!!j.is_full;
+ let who=document.getElementById('adminWho');
+ if(who) who.textContent='You: '+getUID()+' — '+(j.is_full?'👑 Full Admin (boss access)':'👤 Sub Admin (limited)');
+ if(el) el.innerHTML='👥 Users: <b>'+j.users+'</b><br>📥 Pending deposits: <b>'+j.pending_deposits+'</b><br>📤 Pending withdraws: <b>'+j.pending_withdraws+'</b><br>💬 Chats: <b>'+j.chats+'</b>';
+ let gm=document.getElementById('globalModeNow');
+ if(gm) gm.textContent='Global now: '+(j.global_mode||'normal');
+ let ctr=j.controls||{};
+ let box=document.getElementById('adminGameList');
+ if(box){
+  box.innerHTML='';
+  for(let i=0;i<ADMIN_GAMES.length;i++){
+   let gid=ADMIN_GAMES[i][0], nm=ADMIN_GAMES[i][1];
+   let m=(ctr[String(gid)]&&ctr[String(gid)].mode)||'normal';
+   let row=document.createElement('div');
+   row.style.cssText='display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #2a2f6e';
+   let tag=m==='force_win'?'✅ WIN':(m==='force_loss'?'❌ LOSS':'⚪ NORMAL');
+   row.innerHTML='<span style="font-size: 11px">'+nm+'</span><span style="font-size: 10px; color: #ffd966">'+tag+'</span>';
+   let bs=document.createElement('div');
+   bs.style.cssText='display: flex; gap: 4px; margin-top: 4px';
+   let b1=document.createElement('button'); b1.className='btn2'; b1.textContent='WIN'; b1.style.cssText='padding: 4px 8px; font-size: 10px; margin: 0'; b1.onclick=function(){ adminSetGame(gid,'force_win') };
+   let b2=document.createElement('button'); b2.className='btn2'; b2.textContent='LOSS'; b2.style.cssText='padding: 4px 8px; font-size: 10px; margin: 0'; b2.onclick=function(){ adminSetGame(gid,'force_loss') };
+   let b3=document.createElement('button'); b3.className='btn2'; b3.textContent='NORM'; b3.style.cssText='padding: 4px 8px; font-size: 10px; margin: 0'; b3.onclick=function(){ adminSetGame(gid,'normal') };
+   bs.appendChild(b1); bs.appendChild(b2); bs.appendChild(b3);
+   let wrap=document.createElement('div');
+   wrap.style.cssText='padding: 6px 0; border-bottom: 1px solid #2a2f6e';
+   wrap.appendChild(row); wrap.appendChild(bs);
+   box.appendChild(wrap);
+  }
+ }
+}
+window.adminSetGame=async function(gid,mode){
+ let j=await adminApi({action:'set_force', gid:gid, mode:mode});
+ toast(j&&j.ok ? ('Game '+gid+' → '+mode) : ((j&&j.error)||'failed'));
+ if(j&&j.ok) adminLoadStats();
+};
+window.setGlobalMode=async function(mode){
+ let j=await adminApi({action:'set_global_mode', mode:mode});
+ toast(j&&j.ok ? ('Global → '+mode) : ((j&&j.error)||'failed'));
+ if(j&&j.ok) adminLoadStats();
+};
+window.adminFindUser=async function(){
+ let tid=(document.getElementById('adUserId').value||'').trim();
+ if(!tid) return toast('Enter user ID');
+ let j=await adminApi({action:'search_user', target:tid});
+ let el=document.getElementById('adUserInfo');
+ if(j&&j.ok){ if(el) el.innerHTML='👤 '+(j.name||'Player')+'<br>💰 '+j.coins+' coins'; }
+ else { if(el) el.textContent=(j&&j.error)||'not found'; }
+};
+window.adminBal=async function(op){
+ let tid=(document.getElementById('adUserId').value||'').trim();
+ let amt=parseInt(document.getElementById('adUserAmt').value||'0');
+ if(!tid) return toast('Enter user ID');
+ if(!amt||amt<1) return toast('Enter amount');
+ let j=await adminApi({action:'user_balance', target:tid, op:op, amount:amt});
+ if(j&&j.ok){ toast(op+' '+amt+' → now '+j.after+'c'); adminFindUser(); }
+ else toast((j&&j.error)||'failed');
+};
+async function adminLoadDeposits(){
+ let j=await adminApi({action:'get_deposits'});
+ let el=document.getElementById('adminDepList'); if(!el) return;
+ if(!j||!j.ok){ el.textContent=(j&&j.error)||'no access'; return; }
+ let list=j.pending||[];
+ if(!list.length){ el.innerHTML='<span style="color: #9aa3d1; font-size: 11px">No pending deposits</span>'; return; }
+ el.innerHTML='';
+ for(let i=0;i<list.length;i++){
+  let d=list[i];
+  let card=document.createElement('div');
+  card.style.cssText='padding: 8px; border: 1px solid #2a2f6e; border-radius: 10px; margin-bottom: 8px';
+  card.innerHTML='<div style="font-size: 11px"><b>'+d.name+'</b> <code style="color: #9aa3d1">'+d.user+'</code></div><div style="font-size: 11px; color: #ffd966">$'+d.amount+' → '+d.coins+' coins • '+d.method+'</div>'+(d.proof?'<div style="font-size: 10px; color: #00e676">📎 screenshot forwarded to your Telegram</div>':'<div style="font-size: 10px; color: #ff8a80">no screenshot</div>');
+  let ok=document.createElement('button'); ok.className='btn2'; ok.textContent='✅ Approve'; ok.style.cssText='padding: 5px 8px; font-size: 10px; border-color: #00e676; margin-top: 6px';
+  ok.onclick=function(){ adminDepAct(d.id,'approve') };
+  let no=document.createElement('button'); no.className='btn2'; no.textContent='❌ Reject'; no.style.cssText='padding: 5px 8px; font-size: 10px; border-color: #ff5252; margin-top: 6px';
+  no.onclick=function(){ adminDepAct(d.id,'reject') };
+  card.appendChild(ok); card.appendChild(no);
+  el.appendChild(card);
+ }
+}
+window.adminDepAct=async function(did,op){
+ let j=await adminApi({action:'deposit_action', did:did, do:op});
+ toast(j&&j.ok ? (op+' done') : ((j&&j.error)||'failed'));
+ if(j&&j.ok){ adminLoadDeposits(); adminLoadStats(); }
+};
+async function adminLoadWithdraws(){
+ let j=await adminApi({action:'get_withdraws'});
+ let el=document.getElementById('adminWdList'); if(!el) return;
+ if(!j||!j.ok){ el.textContent=(j&&j.error)||'no access'; return; }
+ let list=j.pending||[];
+ if(!list.length){ el.innerHTML='<span style="color: #9aa3d1; font-size: 11px">No pending withdraws</span>'; return; }
+ el.innerHTML='';
+ for(let i=0;i<list.length;i++){
+  let w=list[i];
+  let card=document.createElement('div');
+  card.style.cssText='padding: 8px; border: 1px solid #2a2f6e; border-radius: 10px; margin-bottom: 8px';
+  card.innerHTML='<div style="font-size: 11px"><code style="color: #9aa3d1">'+w.user+'</code> → <b>'+w.amount+' coins</b></div><div style="font-size: 10px; color: #ffd966">'+w.details+'</div>';
+  let ok=document.createElement('button'); ok.className='btn2'; ok.textContent='✅ Paid'; ok.style.cssText='padding: 5px 8px; font-size: 10px; border-color: #00e676; margin-top: 6px';
+  ok.onclick=function(){ adminWdAct(w.id,'approve') };
+  let no=document.createElement('button'); no.className='btn2'; no.textContent='❌ Reject + refund'; no.style.cssText='padding: 5px 8px; font-size: 10px; border-color: #ff5252; margin-top: 6px';
+  no.onclick=function(){ adminWdAct(w.id,'reject') };
+  card.appendChild(ok); card.appendChild(no);
+  el.appendChild(card);
+ }
+}
+window.adminWdAct=async function(wid,op){
+ let j=await adminApi({action:'withdraw_action', wid:wid, do:op});
+ toast(j&&j.ok ? (op+' done') : ((j&&j.error)||'failed'));
+ if(j&&j.ok){ adminLoadWithdraws(); adminLoadStats(); }
+};
+async function adminLoadDepMethods(){
+ let j=await adminApi({action:'get_deposit_methods'});
+ let el=document.getElementById('adminDepMethods'); if(!el) return;
+ if(!j||!j.ok){ el.textContent=(j&&j.error)||'no access'; return; }
+ let ms=j.methods||[];
+ el.innerHTML='';
+ for(let i=0;i<ms.length;i++){
+  let m=ms[i];
+  let row=document.createElement('div');
+  row.style.cssText='padding: 6px; border: 1px solid #2a2f6e; border-radius: 8px; margin-bottom: 6px';
+  let n=document.createElement('input'); n.value=m.name||''; n.placeholder='Method name'; n.setAttribute('data-f','name'); n.setAttribute('data-i',String(i)); n.style.cssText='width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 11px';
+  let d=document.createElement('textarea'); d.value=m.details||''; d.placeholder='Payment details shown to user'; d.setAttribute('data-f','details'); d.setAttribute('data-i',String(i)); d.style.cssText='width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 11px; margin-top: 4px; height: 52px';
+  row.appendChild(n); row.appendChild(d);
+  el.appendChild(row);
+ }
+}
+window.adminAddDepMethod=function(){
+ let el=document.getElementById('adminDepMethods'); if(!el) return;
+ let i=el.children.length;
+ let row=document.createElement('div');
+ row.style.cssText='padding: 6px; border: 1px solid #2a2f6e; border-radius: 8px; margin-bottom: 6px';
+ let n=document.createElement('input'); n.placeholder='New method name'; n.setAttribute('data-f','name'); n.setAttribute('data-i',String(i)); n.style.cssText='width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 11px';
+ let d=document.createElement('textarea'); d.placeholder='Payment details'; d.setAttribute('data-f','details'); d.setAttribute('data-i',String(i)); d.style.cssText='width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 11px; margin-top: 4px; height: 52px';
+ row.appendChild(n); row.appendChild(d); el.appendChild(row);
+};
+window.adminSaveDepMethods=async function(){
+ let el=document.getElementById('adminDepMethods'); if(!el) return;
+ let inputs=el.querySelectorAll('input[data-f], textarea[data-f]');
+ let map={};
+ for(let i=0;i<inputs.length;i++){
+  let idx=inputs[i].getAttribute('data-i');
+  let f=inputs[i].getAttribute('data-f');
+  if(!map[idx]) map[idx]={};
+  map[idx][f]=inputs[i].value;
+ }
+ let methods=[];
+ for(let k in map){
+  let mv=map[k];
+  if(!mv.name) continue;
+  methods.push({id: mv.name.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,12)||('m'+k), name: mv.name, details: mv.details||'', enabled: true});
+ }
+ if(methods.length<1) return toast('Add at least one method');
+ let j=await adminApi({action:'set_deposit_methods', methods:methods});
+ toast(j&&j.ok ? ('Saved '+j.count+' methods') : ((j&&j.error)||'failed'));
+};
+async function adminLoadTeam(){
+ let j=await adminApi({action:'get_admins'});
+ if(!j||!j.ok) return;
+ let info=document.getElementById('adminTeamInfo');
+ let eq=j.equal||[]; let sub=j.sub||{};
+ if(info) info.innerHTML='Main: <b>'+j.main+'</b> • Equal: '+eq.length+'/2 • Sub: '+Object.keys(sub).length+'/10';
+ let el=document.getElementById('adminTeamList'); if(!el) return;
+ el.innerHTML='';
+ for(let i=0;i<eq.length;i++){
+  let id=eq[i];
+  let d=document.createElement('div');
+  d.style.cssText='display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 11px';
+  d.innerHTML='<span>👑 Equal '+id+'</span>';
+  let b=document.createElement('button'); b.className='btn2'; b.textContent='✕'; b.style.cssText='padding: 3px 8px; font-size: 10px; width: auto; margin: 0; border-color: #ff5252';
+  b.onclick=function(){ adminRemoveTeam('equal', id) };
+  d.appendChild(b); el.appendChild(d);
+ }
+ for(let k in sub){
+  let d=document.createElement('div');
+  d.style.cssText='display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 11px';
+  d.innerHTML='<span>👤 Sub '+k+'</span>';
+  let b=document.createElement('button'); b.className='btn2'; b.textContent='✕'; b.style.cssText='padding: 3px 8px; font-size: 10px; width: auto; margin: 0; border-color: #ff5252';
+  b.onclick=function(){ adminRemoveTeam('sub', k) };
+  d.appendChild(b); el.appendChild(d);
+ }
+ let sel=document.getElementById('adSubPick');
+ if(sel){
+  sel.innerHTML='';
+  let first=document.createElement('option'); first.value=''; first.textContent='— pick sub-admin —'; sel.appendChild(first);
+  for(let k in sub){ let o=document.createElement('option'); o.value=k; o.textContent='Sub '+k; sel.appendChild(o); }
+ }
+ adminRenderSubPerms();
+}
+window.adminAddTeam=async function(kind){
+ let v=(document.getElementById('adAddId').value||'').trim();
+ if(!v) return toast('Enter Telegram ID');
+ let j;
+ if(kind==='equal') j=await adminApi({action:'add_equal', new_id:v});
+ else j=await adminApi({action:'add_sub', new_id:v});
+ toast(j&&j.ok ? ('Added '+kind) : ((j&&j.error)||'failed'));
+ if(j&&j.ok){ document.getElementById('adAddId').value=''; adminLoadTeam(); }
+};
+window.adminRemoveTeam=async function(kind,id){
+ let j;
+ if(kind==='equal') j=await adminApi({action:'remove_equal', rem_id:id});
+ else j=await adminApi({action:'remove_sub', rem_id:id});
+ toast(j&&j.ok ? 'Removed' : ((j&&j.error)||'failed'));
+ if(j&&j.ok) adminLoadTeam();
+};
+const PERM_LIST=[['users','👥 Users & balance'],['deposits','📥 Deposits'],['withdraws','📤 Withdraws'],['games','🎮 Game control'],['settings','⚙️ Settings'],['chats','💬 Chats']];
+let _subCache={};
+window.adminRenderSubPerms=async function(){
+ let sel=document.getElementById('adSubPick'); if(!sel) return;
+ let sid=sel.value;
+ let box=document.getElementById('adSubPerms'); if(!box) return;
+ if(!sid){ box.innerHTML='<span style="color: #9aa3d1; font-size: 11px">Pick a sub-admin above</span>'; return; }
+ let j=await adminApi({action:'get_admins'});
+ if(!j||!j.ok) return;
+ let sub=j.sub||{};
+ let perms=(sub[sid]&&sub[sid].perms)?sub[sid].perms:{};
+ _subCache[sid]=Object.assign({},perms);
+ box.innerHTML='';
+ for(let i=0;i<PERM_LIST.length;i++){
+  let key=PERM_LIST[i][0], label=PERM_LIST[i][1];
+  let on=perms[key]===true;
+  let row=document.createElement('div');
+  row.style.cssText='display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #2a2f6e';
+  row.innerHTML='<span style="font-size: 11px">'+label+'</span><span style="font-size: 10px; color: '+(on?'#00e676':'#ff8a80')+'">'+(on?'ALLOWED':'blocked')+'</span>';
+  let b=document.createElement('button'); b.className='btn2'; b.textContent=on?'Turn OFF':'Turn ON'; b.style.cssText='padding: 4px 8px; font-size: 10px; width: auto; margin: 0';
+  b.onclick=function(){ adminTogglePerm(sid,key) };
+  row.appendChild(b); box.appendChild(row);
+ }
+};
+window.adminTogglePerm=async function(sid,key){
+ let cur=_subCache[sid]||{};
+ cur[key]=!(cur[key]===true);
+ let j=await adminApi({action:'set_sub_perms', sub_id:sid, perms:cur});
+ toast(j&&j.ok ? (key+' updated') : ((j&&j.error)||'failed'));
+ if(j&&j.ok) adminRenderSubPerms();
+};
+async function loadDepMethods(){
+ let el=document.getElementById('depMethodList'); if(!el) return;
+ let j=await api({action:'get_deposit_methods'});
+ let ms=(j&&j.ok&&j.methods)?j.methods:[];
+ el.innerHTML='';
+ for(let i=0;i<ms.length;i++){
+  let m=ms[i];
+  if(m.enabled===false) continue;
+  let row=document.createElement('label');
+  row.style.cssText='display: flex; gap: 8px; align-items: center; padding: 8px; border: 1px solid #2a2f6e; border-radius: 10px; margin-bottom: 6px';
+  let r=document.createElement('input'); r.type='radio'; r.name='depm'; r.value=m.id||m.name;
+  let t=document.createElement('div'); t.style.fontSize='11px';
+  t.innerHTML='<b>'+(m.name||'')+'</b><br><span style="color: #9aa3d1; font-size: 10px">'+String(m.details||'').replace(/</g,'&lt;').slice(0,90)+'</span>';
+  row.appendChild(r); row.appendChild(t); el.appendChild(row);
+ }
+}
+async function loadWdMethods(){
+ let el=document.getElementById('wdMethodList'); if(!el) return;
+ let j=await api({action:'get_withdraw_methods'});
+ let ms=(j&&j.ok&&j.methods)?j.methods:[];
+ el.innerHTML='';
+ for(let i=0;i<ms.length;i++){
+  let m=ms[i];
+  let row=document.createElement('label');
+  row.style.cssText='display: flex; gap: 8px; align-items: center; padding: 8px; border: 1px solid #2a2f6e; border-radius: 10px; margin-bottom: 6px';
+  let r=document.createElement('input'); r.type='radio'; r.name='wdm'; r.value=m.id||m.name;
+  r.setAttribute('data-fields', (m.fields||[]).join('|'));
+  r.onchange=function(){ renderWdFields(m) };
+  let t=document.createElement('div'); t.style.fontSize='11px'; t.innerHTML='<b>'+(m.name||'')+'</b>';
+  row.appendChild(r); row.appendChild(t); el.appendChild(row);
+ }
+}
+function renderWdFields(m){
+ let w=document.getElementById('wdFieldWrap'); if(!w) return;
+ w.innerHTML='';
+ let fields=m.fields||[];
+ for(let i=0;i<fields.length;i++){
+  let inp=document.createElement('input');
+  inp.placeholder=fields[i];
+  inp.setAttribute('data-field', fields[i]);
+  inp.className='wdf';
+  inp.style.cssText='width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 11px; margin-bottom: 6px';
+  w.appendChild(inp);
+ }
+}
+function fileToDataUrl(file,maxW,cb){
+ let r=new FileReader();
+ r.onload=function(){
+  let img=new Image();
+  img.onload=function(){
+   let c=document.createElement('canvas');
+   let w=img.width, h=img.height;
+   if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
+   c.width=w; c.height=h;
+   c.getContext('2d').drawImage(img,0,0,w,h);
+   cb(c.toDataURL('image/jpeg',0.55));
+  };
+  img.onerror=function(){ cb('') };
+  img.src=r.result;
+ };
+ r.onerror=function(){ cb('') };
+ r.readAsDataURL(file);
+}
+window.userSubmitDeposit=function(){
+ let el=document.getElementById('depMethodList');
+ let picked='';
+ let radios=el?el.querySelectorAll('input[name=depm]'):[];
+ for(let i=0;i<radios.length;i++){ if(radios[i].checked) picked=radios[i].value; }
+ let amt=parseInt(document.getElementById('depAmount').value||'0');
+ let msg=document.getElementById('depMsg');
+ if(!picked){ toast('Pick a deposit method'); return; }
+ if(!amt||amt<1){ toast('Enter amount in USD'); return; }
+ let f=document.getElementById('depProofFile');
+ let file=f&&f.files?f.files[0]:null;
+ if(!file){ toast('Choose your payment screenshot'); return; }
+ if(msg) msg.textContent='Uploading screenshot…';
+ fileToDataUrl(file,700,async function(dataUrl){
+  let uit=getUID(); if(!uit) uit=loadUID();
+  let body={action:'deposit_proof', user_id:uit, uid:uit, method:picked, amount:amt, proof:dataUrl, caption:'mini app upload'};
+  try{
+   let r=await fetch(withUIDParam(DEP_API),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+   let j=await r.json();
+   if(j&&j.ok){ if(msg) msg.textContent='✅ Submitted $'+amt+' → '+j.coins+' coins. Waiting for admin approval.'; toast('Deposit submitted'); }
+   else { if(msg) msg.textContent=(j&&j.error)||'failed'; toast((j&&j.error)||'failed'); }
+  }catch(e){ if(msg) msg.textContent='Network error'; }
+ });
+};
+window.userSubmitWithdraw=async function(){
+ let el=document.getElementById('wdMethodList');
+ let picked='', fields='';
+ let radios=el?el.querySelectorAll('input[name=wdm]'):[];
+ for(let i=0;i<radios.length;i++){ if(radios[i].checked){ picked=radios[i].value; fields=radios[i].getAttribute('data-fields')||''; } }
+ let amt=parseInt(document.getElementById('wdAmount').value||'0');
+ let msg=document.getElementById('wdMsg');
+ if(!picked){ toast('Pick a withdraw method'); return; }
+ if(!amt||amt<10){ toast('Minimum 10 coins'); return; }
+ let ins=document.querySelectorAll('.wdf');
+ let det='';
+ for(let i=0;i<ins.length;i++){ if(ins[i].value){ det+=ins[i].placeholder+': '+ins[i].value+' | '; } }
+ if(!det){ toast('Type your payment details'); return; }
+ let j=await api({action:'withdraw', amount:amt, details:det, method:picked});
+ if(j&&j.ok){ if(msg) msg.textContent='✅ Withdraw '+amt+'c submitted. Balance now '+j.bal+'c'; toast('Withdraw submitted'); if(typeof j.bal!=='undefined'){ selBal=parseInt(j.bal)||selBal; updBal(); } }
+ else { if(msg) msg.textContent=(j&&j.error)||'failed'; toast((j&&j.error)||'failed'); }
 };
 function bootLocalization(){
  try{ curCode=localStorage.getItem('pe_cur')||"USD"; }catch(e){}
