@@ -314,10 +314,10 @@ main{padding:14px;position:relative;z-index:1}
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RF8xNhqdW8XKMIJesbSCkIGmhNgvjGxrO8SnogMqWDg95LDF9C_vy5OfOQHy0Cl_atiUA8jZ5sr5UDSwORr0Ip63Rnv_E8vHz58WHHFowYT4ibDz0WA7Ax9fAyW0XiRmVD8v2_CFA8kJc-vHqQT5MDB15Y_100akXNqUA2kpD4-nTDAqSuCvGA-ZSZqOavmbrEi";
-const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RF8hEnC0Xs_n6a2YzCVOTAsoF7jFuVouXvtr2SNZ_xcLO8ajWlgk8yugjiYZAUY7CnIZvs4NoU_vaJGsLGwt0tqagMlRU19ru8qld_jhGB_L3y-aErD7WeZ0Axp2-KM4ezgXU1zzyx6e53FCVsjA1BOtrCGeQ4bJAAQgx7TMk8dPgduASWMGVr75AoVa5PXKYTd";
-const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RF8cUF2x0Yc8E9qplc5SL-ReI04MfQyOe4Re0YIXavtJHapOI6FB_YTQ1h_6PZ2W8EUTqIs_cddSfKXe0oKvX3Dxt5Z1S_90MaIV7AAAYRTOO_nbFqdFZsUORKpMyjpCE_dFZJKRvAJiRNHMk7L1oVCtZ3Za3mUv6HHMSjceH7ODA8u3x_GZ_jJlrWHHRdvEdqaIQqPzWRwZPSlHVi44TrFpQ%3D%3D";
-const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RF8wTbyEhwWAtk44FbJ1DPFSxFTvFPkdrh5z1_jeAE5uQp1qmega9eEoq4FxYfRPDkVt1uPlzn2mL-S3g5Yra3vBrWDALn5B6ntGbPwLcl_TJt-qvsUAGH5woXy9iZB6BtnOBG2ZtSa1EE50j7A-gs0j8_VdMhoNik2_0zbEuZvkhv4WyjKHyV8TENJM_PtGRol";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RVCibIwGOIUe0Dc14fCBGklGRAumCM68QzMFnUYiEXEDx7GVEIzhXxXjeBwD7hbjCHUJXX2HSbuh-eYy7d_HT1UyPezzc6Eew94jQAGwGh5IT3Zq18XqRmVwJRm-VVOIXFfQYG4M4hN8T_9RvhTeFz1dbM3Af_l_Q86O0Klybk1mm_5t-_K-9E9aqoCw2ISgRJb";
+const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RVCS805Eb1cG4k2RdsezluVm5iU7tfY4L958Z3fMEr7G-V1XkOflt5mRTx_o0BeZBfOq8K_uLxjwy72QDkqQI2IJsgJPxuxhMrlXt5w8udEhqAzi4LYKImCf0CJ9amwVnk1ge3tzko2GtEfy0gi8wpr6C1PcK5Uoc23tfKi8LWRg7Em8dphWFLeudTDO2OFxr_r";
+const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RVCaFW1uws_Yo4ziWsgSpKPdSPrOwlrXdE6n_AwDRvyMBFRuG2rnDP59KXA-3tKbQUrn8z5FqPqZ8QE_j_-hEZaRacZeygAsE4CZumAoyC92_KbyS_zrXMKw9TOgFBJDHlKMEKdlAGTefIClzxko7UElawVoYo9TG0jZbmfXejFTf-_-Tlo_7mbkX2_-dtvwoL72Ibgi1HP0lh4aGTIjzmySA%3D%3D";
+const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RVC6joQ64HjdTboS5OZd0hbILz1tanPjpZotEc1qrxuLr-LL587osqGdh7HOvkHK0UTP1u-Ld4zB7G3Sxh0v3g4pqmjtOYBTYakaitmCW3-exmw5usUgsLrevpWgMtjS3LOQ-4A4QeZur1Wk71JBj8ADOecu-PycMHIWzjzN3IDYTygn_yyS1WTmhGZLl0x8hsn";
 let accToken="", accUser=null, accChecking=true;
 let isAdmin=false, isFullAdmin=false;
 let selBal=0;
@@ -373,16 +373,25 @@ async function api(obj){
  let payload=Object.assign({},obj,{user_id:uid,uid:uid, start_param:uid});
  try{ let r=await fetch(withUIDParam(API),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); let j=await r.json(); return j; }catch(e){ return {ok:false,error:String(e).slice(0,80)}; }
 }
+let balLoaded=false, lastBalErr='';
+function refreshAdminUI(){
+ let at=document.getElementById('adminTab'); if(at) at.style.display=isAdmin?'block':'none';
+ let an=document.getElementById('bAdminNav'); if(an) an.style.display=isAdmin?'flex':'none';
+ let asl=document.getElementById('adminStateLbl'); if(!asl) return;
+ if(isAdmin){ asl.textContent='✅ Server confirms you are the owner — ADMIN tab is unlocked above.'; asl.style.color='#00e676'; }
+ else if(!balLoaded){ asl.textContent='Checking owner status with the server…'; asl.style.color='#ffd966'; }
+ else { asl.textContent='❌ Server says NOT owner. Reason: '+(lastBalErr||'is_admin=false')+' — your ID '+getUID(); asl.style.color='#ff8a80'; }
+}
 async function syncBal(show){
  let j=await api({action:'balance'});
  if(j&&j.ok){
   let b=parseInt(j.bal); if(isNaN(b)) b=parseInt(j.coins); if(isNaN(b)) b=0;
   selBal=b; updBal();
   isAdmin=!!j.is_admin;
-  let at=document.getElementById('adminTab'); if(at) at.style.display=isAdmin?'block':'none';
-  let an=document.getElementById('bAdminNav'); if(an) an.style.display=isAdmin?'flex':'none';
+  balLoaded=true; lastBalErr='';
+  refreshAdminUI();
   if(show) toast('💰 '+selBal+' coins');
- } else { if(show) toast((j&&j.error)?j.error:'sync failed'); }
+ } else { balLoaded=true; lastBalErr=(j&&j.error)?String(j.error):'no reply from server'; refreshAdminUI(); if(show) toast(lastBalErr); }
 }
 function updBal(){ document.getElementById('balTop').textContent=selBal+' coins'; document.getElementById('usdTop').textContent='≈ $'+(selBal/RATE).toFixed(2); document.getElementById('balBig').textContent=selBal+' coins'; document.getElementById('walletSub').textContent='≈ $'+(selBal/RATE).toFixed(2)+' — 1$='+RATE+'c'; document.getElementById('rateLbl').textContent='1$='+RATE+'c'; }
 window.showTab=function(id){ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); let el=document.getElementById(id); if(el) el.classList.add('active'); document.querySelectorAll('.tabs .tab').forEach(b=>b.classList.toggle('active', b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))); if(id==='wallet') syncBal(false); if(id==='freegames') loadFree('all'); if(id==='admin'){ adminRefresh(); } if(id==='deposit'){ loadDepMethods(); loadWdMethods(); } window.scrollTo({top:0,behavior:'smooth'}); };
@@ -1198,8 +1207,7 @@ function enterApp(){
  let ln = document.getElementById('accLine');
  if(ln && accUser) ln.innerHTML = '<b>' + (accUser.first||'') + ' ' + (accUser.last||'') + '</b><br>@' + (accUser.username||'') + '<br><span style="color: #9aa3d1; font-size: 11px">Telegram ID: ' + getUID() + '</span>';
  let mid=document.getElementById('myIdLbl'); if(mid) mid.textContent=String(getUID()||'not detected');
- let asl=document.getElementById('adminStateLbl');
- if(asl){ asl.textContent = isAdmin ? '✅ You are the owner — ADMIN tab is unlocked.' : 'Not the owner — ADMIN tab is hidden.'; asl.style.color = isAdmin ? '#00e676' : '#ff8a80'; }
+ refreshAdminUI();
  startBalSync();
 }
 function checkSession(){
