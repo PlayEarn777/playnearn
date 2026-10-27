@@ -316,10 +316,10 @@ main{padding:14px;position:relative;z-index:1}
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Ryl4xRpBl61zvyTnLY0knW4gU01TA4Yu73Bi-aOBTi2wIMb8GxIQvp_77WNFMAMB7t4iYy4p6PQR4MMEPE4hr71ZtcxUzWTGDcXOlhe4GZIIu3puRXZTGn_iMngOZGg6_cQ80JRswfJbc4_96CH9Ezt238Dd9GKW0KZ-dRq0mJaA7RkZ_nrXGg7A3lFM8jNrzxY";
-const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RyliBpcr5mjGvsT8dZgUNrJaQQ1lcJKfJQecIg2_u3U64JOgr_4XyKXXIC0-JjfLJM_N9ylpY1SYM849FgHfrYJZDDKV2kWJBR9RdoWg-a7EQ_XTX6v2AhgdqPEyiy77-3EoCQf8fyMVi0uC7Ynhr_vgAmw-tMq5DhyI25Qlm7keQOXUPanCXhKRYlggwE6Dr3s";
-const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RylowE__6E0UjrZ6QGWXccH9d65nu3-BTdfmPjsPY516gCSsIsjkKvAOXa4yf-spVM6CZike_xrRhLPAmA9xVvmL0iEFCJ0bT6yYxhbNoa2K3zueVYYUEHBkBlWB-_akv_LfE_U2riXk1kSYEoVhg52mhlxovgRq3LISW2jn1SrvRQrh9_Y6SqhTB8nqgxAm2bIYefpLz-Ztaf7LWhFYw-y2w%3D%3D";
-const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Ryls2x1le4KiFn3Wh5a-0pjOA-y5Mx3hxB24Wr5SWyChcJg7ieywUHY9A2LOs5q_rbQXHHO_DPQQyGNNIHbUQ6LbPnfaIJbj7wtSvGhhVMqhFu961z3Sc1j2ZE_MGADKf39gRbQhTPBbXh1aiwQ1iDZVAZK_3eDhih-rjGDmn2ADFblM65hSNYRCi1i1MACrWRb";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SAE-g5D3vKeC01sfQ-jC2sjp5oUPZhCNhchd6QLqChfLQ7zsOERLnUN1n-Oj22fUDmZSmV6P-IXFfPnSWOJamjwMDFEh5X63AITz_XqzGhLNhE2KCyUiYr3X9fRzbDTm6cLWUt6p6FkQhDJrfD5brJf5nxc7bVQyCVsE4m6eLiPCX-KTPQiyJaR5mIKhfItSTaP";
+const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SAEVH3louq9TEcloz7CBkNmHYCT2ee8rsCFXahOg87_OJx2cBNo6UIQWmkL3askU4mgMvuOk8CrAtDIpri2umFGySta23WqAPY1Yi8Vf6yTJ-6NSHPed1EGa7spRbFdsWqj8bkk307i7vopLOoTuh706H1LpTMyHsvH6UNDU6DW5nOhAP4wsHFHDk20750zPqZD";
+const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SAEqsuXmZQwdlA-4-SbH_SbL62yT5DSbrs4Ud1E0w_fq1lrGwEFqYWvdSVWks2OTfzzMRyFoSKaNOydlrTjXOM6BEG2KrYiZcGEAONnAADqMuacCf9GfqvskrQ4uPKEk7QcLiAKCJT8Nt1k_UE6CaGiYTLl4CV9GaIXUxoJzbS_JI_UEUk2GSFNKVO5FMRW1nlBhkBbHZuxVkkNbR91Vkr-Qg%3D%3D";
+const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SAEpKfyyo5JHiziHIahY5_ZH3efig4oJC2JizwFdB4JwE3y74YXivCgGyCVS94wH-OdoG63c4swj7M02kJ7izV0BepjZF8rqGBJvYXdqq86SopSXCKsRS6pfy4WBL0pw1tBTvlwIOqAYfgk5REZ6qjed631ew2V5YOfv_02DZ58boHcIG45FO0YgQR2P3Bt82pi";
 let accToken="", accUser=null, accChecking=true;
 let isAdmin=false, isFullAdmin=false;
 let selBal=0;
@@ -772,14 +772,23 @@ async function adminLoadAccounts(){
  let el=document.getElementById('adminAccList'); if(!el) return;
  if(!j||!j.ok){ el.textContent=(j&&j.error)||'no access'; return; }
  let list=j.accounts||[];
- if(!list.length){ el.innerHTML='<span style="color:#9aa3d1;font-size:11px">No signups yet</span>'; return; }
+ if(!list.length){ el.innerHTML='<span style="color:#9aa3d1;font-size:11px">No users found</span>'; return; }
  el.innerHTML='';
+ let regN=0; for(let q=0;q<list.length;q++){ if(list[q].registered) regN++; }
+ let hdr=document.createElement('div');
+ hdr.style.cssText='font-size:11px;color:#ffd966;margin-bottom:6px';
+ hdr.textContent='Total '+j.total+' • Registered '+regN+' • Loaded '+list.length;
+ el.appendChild(hdr);
  for(let i=0;i<list.length;i++){
   let a=list[i];
   let card=document.createElement('div');
   card.style.cssText='padding:8px;border:1px solid #2a2f6e;border-radius:10px;margin-bottom:8px';
   let blk=a.blocked?'<span style="color:#ff5252;font-size:10px"> 🚫 BLOCKED</span>':'';
-  card.innerHTML='<div style="font-size:11px"><b>'+a.first+' '+a.last+'</b>'+blk+'</div><div style="font-size:10px;color:#9aa3d1">@'+a.username+' • ID '+a.id+'</div><div style="font-size:11px;color:#ffd966">💰 '+a.coins+' coins</div>';
+  let tag=a.registered?'<span style="color:#00e676;font-size:9px">📝 registered</span>':'<span style="color:#9aa3d1;font-size:9px">📱 telegram only</span>';
+  let nm=(a.first||'')+' '+(a.last||'');
+  if(!nm.trim()) nm='(no profile)';
+  let dt=a.created?new Date(a.created*1000).toLocaleDateString():'—';
+  card.innerHTML='<div style="font-size:11px"><b>'+nm+'</b>'+blk+'</div><div style="font-size:10px;color:#9aa3d1">@'+(a.username||'—')+' • ID '+a.id+' • '+dt+'</div>'+tag+'<div style="font-size:11px;color:#ffd966">💰 '+a.coins+' coins</div>';
   let b1=document.createElement('button'); b1.className='btn2'; b1.textContent=a.blocked?'✅ Unblock':'🚫 Block'; b1.style.cssText='padding:4px 8px;font-size:10px;width:auto;margin:6px 4px 0 0';
   b1.onclick=function(){ adminAccBlock(a.id, !a.blocked) };
   let b2=document.createElement('button'); b2.className='btn2'; b2.textContent='🔐 Reset password'; b2.style.cssText='padding:4px 8px;font-size:10px;width:auto;margin:6px 4px 0 0';
