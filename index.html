@@ -105,18 +105,18 @@ main{padding:14px;position:relative;z-index:1}
 </header>
 <div class="tabs">
  <button class="tab active" type="button" onclick="showTab('home')">🏠 Home</button>
- <button class="tab" type="button" onclick="showTab('playearn')">💰 PLAY&EARN (42)</button>
+ <button class="tab" type="button" onclick="showTab('playearn')">💰 PLAY&EARN (10)</button>
  <button class="tab" type="button" onclick="showTab('freegames')">🌐 FREE GAMES</button>
  <button class="tab" type="button" onclick="showTab('wallet')">💳 Wallet</button>
  <button class="tab" type="button" onclick="showTab('settings')">⚙️ Settings</button>
 </div>
 <main>
  <section id="home" class="section active">
-  <div class="box" style="text-align:center"><h2 style="font-family:'Cinzel',serif">Welcome 💰 PLAY&EARN</h2><p style="color:#9aa3d1;font-size:12px;margin-top:6px">Bot = menu only — all games inside Mini App</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div class="box"><div style="font-size:22px">💰</div><b>PLAY&EARN (42)</b><p style="color:#9aa3d1;font-size:11px">Betting — pick then 3-5s animation</p><button class="btn" type="button" onclick="showTab('playearn')">▶ Enter</button></div><div class="box"><div style="font-size:22px">🌐</div><b>FREE GAMES (Live API)</b><p style="color:#9aa3d1;font-size:11px">FreeToGame — no coins</p><button class="btn" type="button" onclick="showTab('freegames')">▶ Play Free</button></div></div></div>
+  <div class="box" style="text-align:center"><h2 style="font-family:'Cinzel',serif">Welcome 💰 PLAY&EARN</h2><p style="color:#9aa3d1;font-size:12px;margin-top:6px">Bot = menu only — all games inside Mini App</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div class="box"><div style="font-size:22px">💰</div><b>PLAY&EARN (10)</b><p style="color:#9aa3d1;font-size:11px">Best 10 games — pick then 3-5s animation</p><button class="btn" type="button" onclick="showTab('playearn')">▶ Enter</button></div><div class="box"><div style="font-size:22px">🌐</div><b>FREE GAMES (Live API)</b><p style="color:#9aa3d1;font-size:11px">FreeToGame — no coins</p><button class="btn" type="button" onclick="showTab('freegames')">▶ Play Free</button></div></div></div>
  </section>
  <section id="playearn" class="section">
   <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-   <button class="tab active" type="button" onclick="filterPlay('all',this)">All 42</button><button class="tab" type="button" onclick="filterPlay('slots',this)">Slots</button><button class="tab" type="button" onclick="filterPlay('cards',this)">Cards</button><button class="tab" type="button" onclick="filterPlay('crash',this)">Crash</button><button class="tab" type="button" onclick="filterPlay('classic',this)">Classic</button>
+   <button class="tab active" type="button" onclick="filterPlay('all',this)">All 10</button><button class="tab" type="button" onclick="filterPlay('dice',this)">🎲 Dice</button><button class="tab" type="button" onclick="filterPlay('crash',this)">🚀 Crash</button><button class="tab" type="button" onclick="filterPlay('wheel',this)">🎡 Wheel</button><button class="tab" type="button" onclick="filterPlay('board',this)">🔴 Mines</button><button class="tab" type="button" onclick="filterPlay('keno',this)">🔢 Keno</button>
   </div>
   <div id="playGrid" class="grid"></div>
   <p style="color:#9aa3d1;font-size:11px;text-align:center;margin-top:8px">Each playable game: pick choice (Head/Tail, 1-6, Rock/Paper…) → stake → 3-5s close animation → win/loss.</p>
@@ -133,7 +133,7 @@ main{padding:14px;position:relative;z-index:1}
   <div class="box" style="text-align:center"><h3>🌍 Language — 100+ Worldwide</h3><p id="lblLanguage" style="color:#9aa3d1;font-size:11px">🌍 Language</p><select id="langSel" onchange="setLanguage(this.value)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select><p style="color:#9aa3d1;font-size:10px;margin-top:6px">Whole system changes instantly — menus, buttons, texts</p></div>
   <div class="box" style="margin-top:10px;text-align:center"><h3>💱 Currency — 100+ Worldwide</h3><p id="lblCurrency" style="color:#9aa3d1;font-size:11px">💱 Currency</p><select id="curSel" onchange="setCurrency(this.value)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select><p style="color:#9aa3d1;font-size:10px;margin-top:6px">Balance shows coins + $ + your local currency (live rates)</p></div>
   <div class="box" style="text-align:center;margin-top:10px"><h3>⚙️ Settings — System</h3><p style="color:#9aa3d1;font-size:11px">One tap clears system cache so whole app refreshes from GitHub</p><button class="btn" type="button" style="background:#1a1f4a;border:1px solid #ff5252;color:#ff8a80" onclick="purgeCache()">🗑️ Purge Cache — Clear System</button><p style="color:#ff8a80;font-size:10px;margin-top:6px">Clears Telegram + browser cache + reloads fresh</p></div>
-  <div class="box" style="margin-top:10px"><h3>ℹ️ About</h3><p style="color:#9aa3d1;font-size:11px">Build: <span id="buildInfo" style="color:#ffd966"></span> • Games: 42</p></div>
+  <div class="box" style="margin-top:10px"><h3>ℹ️ About</h3><p style="color:#9aa3d1;font-size:11px">Build: <span id="buildInfo" style="color:#ffd966"></span> • Games: 10 (best selection)</p></div>
  </section>
 </main>
 <div id="ov"><div class="ovCard" id="ovCard"><button class="ovClose" type="button" onclick="forceCloseOv()" aria-label="Close">✕</button><div class="pulseRing"></div><div id="ovVisual" style="min-height:110px;display:flex;align-items:center;justify-content:center"></div><div id="ovTitle" style="font-weight:800;margin-top:10px;font-family:'Cinzel',serif">Game</div><div id="ovSub" style="color:#ffd966;font-size:12px;margin-top:4px">Starting…</div><div class="bar"><div id="ovFill" class="fill"></div></div><div id="ovPct" style="color:#ffcc33;font-size:11px">14%</div><div id="ovExtra" style="color:#9aa3d1;font-size:11px;margin-top:6px"></div></div></div>
@@ -145,7 +145,7 @@ main{padding:14px;position:relative;z-index:1}
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QAH59LLNffPj2cdKo5uPW1X8GN-aBwZytoVSLwhDx3kf1nVfNsbTkZYf7wogT8r_Ssz_KJeZAxjk-nHpAht3uK81JJn0_5KhVowhYsHiJN4Tge10PNpHklNfV8txjKvAw3866OHppqS77EhcfMnOJqUSTOWtpjaLTjAlR_oMcMPlFsWeHOgwfG1N3uVX5tiBHgU";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QSmqyBewfwcsNSzgFej8WruQ_xr4PZGFTv0QJmWaO2qBS5x6MA7NHj06LXHipsHWqDuNhGeU_xbUlJhkuGX9S1Jpe8ec7Wq9NH30c-BtXpU-VXFjFnuifi_Nro_zil318U3u2ZbYZf-i6LOc-2wFoB2tLwe0fxqxu-vLHQnSXLPNCxjiZefNPUMx6qNa7ydrkfD";
 let selBal=0;
 let _updBalInterval=null;
 function startBalSync(){ if(_updBalInterval) clearInterval(_updBalInterval); _updBalInterval=setInterval(()=> syncBal(false), 4000); syncBal(false); }
@@ -215,9 +215,12 @@ const GAMES=[
 let pendingPick={game:0, choice:""};
 let curWinG=null, curWon=0, curCost=10, curBal=0, curResult="";
 let _autoCloseId=null;
+const TOP10=[1,2,4,5,6,7,9,12,13,25];
+const CATMAP={all:null, dice:['classic','dice'], crash:['crash'], wheel:['wheel','roulette'], board:['mines','plinko'], keno:['keno']};
 function renderPlay(filter){
  let grid=document.getElementById('playGrid'); if(!grid) return; grid.innerHTML='';
- let list=GAMES.filter(g=>filter==='all'||g.cat===filter);
+ let cats=CATMAP[filter]||null;
+ let list=GAMES.filter(function(g){ return TOP10.includes(g.id) && (!cats || cats.indexOf(g.cat)>-1) });
  list.forEach(g=>{
   let d=document.createElement('div'); d.className='card';
   let pickHTML='';
@@ -283,7 +286,8 @@ window.setMult=function(gid){
  toast('Target x'+v+' set — tap Play');
 };
 window.filterPlay=function(cat,el){ document.querySelectorAll('#playearn .tab').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active'); renderPlay(cat); };
-let _ovTimer=null;
+let ovTimer=null;
+let _playSeq=0;
 function ovDur(){ return 3000 + Math.floor(Math.random()*2000); }
 function buildVisual(g, resultChoice){
  const v=document.getElementById('ovVisual'); if(!v) return; v.innerHTML='';
@@ -379,6 +383,7 @@ function showOv(g){
  buildVisual(g, '');
  clickSound();
  ov.classList.add('show');
+ _playSeq++;
  let total=ovDur();
  let steps=[{p:26,t:'Bet locked '+g.cost+'c…'}, {p:50,t:'Running close simulation…'}, {p:70,t:'Almost there…'}, {p:86,t:'Revealing in 3…'}, {p:93,t:'2…'}, {p:98,t:'1…'}];
  let stepMs=Math.floor((total-620)/steps.length);
@@ -445,20 +450,23 @@ function finishOvOld(win,g,won,cost,bal,result){
 window.play=async function(id){
  let g=GAMES.find(x=>x.id===id); if(!g) return toast('Game not found');
  let stk=pendingStake[id]||g.cost;
- let needPick=[1,2,5,6,7,8,9,10,11,13,15,18,19,20,21,22,23,24,25,27,28,29,31,35,36,37,38,39,41,42];
- let crashPick=[4,12,26,33];
+ let needPick=[1,2,5,6,7,9,13,25];
+ let crashPick=[4,12];
  let choice=pendingPick[id]||"";
  if(needPick.includes(id) && !choice){ toast('Pick your option first 👆'); return; }
  if(crashPick.includes(id) && !choice){ toast('Enter target x first (e.g. 1.5) 👆'); return; }
  if(selBal && selBal < stk){ await syncBal(false); if(selBal < stk){ toast('Need '+stk+'c have '+selBal+'c'); return; }}
  let dur=showOv(g);
+ let mySeq=_playSeq;
  try{
   let payload={action:'play', game:id, stake:stk};
   if(choice) payload.choice=choice;
-  let j=await api(payload);
+  let to=new Promise(function(res){ setTimeout(function(){ res({ok:false,error:'Server slow — try again'}) }, 9000); });
+  let j=await Promise.race([api(payload), to]);
+  if(mySeq!==_playSeq) return;
   if(j&&j.ok){
    let nb=parseInt(j.bal); if(isNaN(nb)) nb=selBal; selBal=nb; updBal();
-   setTimeout(function(){ finishOv(j.win,g, j.won||0, j.cost||stk, selBal, j.result, j.detail); }, Math.max(420,dur-580));
+   setTimeout(function(){ if(mySeq!==_playSeq) return; finishOv(j.win,g, j.won||0, j.cost||stk, selBal, j.result, j.detail); }, Math.max(420,dur-580));
   } else { hideOv(); toast((j&&j.error)? j.error : 'Play failed'); }
  }catch(e){ hideOv(); toast('Connection failed'); }
 };
