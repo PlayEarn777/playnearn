@@ -307,10 +307,10 @@ main{padding:14px;position:relative;z-index:1}
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QrhJ5bfoTUOBSm6jux9xnQ8xwj_c42vxHgQv_Bx30s4fadwKLLLuI1Kdo1faKSjIY7X7Y43Lea8yJstJIW6fBhiOKDpOrjUwqymMHX4ERcUixKqX5L_M77Us6DMWq8erGQtz_zbvIX96_VCKAPgtPCPFsF1Xni7yl2kH3cY7WVuvezeKYKS9JB4oRs5Nx5-JYGN";
-const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QrhCXKR6a0SN5PNNuygy9rP4uyQpWHuggrWp37JlHCmqyjyypgsTFZKPQwChB1VzXtI5M1mVg4N9bnDnQr7pQcXnHFyuQOwIUYWZg6C5h8atxs3MytpG-1kcX7Kh0zANsZvNJ7SIp8AWFafp-7DMkOOJE7pxgmydLRP6dlvZWV4YCE1wYoiljekZGXp6zcI0RmM";
-const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QrhfYOivqHAq3T-q-f4THttxrpi4DWpM9kii9Ipoe2dYywVyNN4FyIzc-G0TgazK7iBgv66xXP5urmxlGf6SfLOsiTfoD7TK7JDgoJdoNKqrFHN-_aGW1fXtNTWphbq1cDXO2Dx9hFbxuFiACGLDStPKnp-as85tpj_ElcsCGYlrgZ7_UKRMVewXYYsBbEapcoH1zhwpFbRdSY1uUNRk4wxxQ%3D%3D";
-const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QrhmKzPd1nelBqAWUmU51Lz3yXtSCg4CiqHb2Mh7UxGbh3JWT3gwKDlG9049rKOacOoUfz-i1GYd8eL-5MfImimhAr3zHSZf-Oi-ZUMAc-LlxcBzBGhaf3PEzfPXAp8YGziYqejVEzpAK5aYuYggr_jNHhVgsJxkjwxeN2vspBuEoylB0SI9cviOM63MVXNEBFw";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Q3DzRENRK7aD7-xQbt8vCz5_6q1zKDBgfw046n-DiSZqAqEQZftSr0xY5U5lfBgvYJo1PUmYwLK0tb8QMc7nqywWIG2cAl5XD74ZJHT2rsb0bmGz8SdgAtKuYTtW8VVAjXWyKKFI48FzwuubhuwxtUMde1K3uH-RQufBJLlcVuQrmiYzuO5tGPhFuRANRZ8LCtY";
+const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Q3D5mTaEKZYe6ZowIdTlTtiF-pU5hjYEr7502F7qFFxBthFfn_s0kOumc-d3e0JflD2HvUFU0jlN9dRXGdnvdrws-Dejfp0rIzciqDKy3TotnHJVboRaMSTK5O1UST1OUHBxqpbPh3GvaEZRdU55lEX8RcT9eJoXxcNRtzTxLls5ZQ83jBPTVyhPgSVRcdgFus1";
+const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Q3D53RlWn3jIIyR2VvWcm6W20mJIeiPnNh8RB3JfFvIgNfGMUweRFqOiWUAizbAKLXg62DiDIR4XwALj1xnK3TWX5Y2L6p4lelmJwzlXqyE4yPLV-zDGDFHIiUEX9zsJvCgqFZDlg9IoZucqOcKlqWKYmZO7Ig2F5r5T9IzRdEK7RN79ASDYHAeBwUNNMUPifcBj3rIeVBRjdqFpvw9Qu5teg%3D%3D";
+const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Q3DctX3arTTMIJrlWyxIMfkvzwBoxUsg_rJWpY6d-s_5KFERo5UVmjKbVuye6duHXM3OUPe-ro1Cij1PGrJPtoXOFswmhuG8qO7QdfHIVBD7qHTyfxcK90V0h12MKmLt11caPib1UcET7ysaiCx3gWZXbMMopEo3CpxOiPY-fA_1b0hS3B4D_ExtCiWbLZnWcm8";
 let accToken="", accUser=null, accChecking=true;
 let isAdmin=false, isFullAdmin=false;
 let selBal=0;
@@ -1125,10 +1125,10 @@ window.renderGate = function(mode){
  let msg = document.getElementById('gateMsg'); if(msg) msg.textContent = '';
  if(gateMode === 'signup'){
   box.innerHTML = gateField('gFirst','First name') + gateField('gLast','Last name') + gateField('gUser','Username') + gateField('gPass','Password','password') + '<button class="btn" type="button" onclick="doSignup()">Create Account</button>';
-  if(sw) sw.innerHTML = 'Already have an account? <b style="color: #ffd966; cursor: pointer" onclick="renderGate('login')">Log in</b>';
+  if(sw) sw.innerHTML = 'Already have an account? <b style="color: #ffd966; cursor: pointer" onclick="renderGate(&#39;login&#39;)">Log in</b>';
  } else {
   box.innerHTML = gateField('gUser','Username') + gateField('gPass','Password','password') + '<button class="btn" type="button" onclick="doLogin()">Log In</button>';
-  if(sw) sw.innerHTML = 'No account yet? <b style="color: #ffd966; cursor: pointer" onclick="renderGate('signup')">Sign up</b>';
+  if(sw) sw.innerHTML = 'No account yet? <b style="color: #ffd966; cursor: pointer" onclick="renderGate(&#39;signup&#39;)">Sign up</b>';
  }
 };
 function gateMsg(t){ let m = document.getElementById('gateMsg'); if(m) m.textContent = t || ''; }
