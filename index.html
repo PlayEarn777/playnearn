@@ -252,6 +252,8 @@ main{padding:14px;position:relative;z-index:1}
    <h3>👑 Admin Access</h3>
    <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Your Telegram ID: <b id="myIdLbl" style="color:#ffd966">—</b></p>
    <p id="adminStateLbl" style="font-size:11px;margin-top:4px;color:#ff8a80">Not the owner — ADMIN tab is hidden.</p>
+   <button class="btn" type="button" style="background:linear-gradient(135deg,#7c4dff,#e040fb);color:#fff" onclick="adminTry()">👑 Open Admin Panel</button>
+   <p style="color:#9aa3d1;font-size:10px;margin-top:6px">Server checks your ID. If you are the owner, the panel opens.</p>
    <a class="btn2" href="https://t.me/PlaynEarnbot?text=/claim_admin" style="text-decoration:none;display:block;text-align:center;margin-top:8px">🔑 Claim Owner Access</a>
    <p style="color:#9aa3d1;font-size:10px;margin-top:6px">Opens the bot — send /claim_admin, then reopen this Mini App.</p>
   </div>
@@ -314,10 +316,10 @@ main{padding:14px;position:relative;z-index:1}
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RVCibIwGOIUe0Dc14fCBGklGRAumCM68QzMFnUYiEXEDx7GVEIzhXxXjeBwD7hbjCHUJXX2HSbuh-eYy7d_HT1UyPezzc6Eew94jQAGwGh5IT3Zq18XqRmVwJRm-VVOIXFfQYG4M4hN8T_9RvhTeFz1dbM3Af_l_Q86O0Klybk1mm_5t-_K-9E9aqoCw2ISgRJb";
-const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RVCS805Eb1cG4k2RdsezluVm5iU7tfY4L958Z3fMEr7G-V1XkOflt5mRTx_o0BeZBfOq8K_uLxjwy72QDkqQI2IJsgJPxuxhMrlXt5w8udEhqAzi4LYKImCf0CJ9amwVnk1ge3tzko2GtEfy0gi8wpr6C1PcK5Uoc23tfKi8LWRg7Em8dphWFLeudTDO2OFxr_r";
-const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RVCaFW1uws_Yo4ziWsgSpKPdSPrOwlrXdE6n_AwDRvyMBFRuG2rnDP59KXA-3tKbQUrn8z5FqPqZ8QE_j_-hEZaRacZeygAsE4CZumAoyC92_KbyS_zrXMKw9TOgFBJDHlKMEKdlAGTefIClzxko7UElawVoYo9TG0jZbmfXejFTf-_-Tlo_7mbkX2_-dtvwoL72Ibgi1HP0lh4aGTIjzmySA%3D%3D";
-const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4RVC6joQ64HjdTboS5OZd0hbILz1tanPjpZotEc1qrxuLr-LL587osqGdh7HOvkHK0UTP1u-Ld4zB7G3Sxh0v3g4pqmjtOYBTYakaitmCW3-exmw5usUgsLrevpWgMtjS3LOQ-4A4QeZur1Wk71JBj8ADOecu-PycMHIWzjzN3IDYTygn_yyS1WTmhGZLl0x8hsn";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4ReyFZ94W0HREXaS1MvHWx_ocXf2AeRQBBQoieFhYt_uKC38-TLm60xNb4mFh3GxofkOwIwi0_St7wgZdh-SR1onKlnKWfzJPhdQHwazVa-04jBahjncAgbS2q9Ae-djYxuChEekH10XPH5m65knieawcpXmeGx5evf60xt3U17vXuwTlQ95fg0OAlgAvk4_rAWU";
+const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Reywjg5GY7X7i9TqKQB_VG_MHdGy8kj7FZ3KBSylBjoXLTPw_XeX5R15iFLsNVpHXBK75a2k3lRCnKCqFezMHtyPttgF4oEdYtvXWwlL0YDcR6hyBnDmc5q5mq5XA7qvTgQSaHDNv6mv0n7rvD5fgVPAg5QGq4F6l_KxyHx6kD4BHub9Wt91vPq74KYbEE4MBtL";
+const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4ReydAKS1aBwTXqEaFzqJDy9NF757grpVQ1OQ8tlzeqkxSRiPIjH6Ztapo6JDnlYDV7-5SfeEcKnxeRgstiPrHcZKqlFgpXkPwpHXwKVXZhBDpU_6ScuWkgd5lN0LvFMUINtmIEdSxUkM1zsg3IUx2aItWIy1SlLVaOlhSdB0xvMobdlUABvjUZ-jDGvF-lIZW0VDVYzzAgCcxL597cNmE87iQ%3D%3D";
+const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4ReyYrEbrHST9F2k17nRXavJcK5wpVao9s_KsOn3wPnVcckmpFT_vU-qgWrt2gtEhJ5b9A2C3DsDvAaG9LRgsMzFdsItFxmhdxHdoDBo9v51YuK-aNm4xg4GqBPc508-JqthjIByZ7c7oQKikyt7B2CZfFwivjzHbnrnG7_PTOdKv23CkRFFTVewiVd5MvbBHScg";
 let accToken="", accUser=null, accChecking=true;
 let isAdmin=false, isFullAdmin=false;
 let selBal=0;
@@ -374,6 +376,22 @@ async function api(obj){
  try{ let r=await fetch(withUIDParam(API),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); let j=await r.json(); return j; }catch(e){ return {ok:false,error:String(e).slice(0,80)}; }
 }
 let balLoaded=false, lastBalErr='';
+window.adminTry=function(){
+ toast('Checking owner access…');
+ adminApi({action:'admin_stats'}).then(function(j){
+  if(j && j.ok){
+   isAdmin=true; balLoaded=true; lastBalErr='';
+   refreshAdminUI();
+   showTab('admin');
+   toast('👑 Admin panel unlocked');
+  } else {
+   balLoaded=true;
+   lastBalErr=(j && j.error) ? String(j.error) : 'not authorized';
+   refreshAdminUI();
+   toast('Not owner: '+lastBalErr);
+  }
+ });
+};
 function refreshAdminUI(){
  let at=document.getElementById('adminTab'); if(at) at.style.display=isAdmin?'block':'none';
  let an=document.getElementById('bAdminNav'); if(an) an.style.display=isAdmin?'flex':'none';
@@ -1214,8 +1232,12 @@ function checkSession(){
  accApi({ action:'session', token: accToken }).then(function(j){
   if(j && j.ok && j.logged_in){
    accUser = j.user || null;
+   // admin flag from the session call too, so the tab does not depend
+   // on the balance request succeeding
+   if(typeof j.is_admin !== 'undefined'){ isAdmin = !!j.is_admin; balLoaded = true; lastBalErr = ''; }
    enterApp();
   } else {
+   if(j && j.ok && typeof j.is_admin !== 'undefined'){ isAdmin = !!j.is_admin; balLoaded = true; }
    setAppVisible(false);
    if(j && j.ok && j.registered){
     renderGate('login');
