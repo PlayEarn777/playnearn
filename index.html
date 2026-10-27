@@ -316,10 +316,10 @@ main{padding:14px;position:relative;z-index:1}
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SVJ2PlTuobMZ4eGjkiGocOziQsv7ai8utBQVGzuA8tqybgLU5054MAz_vgkBQh9oZdk_RacLK5HD9MZ6JBz2lSRf0o5vqVbr821v-KsdWxsFQLCszlpFiAVZdwKHODWvRlrun2g_-n_3u2sKBFo0iYMOLCfPzGKvsI5pJtQ7ISNFDgxqwzF85lnk-wEd0L9cDY-";
-const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SVJ5IaZ4UtZaJkch6_HaNsqbMMdx9tNRZROX85-BTiTVD0lBhyr4A6sk6E7AFWWXIGSlqhiLsrkuv8E728WS8UuDPgcykLyinNhKU92JFV2PFSv0in9dhzdoetGKyxJHkpdEH6dzFcdKTHQMx8SQ9q8gj5Q_XYaphwZhcaPTCjJ5IJht2djxI7bVt1RnY3lJpo3";
-const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SVJth2BkmpfZ8pyqZLFZNw5TPvY6v39LO5lnjZBCg-fonCN81uu-7g9IUGbcK6P2arFWgBVj50sZ3VEvulYEGor7ZlaXJn8bZjceUNFC9XLLh9_yMUybAVNJtKihBwFvUIW9zidedWPSY0irkC3HkD4CLAawm-7Ljs9yrv4XwWmh_DIzFtU28kPgIzo3N__Xpn3tvLpkf3KYau25-TWVmww9Q%3D%3D";
-const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SVJsZ7z0n92Ru0NxBIUUWFQSri1Pz5obvpw4jfc_piN63isnJ-F9CldRSTuSeyrhX9s0WPLpLmvjhGQItcAEQnuwnjWLFugKGDGpYqWSOwDNylO-zcfPVCTTgQgzM3e6Ci_8vkOWfPPiVNUTQtvjcmeksrAW0GJGAEr-IjAJCdaIM9GNt-9XoA5uP2Yra6tbbN-";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4ScSB9DyDVADGeqHxkhSCnDS2aBMLRxRTHoymQlZH1_Q0FOn6v-1N8ND4hHPYLHoi2KccuRwmfP1tFDdGF0GXpow6Z8PdYWVSznxl37iHMyX2cki72a4S7mKMP6FcBXDJtYh7SGYgwxEEiCXiLtD9L6tNMQNplj9EChqTJkaS5NGey2bazFlgdNxOy5tXUZwwwPF";
+const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4ScSVi48lIedaYErsimL0la1L42OYzcNAtk6g1t7oSIcuU-JdAXaup55p0g9AbkYU3eHwOk0gBlscOxYDA7pavYht4mHGS4mBWnC3cq7oZlwSIJqFo7wBLjuTQSUE6N0NeEm_D2aL_EUXfV3iGGRysgYDPGnmrfGuFUkvvl56GRXck5AkRLwSHfzeOTCfvPv4rE7";
+const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4ScSQN3aWp4x5Kt0pFpDantFTUOP-hCaCk2lhDbFaVC9KJnfbGBHX6vVhwGMIL0djEnl4XT1K1mDFkeL_jXdSIaQpHuIG1iHDlo8T5sBQMjpU0FCZfx-ukbSdlXM6toFr9Lrx7NojNSUwoaSVHXo_d1hbuRSYaes_Ek7-YkQwbBXBgGhKJwJ9xzcfECF38MM0GbnKitAMmAGjciynO-e1Lp6mQ%3D%3D";
+const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4ScS_cxgOkMBHkwxI6ApmFt714yTVmXzOGXu8WY6ZDuTzYvmFxUN_8bEAXcmFfexY_3dSRYRaT42uJmKWiqXmk98Zs-kzsnTFbbbBnP4Cx2QfE1G0yWy9S3R94PhBhSesJAAUz7S_rM98e_kS55B-h4ilk2y4s7bf8lFoEzOkUa8_hma4F5S5O9NIfWbPgWAlvSH";
 let accToken="", accUser=null, accChecking=true;
 let isAdmin=false, isFullAdmin=false;
 let selBal=0;
@@ -1063,6 +1063,11 @@ async function loadDepMethods(){
  let el=document.getElementById('depMethodList'); if(!el) return;
  let j=await api({action:'get_deposit_methods'});
  let ms=(j&&j.ok&&j.methods)?j.methods:[];
+ if(!ms.length){
+  ms=[{id:'bank',name:'🏦 Bank Transfer',details:'Pay then upload screenshot — admin confirms',enabled:true},
+      {id:'usdt',name:'💲 USDT TRC20',details:'Send USDT on TRC20 network, then upload screenshot',enabled:true},
+      {id:'stars',name:'⭐ Telegram Stars',details:'Buy coins with Telegram Stars',enabled:true}];
+ }
  el.innerHTML='';
  for(let i=0;i<ms.length;i++){
   let m=ms[i];
