@@ -286,13 +286,31 @@ main{padding:14px;position:relative;z-index:1}
 </div>
 <div id="toast" class="toast"></div>
 <script>
+(function(){
+ function showErr(txt){
+  try{
+   var d=document.getElementById('jsErrBanner');
+   if(!d){
+    d=document.createElement('div');
+    d.id='jsErrBanner';
+    d.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:#b00020;color:#fff;font-size:11px;padding:8px;font-family:monospace;white-space:pre-wrap;max-height:40vh;overflow:auto';
+    document.body.appendChild(d);
+   }
+   d.textContent='SCRIPT ERROR - send this screenshot to admin:'+String.fromCharCode(10)+txt;
+  }catch(e){}
+ }
+ window.onerror=function(m,src,ln,col){ showErr(m+' @ line '+ln+' col '+col); return false; };
+ window.addEventListener('unhandledrejection',function(ev){ showErr('Promise '+((ev&&ev.reason&&ev.reason.message)?ev.reason.message:String(ev&&ev.reason))); });
+})();
+</script>
+<script>
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QiaTk77BY4z4V_Ci25rOGpgtMOMWJ1oXkgPUetWfkNT4Jyz4TfulFxztfo31qRiT47vzN4MT-BmrrsaUYKPCvV7z15FKE5dQjDVGzH9gmspzBL5LQm3H37xxgjVg3lWL5Cvtb_KdbzwbNaMDBpk0eZX2jVoEhEPRylfamIt4RHzLTe9RcQTfttf55YUwE55a_SG";
-const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QiajJ1WnJV-ZtzxKc39cnc-tYl24SDE5Vr8n2Of9RKKT_6pngPHjqU4uYHJZLo3src4yYiryEu2u01vNAgjc4l5dU7FuKEP9311ysi5gDyHuHKjH7sla3N1sTXS36291iSzoc-x3CcfLEq19e1za1jhmg9x-qwDb8uCKmGp_K69rTcnSDkY0cmuUaBd8SR75pzM";
-const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QianWXZcq6xOYOss1YLg5ncHbdxTCnLpXvHpWCOK8yx4WIOdxBk4qjPzwOq1hsVm3HT_13eFU6rbG-gqVczuoco59YEK6SHL-8_AR6v4ynGZ3QQT15EpffQS--UYt8VsKaUt1v-5lPAoRQHWnHTv0t3G8AXdtgUbswN5PmV9CIApMP_DLN_57Fd12g957yr-E_KuEwLHwCzf34CxMGAaM7A5A%3D%3D";
-const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QiaH_Dfp0ce4s2arozmhdSKqsAjG_Bgrag3M3spKOgoopNhwyh36tTrp2Ry7GJ3fXn2pYtD8s3636NZGnZWaLV4_BMIe45iVG0wAGtHMItjWohRdToHhXGT3mZTOjQV1_2678UJthT0M5yK0WwKJa2VOL2oWUZeoBDQtT5ZKJ6-mP7lsy1a-2ERESzbqwThQw9r";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QrhJ5bfoTUOBSm6jux9xnQ8xwj_c42vxHgQv_Bx30s4fadwKLLLuI1Kdo1faKSjIY7X7Y43Lea8yJstJIW6fBhiOKDpOrjUwqymMHX4ERcUixKqX5L_M77Us6DMWq8erGQtz_zbvIX96_VCKAPgtPCPFsF1Xni7yl2kH3cY7WVuvezeKYKS9JB4oRs5Nx5-JYGN";
+const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QrhCXKR6a0SN5PNNuygy9rP4uyQpWHuggrWp37JlHCmqyjyypgsTFZKPQwChB1VzXtI5M1mVg4N9bnDnQr7pQcXnHFyuQOwIUYWZg6C5h8atxs3MytpG-1kcX7Kh0zANsZvNJ7SIp8AWFafp-7DMkOOJE7pxgmydLRP6dlvZWV4YCE1wYoiljekZGXp6zcI0RmM";
+const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QrhfYOivqHAq3T-q-f4THttxrpi4DWpM9kii9Ipoe2dYywVyNN4FyIzc-G0TgazK7iBgv66xXP5urmxlGf6SfLOsiTfoD7TK7JDgoJdoNKqrFHN-_aGW1fXtNTWphbq1cDXO2Dx9hFbxuFiACGLDStPKnp-as85tpj_ElcsCGYlrgZ7_UKRMVewXYYsBbEapcoH1zhwpFbRdSY1uUNRk4wxxQ%3D%3D";
+const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QrhmKzPd1nelBqAWUmU51Lz3yXtSCg4CiqHb2Mh7UxGbh3JWT3gwKDlG9049rKOacOoUfz-i1GYd8eL-5MfImimhAr3zHSZf-Oi-ZUMAc-LlxcBzBGhaf3PEzfPXAp8YGziYqejVEzpAK5aYuYggr_jNHhVgsJxkjwxeN2vspBuEoylB0SI9cviOM63MVXNEBFw";
 let accToken="", accUser=null, accChecking=true;
 let isAdmin=false, isFullAdmin=false;
 let selBal=0;
