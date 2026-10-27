@@ -3,1343 +3,1302 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<title>PLAY&EARN — Mini App</title>
+<title>PLAY & EARN</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:'Outfit',system-ui;-webkit-tap-highlight-color:transparent}
-:root{--bg:#080a1e;--card:#11142e;--card2:#1a1f4a;--bor:#2a2f6e;--text:#fff;--mut:#9aa3d1;--gold:#ffcc33}
-body{background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:80px}
-body::after{content:'';position:fixed;inset:0;background:radial-gradient(1100px 500px at 20% 0%,rgba(26,31,110,.5),transparent 60%), url('https://cdn.pixabay.com/photo/2016/03/09/09/22/casino-1246323_1280.jpg') center/cover;opacity:.16;pointer-events:none;z-index:-1}
-header{position:relative;z-index:5;background:linear-gradient(135deg,#ffcc33,#ff8c00 50%,#6a5cff 100%);padding:16px}
-.hrow{display:flex;justify-content:space-between;align-items:center}
-.badge{background:rgba(0,0,0,.18);border:1px solid rgba(255,255,255,.25);padding:6px 10px;border-radius:999px;font-size:11px}
-.balbar{margin-top:10px;background:rgba(0,0,0,.2);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:10px;display:flex;justify-content:space-between}
-.tabs{position:relative;z-index:5;background:#0a0d2a;border-bottom:1px solid var(--bor);display:flex;gap:8px;padding:10px;overflow-x:auto}
-.tab{white-space:nowrap;background:#11142e;border:1px solid #2a2f6e;color:#fff;padding:8px 14px;border-radius:999px;cursor:pointer}
-.tab.active{background:linear-gradient(135deg,#ffcc33,#ff6b00);color:#1a0f00;border-color:transparent}
-main{padding:14px;position:relative;z-index:1}
-.section{display:none} .section.active{display:block}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.card{background:linear-gradient(180deg,#1a1f4a,#11142e);border:1px solid #2a2f6e;border-radius:14px;padding:12px;text-align:center}
-.card .emoji{font-size:28px}
-.btn{width:100%;margin-top:8px;background:linear-gradient(135deg,#ffcc33,#ff6b00);color:#1a0f00;border:0;padding:10px;border-radius:10px;font-weight:800;cursor:pointer}
-.btn:active{transform:scale(.97)}
-.btn2{width:100%;margin-top:8px;background:#1a1f4a;border:1px solid #2a2f6e;color:#fff;padding:10px;border-radius:10px;cursor:pointer}
-.choiceRow{display:flex;gap:8px;margin-top:8px}
-.choiceBtn{flex:1;background:#11142e;border:1px solid #2a2f6e;color:#fff;padding:10px;border-radius:10px;cursor:pointer;font-weight:700}
-.choiceBtn.active{background:linear-gradient(135deg,#ffcc33,#ff8c00);color:#1a0f00;border-color:transparent;box-shadow:0 4px 14px rgba(255,140,0,.45)}
-.stakeBtn.active{background:linear-gradient(135deg,#ffcc33,#ff8c00)!important;color:#1a0f00!important;border-color:#ffcc33!important;box-shadow:0 4px 14px rgba(255,140,0,.45)}
-.box{background:linear-gradient(180deg,#1a1f4a,#11142e);border:1px solid #2a2f6e;border-radius:14px;padding:14px}
-.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:#0f1330;border:1px solid #ffcc33;color:#fff;padding:10px 16px;border-radius:999px;display:none;z-index:99}
-.bottomNav{position:fixed;bottom:0;left:0;right:0;background:rgba(8,10,30,.98);border-top:1px solid #2a2f6e;display:flex;justify-content:space-around;padding:6px;z-index:20}
-.bNav{flex:1;background:transparent;border:0;color:#9aa3d1;font-size:10px;display:flex;flex-direction:column;align-items:center;cursor:pointer}
-.bNav.active{color:#ffcc33}
-#ov{display:none;position:fixed;inset:0;z-index:50;background:rgba(5,7,20,.92);align-items:center;justify-content:center;padding:20px}
-#ov.show{display:flex}
-.ovCard{background:linear-gradient(180deg,#1a1f4a,#0f1330);border:1px solid #2a3266;border-radius:18px;padding:20px;width:min(380px,92vw);text-align:center;position:relative;overflow:hidden}
-.bar{height:9px;background:#0e1230;border-radius:999px;overflow:hidden;margin:12px 0;border:1px solid #252c5a}
-.fill{height:100%;width:14%;background:linear-gradient(90deg,#ffcc33,#ff6b00);transition:width .35s;box-shadow:0 0 10px rgba(255,204,51,.6)}
-.ovClose{position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,204,51,.35);color:#ffcc33;font-size:15px;font-weight:800;display:grid;place-items:center;cursor:pointer;z-index:5}
-.ovClose:active{transform:scale(.92)}
-.coin3d{width:96px;height:96px;border-radius:50%;background:radial-gradient(circle at 30% 30%, #fff9c4 0%, #ffcc33 35%, #ff8c00 65%, #8d4e00 100%);border:4px solid #ffd700;display:flex;align-items:center;justify-content:center;font-size:48px;margin:0 auto;box-shadow:0 10px 35px rgba(255,204,51,.55), inset 0 3px 12px rgba(255,255,255,.85);animation:coinFlip3d .55s linear infinite}
-@keyframes coinFlip3d{0%{transform:perspective(500px) rotateY(0) rotateX(6deg)}50%{transform:perspective(500px) rotateY(180deg) rotateX(6deg)}100%{transform:perspective(500px) rotateY(360deg) rotateX(6deg)}}
-.confettiReal{position:absolute;width:7px;height:7px;border-radius:2px;animation:confettiDrop 1s linear forwards}
-@keyframes confettiDrop{0%{transform:translateY(-12px) rotate(0deg) translateX(0);opacity:1}100%{transform:translateY(90px) rotate(320deg) translateX(18px);opacity:0}}
-.pulseRing{position:absolute;inset:0;border:2px solid rgba(255,204,51,.45);border-radius:18px;animation:pulseRingAnim 1.1s ease-out infinite;pointer-events:none}
-@keyframes pulseRingAnim{0%{transform:scale(.96);opacity:.7}100%{transform:scale(1.08);opacity:0}}
-.diceWrap{ display: flex; gap: 12px; justify-content: center }
-.diceBox{ width: 54px; height: 54px; background: linear-gradient(145deg, #fff, #e6e6e6); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 26px; color: #111; box-shadow: 0 6px 18px rgba(0,0,0,.35); border: 1px solid #ddd }
-.diceRollA{ animation: diceRollA .45s ease infinite }
-.diceRollB{ animation: diceRollB .45s ease infinite .12s }
-@keyframes diceRollA{ 0%{ transform: translateY(0) rotate(0) } 50%{ transform: translateY(-14px) rotate(90deg) } 100%{ transform: translateY(0) rotate(180deg) } }
-@keyframes diceRollB{ 0%{ transform: translateY(0) rotate(0) } 50%{ transform: translateY(-10px) rotate(-90deg) } 100%{ transform: translateY(0) rotate(-180deg) } }
-.slotMachine{ display: flex; gap: 6px; justify-content: center }
-.reel{ flex: 1; background: #0a0d2a; border: 1px solid #2a2f6e; border-radius: 8px; height: 88px; overflow: hidden; position: relative }
-.reelStrip{ animation: reelSpin .12s linear infinite }
-.sym{ height: 42px; display: flex; align-items: center; justify-content: center; font-size: 22px }
-@keyframes reelSpin{ 0%{ transform: translateY(0) } 100%{ transform: translateY(-42px) } }
-.rocketStage{ width: 170px; height: 110px; background: linear-gradient(180deg, #1a237e, #4a148c); border-radius: 12px; margin: 0 auto; position: relative; overflow: hidden; border: 1px solid #3a2d7a }
-.rocketIcon{ position: absolute; left: 12px; bottom: 18px; font-size: 32px; animation: rocketAscend 1.1s ease-out forwards }
-@keyframes rocketAscend{ 0%{ transform: translate(0,0) } 40%{ transform: translate(22px,-28px) } 75%{ transform: translate(48px,-62px) } 100%{ transform: translate(72px,-86px) } }
-.flameFlicker{ animation: flame .12s alternate infinite; font-size: 14px; margin-left: -6px }
-@keyframes flame{ 0%{ opacity: .7; transform: scale(.9) } 100%{ opacity: 1; transform: scale(1.15) } }
-.altitude{ position: absolute; top: 8px; right: 10px; background: rgba(0,0,0,.55); padding: 4px 8px; border-radius: 999px; font-size: 11px; color: #ffcc33; font-weight: 700 }
-.plinkoBoard{ width: 180px; height: 130px; background: radial-gradient(ellipse at center, #1a237e, #0a0d2a); border-radius: 12px; margin: 0 auto; position: relative; border: 1px solid #2a2f6e; overflow: hidden }
-.peg{ position: absolute; width: 7px; height: 7px; background: radial-gradient(circle, #ffcc33, #ff8c00); border-radius: 50% }
-.plinkoBall{ position: absolute; left: 50%; top: 10px; width: 15px; height: 15px; background: radial-gradient(circle, #ff5252, #b71c1c); border-radius: 50%; transform: translateX(-50%); animation: plinkoPath 1.05s ease-in forwards; z-index: 2 }
-@keyframes plinkoPath{ 0%{ transform: translateX(-50%) translateY(0) } 30%{ transform: translateX(-30%) translateY(40px) } 60%{ transform: translateX(20%) translateY(80px) } 100%{ transform: translateX(0%) translateY(108px) } }
-.wheelWrap{ width: 120px; height: 120px; margin: 0 auto; position: relative }
-.pointerTop{ position: absolute; top: -8px; left: 50%; transform: translateX(-50%); font-size: 12px; color: #ffcc33; z-index: 2 }
-.wheelMain{ width: 120px; height: 120px; border-radius: 50%; background: repeating-linear-gradient(45deg, #ff1744 0 20px, #111 20px 40px, #00e676 40px 60px); border: 4px solid #fff; box-shadow: 0 0 28px rgba(255,204,51,.45) }
-.wheelSpinAnim{ animation: wheelSpin 1s cubic-bezier(.2,.8,.3,1) forwards }
-@keyframes wheelSpin{ 0%{ transform: rotate(0) } 100%{ transform: rotate(720deg) } }
-.wheelCenter{ position: absolute; top: 50%; left: 50%; width: 18px; height: 18px; background: #fff; border-radius: 50%; transform: translate(-50%,-50%) }
-.cardFlipWrap{ width: 76px; height: 108px; margin: 0 auto; perspective: 600px }
-.cardFlipEl{ width: 100%; height: 100%; background: linear-gradient(145deg, #fff, #e0e0e0); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 36px; box-shadow: 0 8px 22px rgba(0,0,0,.35); border: 1px solid #ccc }
-.cardFlipAnim{ animation: cardFlip .68s ease-in-out infinite }
-@keyframes cardFlip{ 0%{ transform: rotateY(0) } 50%{ transform: rotateY(180deg) } 100%{ transform: rotateY(360deg) } }
-.kenoBalls{ display: flex; gap: 6px; justify-content: center; flex-wrap: wrap }
-.kenoBall{ width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #fff; animation: kenoMix .45s ease infinite alternate; background: radial-gradient(circle, #ff6b00, #bf360c) }
-@keyframes kenoMix{ 0%{ transform: translateY(0) rotate(0) } 100%{ transform: translateY(-8px) rotate(12deg) } }
-.aviatorStage{ width: 200px; height: 110px; background: linear-gradient(180deg, #81d4fa 0 40%, #e1f5fe 40% 42%, #263238 42% 100%); border-radius: 12px; margin: 0 auto; position: relative; overflow: hidden; border: 1px solid #2a2f6e }
-.aviatorPlane{ position: absolute; left: 14px; bottom: 28px; font-size: 28px; animation: aviatorReal 1.35s ease-out forwards }
-@keyframes aviatorReal{ 0%{ transform: translate(0,0) } 35%{ transform: translate(40px,-34px) } 70%{ transform: translate(90px,-62px) } 100%{ transform: translate(140px,-86px) } }
-.scratchFoil{ width: 200px; height: 130px; background: linear-gradient(135deg, #bf9b30, #ffd700, #bf9b30); border-radius: 12px; margin: 0 auto; display: flex; align-items: center; justify-content: center; font-weight: 800; color: #5d4037; position: relative; overflow: hidden }
-.scratchTrail{ position: absolute; width: 40px; height: 18px; background: rgba(255,255,255,.85); border-radius: 999px; animation: scratchTrail 1s linear forwards }
-@keyframes scratchTrail{ 0%{ transform: translate(10px,24px) } 100%{ transform: translate(140px,48px) } }
-.towerBar{ width: 26px; background: linear-gradient(180deg, #ffcc33, #ff8c00); border-radius: 6px; border: 1px solid #ffd700 }
-.mineGrid{ display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; width: 150px; margin: 0 auto }
-.mineCell{ height: 32px; background: #1e245a; border: 1px solid #2a2f6e; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px }
-.mineCell.lit{ background: radial-gradient(circle, #ffcc33, #ff8c00); animation: minePulse .55s ease infinite alternate }
-@keyframes minePulse{ 0%{ transform: scale(1) } 100%{ transform: scale(1.08) } }
-.fishStage{ width: 180px; height: 100px; background: linear-gradient(180deg, #0288d1, #0a0d2a); border-radius: 12px; margin: 0 auto; position: relative; overflow: hidden; border: 1px solid #2a2f6e }
-.fish{ position: absolute; font-size: 18px; animation: fishSwim 1.2s ease-in-out infinite alternate }
-@keyframes fishSwim{ 0%{ transform: translateY(0) } 100%{ transform: translateY(-10px) } }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+:root{--bg:#070a1c;--card:#12162f;--card2:#1a1f45;--bd:#2a3068;--tx:#fff;--mut:#98a2cd;--gold:#ffcc33;--grn:#00e676;--red:#ff5252;--pur:#8b5cf6}
+body{background:var(--bg);color:var(--tx);min-height:100vh;padding-bottom:64px}
+header{background:linear-gradient(135deg,#ffb300,#ff6d00 55%,#6a3cff);padding:10px 12px}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.logo{font-weight:800;font-size:15px;letter-spacing:.5px}
+.who{background:rgba(0,0,0,.22);border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:3px 8px;font-size:10px;white-space:nowrap}
+.balbar{margin-top:8px;background:rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:8px 10px;display:flex;justify-content:space-between;align-items:center}
+.balbar b{font-size:17px}
+.tiny{font-size:10px;color:#ffe9a8}
+.tabs{position:sticky;top:0;z-index:9;background:#0a0e26;border-bottom:1px solid var(--bd);display:flex;gap:6px;padding:8px;overflow-x:auto}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;background:var(--card);border:1px solid var(--bd);color:#fff;padding:7px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.tab.on{background:linear-gradient(135deg,var(--gold),#ff7a00);color:#241500;border-color:transparent}
+.tab.adm{background:linear-gradient(135deg,#7c3aed,#c026d3);border-color:transparent}
+main{padding:12px}
+.sec{display:none}
+.sec.on{display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--bd);border-radius:13px;padding:10px;text-align:center}
+.card .em{font-size:26px}
+.card .nm{font-weight:700;font-size:12px;margin-top:2px}
+.card .sub{color:var(--mut);font-size:10px;margin-top:2px}
+.box{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--bd);border-radius:13px;padding:12px}
+.box+.box{margin-top:10px}
+h3{font-size:13px;margin-bottom:6px}
+p.hint{color:var(--mut);font-size:11px;line-height:1.45}
+.btn{width:100%;background:linear-gradient(135deg,var(--gold),#ff7a00);color:#241500;border:0;padding:11px;border-radius:10px;font-weight:800;font-size:13px;margin-top:8px}
+.btn.alt{background:var(--card2);border:1px solid var(--bd);color:#fff;font-weight:600}
+.btn.pur{background:linear-gradient(135deg,#7c3aed,#c026d3);color:#fff}
+.btn:active{transform:scale(.98)}
+.row{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.row .btn{margin-top:0;flex:1 1 auto;width:auto;min-width:70px;padding:9px 8px;font-size:11px}
+.chips{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}
+.chip{background:var(--card);border:1px solid var(--bd);color:#fff;border-radius:9px;padding:8px 4px;font-size:11px;font-weight:700}
+.chip.on{background:linear-gradient(135deg,var(--gold),#ff8c00);color:#241500;border-color:transparent}
+.stack{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:6px}
+.st{background:var(--card);border:1px solid var(--bd);color:#fff;border-radius:8px;padding:7px 2px;font-size:10px;font-weight:700}
+.st.on{background:linear-gradient(135deg,var(--gold),#ff8c00);color:#241500;border-color:transparent}
+input,select,textarea{width:100%;background:#080c22;border:1px solid var(--bd);color:#fff;border-radius:9px;padding:10px;font-size:12px;margin-top:7px}
+label.lb{display:block;font-size:10px;color:var(--mut);margin-top:8px}
+.menu{display:flex;justify-content:space-around;position:fixed;bottom:0;left:0;right:0;background:#080c22;border-top:1px solid var(--bd);padding:5px 0;z-index:20}
+.mi{flex:1;background:none;border:0;color:var(--mut);font-size:9px;display:flex;flex-direction:column;align-items:center;gap:1px;padding:3px 0}
+.mi span{font-size:16px}
+.mi.on{color:var(--gold)}
+#toast{position:fixed;left:50%;bottom:74px;transform:translateX(-50%);background:#0d1330;border:1px solid var(--gold);color:#fff;padding:9px 14px;border-radius:999px;font-size:11px;display:none;z-index:120;max-width:92vw;text-align:center}
+#ov{display:none;position:fixed;inset:0;background:rgba(4,6,18,.94);z-index:80;align-items:center;justify-content:center;padding:16px}
+#ov.on{display:flex}
+.ovc{background:linear-gradient(180deg,#1b2150,#0d1230);border:1px solid #343b7d;border-radius:16px;padding:16px;width:min(360px,94vw);text-align:center;position:relative}
+.cls{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,204,51,.4);color:var(--gold);font-size:14px;font-weight:800}
+.bar{height:8px;background:#0a0f2c;border:1px solid #232a5c;border-radius:999px;overflow:hidden;margin:10px 0 6px}
+.fill{height:100%;width:14%;background:linear-gradient(90deg,var(--gold),#ff6b00);transition:width .3s}
+.pct{font-size:10px;color:var(--gold)}
+.vstage{min-height:104px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:6px}
+.coin{width:78px;height:78px;border-radius:50%;background:radial-gradient(circle at 32% 28%,#fff8c4,#ffcc33 38%,#ff8c00 66%,#7d4300);border:3px solid #ffd700;box-shadow:0 8px 26px rgba(255,204,51,.5),inset 0 2px 10px rgba(255,255,255,.8);animation:cf .5s linear infinite}
+@keyframes cf{0%{transform:perspective(460px) rotateY(0)}100%{transform:perspective(460px) rotateY(360deg)}}
+.dw{display:flex;gap:10px}
+.db{width:48px;height:48px;background:linear-gradient(145deg,#fff,#dcdcdc);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:26px;color:#111;box-shadow:0 5px 14px rgba(0,0,0,.4)}
+.da{animation:dA .45s ease infinite}
+.dbb{animation:dB .45s ease infinite .12s}
+@keyframes dA{0%{transform:translateY(0) rotate(0)}50%{transform:translateY(-12px) rotate(95deg)}100%{transform:translateY(0) rotate(190deg)}}
+@keyframes dB{0%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(-95deg)}100%{transform:translateY(0) rotate(-190deg)}}
+.wheel{width:104px;height:104px;border-radius:50%;border:3px solid #fff;background:repeating-conic-gradient(#ff1744 0 30deg,#111 30deg 60deg,#00e676 60deg 90deg);box-shadow:0 0 22px rgba(255,204,51,.45);animation:wh 1s cubic-bezier(.2,.8,.3,1) forwards}
+@keyframes wh{0%{transform:rotate(0)}100%{transform:rotate(720deg)}}
+.rk{width:150px;height:92px;background:linear-gradient(180deg,#1a237e,#4a148c);border-radius:11px;position:relative;overflow:hidden;border:1px solid #3a2d7a}
+.rki{position:absolute;left:10px;bottom:14px;font-size:26px;animation:ra 1s ease-out forwards}
+@keyframes ra{0%{transform:translate(0,0)}60%{transform:translate(46px,-52px)}100%{transform:translate(78px,-72px)}}
+.alt{position:absolute;top:6px;right:7px;background:rgba(0,0,0,.55);border-radius:999px;padding:3px 7px;font-size:10px;color:var(--gold);font-weight:700}
+.pb{width:160px;height:112px;background:radial-gradient(ellipse,#1a237e,#080c22);border-radius:11px;position:relative;overflow:hidden;border:1px solid var(--bd)}
+.pg{position:absolute;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle,#ffcc33,#ff8c00)}
+.bl{position:absolute;left:50%;top:6px;width:13px;height:13px;border-radius:50%;background:radial-gradient(circle,#ff5252,#b71c1c);animation:pl 1s ease-in forwards}
+@keyframes pl{0%{transform:translate(-50%,0)}35%{transform:translate(-24%,36px)}70%{transform:translate(16%,70px)}100%{transform:translate(0,92px)}}
+.mg{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;width:140px}
+.mc{height:28px;background:#1b2150;border:1px solid var(--bd);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.mc.lit{background:radial-gradient(circle,#ffcc33,#ff8c00);animation:mp .5s ease infinite alternate}
+@keyframes mp{0%{transform:scale(1)}100%{transform:scale(1.09)}}
+.kb{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.kn{width:30px;height:30px;border-radius:50%;color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,#ff6b00,#bf360c);animation:km .45s ease infinite alternate}
+@keyframes km{0%{transform:translateY(0)}100%{transform:translateY(-7px)}}
+.sl{display:flex;gap:5px;justify-content:center}
+.re{width:44px;height:74px;overflow:hidden;background:#080c22;border:1px solid var(--bd);border-radius:7px}
+.rs{animation:rsp .12s linear infinite}
+.rs div{height:37px;display:flex;align-items:center;justify-content:center;font-size:19px}
+@keyframes rsp{0%{transform:translateY(0)}100%{transform:translateY(-37px)}}
+.res{font-size:12px;font-weight:700;color:var(--gold)}
+.miss{color:var(--red)}
+.win{color:var(--grn)}
+#gate{display:none;position:fixed;inset:0;z-index:200;background:var(--bg);align-items:center;justify-content:center;padding:16px;overflow:auto}
+#gate.on{display:flex}
+.gc{width:100%;max-width:360px;background:linear-gradient(180deg,#1a1f45,#0d1230);border:1px solid #343b7d;border-radius:16px;padding:16px}
+.gmsg{color:var(--red);font-size:11px;text-align:center;min-height:15px;margin-top:8px}
+.gsw{text-align:center;font-size:11px;margin-top:9px;color:var(--mut)}
+.gsw b{color:var(--gold)}
+.big{font-size:20px;font-weight:800;color:var(--grn)}
+.urow{border:1px solid var(--bd);border-radius:10px;padding:8px;margin-top:7px;font-size:11px}
+.urow .nm{font-weight:700}
+.urow .meta{color:var(--mut);font-size:10px;margin-top:2px}
+.tag{font-size:9px;padding:1px 5px;border-radius:999px;border:1px solid var(--bd);color:var(--mut)}
+.tag.reg{color:var(--grn);border-color:#1b5e20}
+.tag.blk{color:var(--red);border-color:#7f1d1d}
+.mod{position:fixed;inset:0;background:rgba(0,0,0,.9);z-index:300;display:flex;align-items:center;justify-content:center;padding:12px}
+.mod .mc2{background:#0d1230;border:1px solid var(--pur);border-radius:12px;padding:10px;max-width:94vw;max-height:90vh;overflow:auto;text-align:center}
+.mod img{max-width:100%;border-radius:8px;display:block;margin-top:8px}
+.vtxt{font-size:10px;color:var(--mut);margin-top:6px;line-height:1.5}
 </style>
 </head>
 <body>
 <header>
- <div class="hrow"><div><div style="font-family:'Cinzel',serif;font-weight:700">PLAY&EARN</div><div style="font-size:11px;opacity:.9">Mini App — Bot is only menu</div></div><div class="badge" id="badge">👤 Guest</div></div>
- <div class="balbar"><div><small>💰 Coins</small><br><b id="balTop">—</b> <span id="usdTop"></span></div><div><small>Rate</small><br><span id="rateLbl"></span></div></div>
+ <div class="hrow">
+  <div class="logo">🎰 PLAY &amp; EARN</div>
+  <div class="who" id="who">—</div>
+ </div>
+ <div class="balbar">
+  <div>
+   <div class="tiny">BALANCE</div>
+   <b id="bal">—</b> <span class="tiny" id="balusd"></span>
+  </div>
+  <div style="text-align:right">
+   <div class="tiny" id="rateinfo">—</div>
+   <div class="tiny" id="verinfo">—</div>
+  </div>
+ </div>
 </header>
-<div class="tabs">
- <button class="tab active" type="button" onclick="showTab('home')">🏠 Home</button>
- <button class="tab" type="button" onclick="showTab('playearn')">💰 PLAY&EARN (10)</button>
- <button class="tab" type="button" onclick="showTab('freegames')">🌐 FREE GAMES</button>
- <button class="tab" type="button" onclick="showTab('wallet')">💳 Wallet</button>
- <button class="tab" type="button" onclick="showTab('deposit')">📥 Deposit</button>
- <button class="tab" type="button" onclick="showTab('account')">👤 Account</button>
- <button class="tab" type="button" onclick="showTab('settings')">⚙️ Settings</button>
- <button class="tab" type="button" id="adminTab" style="display:none;background:linear-gradient(135deg,#7c4dff,#e040fb);color:#fff;border-color:#7c4dff" onclick="showTab('admin')">👑 ADMIN</button>
+<div class="tabs" id="tabs">
+ <button class="tab on" id="tPlay" type="button">🎮 Play</button>
+ <button class="tab" id="tWallet" type="button">💳 Wallet</button>
+ <button class="tab" id="tDep" type="button">📥 Deposit</button>
+ <button class="tab" id="tWd" type="button">📤 Withdraw</button>
+ <button class="tab" id="tAcc" type="button">👤 Account</button>
+ <button class="tab" id="tSet" type="button">⚙️ Settings</button>
+ <button class="tab adm" id="tAdm" type="button" style="display:none">👑 ADMIN</button>
 </div>
 <main>
- <section id="home" class="section active">
-  <div class="box" style="text-align:center"><h2 style="font-family:'Cinzel',serif">Welcome 💰 PLAY&EARN</h2><p style="color:#9aa3d1;font-size:12px;margin-top:6px">Bot = menu only — all games inside Mini App</p><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px"><div class="box"><div style="font-size:22px">💰</div><b>PLAY&EARN (10)</b><p style="color:#9aa3d1;font-size:11px">Best 10 games — pick then 3-5s animation</p><button class="btn" type="button" onclick="showTab('playearn')">▶ Enter</button></div><div class="box"><div style="font-size:22px">🌐</div><b>FREE GAMES (Live API)</b><p style="color:#9aa3d1;font-size:11px">FreeToGame — no coins</p><button class="btn" type="button" onclick="showTab('freegames')">▶ Play Free</button></div></div></div>
- </section>
- <section id="playearn" class="section">
-  <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">
-   <button class="tab active" type="button" onclick="filterPlay('all',this)">All 10</button><button class="tab" type="button" onclick="filterPlay('dice',this)">🎲 Dice</button><button class="tab" type="button" onclick="filterPlay('crash',this)">🚀 Crash</button><button class="tab" type="button" onclick="filterPlay('wheel',this)">🎡 Wheel</button><button class="tab" type="button" onclick="filterPlay('board',this)">🔴 Mines</button><button class="tab" type="button" onclick="filterPlay('keno',this)">🔢 Keno</button>
-  </div>
-  <div id="playGrid" class="grid"></div>
-  <p style="color:#9aa3d1;font-size:11px;text-align:center;margin-top:8px">Each playable game: pick choice (Head/Tail, 1-6, Rock/Paper…) → stake → 3-5s close animation → win/loss.</p>
- </section>
- <section id="freegames" class="section">
-  <div class="box"><h3>🌐 FREE GAMES — Live API</h3><p id="freeHint" style="color:#ffd966;font-size:11px;margin-top:6px"></p></div>
-  <div id="freeGrid" class="grid" style="margin-top:10px"></div>
-  <div style="display:flex;gap:8px;margin-top:8px"><button class="btn2" type="button" onclick="loadFree('all')">🔄 Reload Free</button><button class="btn" type="button" onclick="showTab('playearn')">💰 Go PLAY&EARN</button></div>
- </section>
- <section id="wallet" class="section">
-  <div class="box" style="text-align:center"><h3>💳 Wallet</h3><h2 id="balBig" style="font-size:24px;color:#00e6a0">— coins</h2><p id="walletSub" style="color:#9aa3d1;font-size:11px"></p><button class="btn2" type="button" onclick="syncBal(true)">🔄 Sync Real Balance</button></div>
- </section>
- <section id="admin" class="section">
-  <div class="box" style="background:linear-gradient(135deg,#2a0a4a,#1a1f4a);border:1px solid #7c4dff;text-align:center">
-   <h2 style="font-family:'Cinzel',serif">👑 ADMIN PANEL</h2>
-   <p id="adminWho" style="color:#b39ddb;font-size:11px;margin-top:4px"></p>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Everything is controlled from here</p>
-  </div>
-  <div class="box" style="margin-top:10px">
-   <h3>📊 Overview</h3>
-   <div id="adminStats" style="font-size:12px;margin-top:6px;color:#9aa3d1">Loading…</div>
-   <button class="btn2" type="button" onclick="adminRefresh()">🔄 Refresh</button>
-  </div>
-  <div class="box" style="margin-top:10px">
-   <h3>🎛️ Global Game Result</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Overrides every game instantly</p>
-   <div style="display:flex;gap:6px;margin-top:8px">
-    <button class="btn2" type="button" onclick="setGlobalMode('normal')">🌐 Normal</button>
-    <button class="btn2" type="button" style="border-color:#00e676" onclick="setGlobalMode('force_win')">✅ All WIN</button>
-    <button class="btn2" type="button" style="border-color:#ff5252" onclick="setGlobalMode('force_loss')">❌ All LOSS</button>
-   </div>
-   <p id="globalModeNow" style="color:#ffd966;font-size:11px;margin-top:6px"></p>
-  </div>
-  <div class="box" style="margin-top:10px">
-   <h3>🎮 Per-Game Control</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">WIN / LOSS / Normal for each of the 10 games</p>
-   <div id="adminGameList" style="margin-top:8px"></div>
-  </div>
-  <div class="box" style="margin-top:10px">
-   <h3>🧾 Registered Users (Signups)</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Name, username, coins — full control</p>
-   <div id="adminAccList" style="margin-top:8px"></div>
-   <div style="display:flex;gap:6px;margin-top:6px"><button class="btn2" type="button" onclick="adminLoadAccounts()">🔄 Refresh Users</button><button class="btn2" type="button" onclick="adminRebuildIndex()">️ Rebuild List</button></div>
-  </div>
-  <div class="box" style="margin-top:10px">
-   <h3>👤 User Balance Control</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Add, remove or set any user's coins</p>
-   <input id="adUserId" inputmode="numeric" placeholder="Telegram user ID" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
-   <button class="btn2" type="button" onclick="adminFindUser()">🔍 Find User</button>
-   <div id="adUserInfo" style="font-size:12px;margin-top:6px;color:#ffd966"></div>
-   <input id="adUserAmt" inputmode="numeric" placeholder="Amount in coins" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
-   <div style="display:flex;gap:6px;margin-top:6px">
-    <button class="btn2" type="button" style="border-color:#00e676" onclick="adminBal('add')">➕ Add</button>
-    <button class="btn2" type="button" style="border-color:#ff5252" onclick="adminBal('remove')">➖ Remove</button>
-    <button class="btn2" type="button" onclick="adminBal('set')">🟰 Set</button>
-   </div>
-  </div>
-  <div class="box" style="margin-top:10px">
-   <h3>📥 Pending Deposits</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Screenshots sent by users — check and approve</p>
-   <div id="adminDepList" style="margin-top:8px"></div>
-   <button class="btn2" type="button" onclick="adminLoadDeposits()">🔄 Refresh Deposits</button>
-  </div>
-  <div class="box" style="margin-top:10px">
-   <h3>📤 Pending Withdraws</h3>
-   <div id="adminWdList" style="margin-top:8px"></div>
-   <button class="btn2" type="button" onclick="adminLoadWithdraws()">🔄 Refresh Withdraws</button>
-  </div>
-  <div class="box" style="margin-top:10px">
-   <h3>💳 Deposit Methods (5–7 options)</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">These appear to users in the Deposit tab</p>
-   <div id="adminDepMethods" style="margin-top:8px"></div>
-   <div style="display:flex;gap:6px;margin-top:8px">
-    <button class="btn2" type="button" onclick="adminAddDepMethod()">➕ Add Method</button>
-    <button class="btn" type="button" onclick="adminSaveDepMethods()">💾 Save Methods</button>
-   </div>
-  </div>
-  <div class="box" style="margin-top:10px">
-   <h3>👥 Admin Team</h3>
-   <p id="adminTeamInfo" style="color:#9aa3d1;font-size:11px;margin-top:4px"></p>
-   <div id="adminTeamList" style="margin-top:8px"></div>
-   <input id="adAddId" inputmode="numeric" placeholder="Telegram ID to add" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
-   <div style="display:flex;gap:6px;margin-top:6px">
-    <button class="btn2" type="button" style="border-color:#ffd54f" onclick="adminAddTeam('equal')">➕ Equal (2)</button>
-    <button class="btn2" type="button" onclick="adminAddTeam('sub')">➕ Sub (10)</button>
-   </div>
-  </div>
-  <div class="box" style="margin-top:10px;margin-bottom:10px">
-   <h3>🔐 Sub-Admin Permissions</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Choose exactly what each sub-admin may do</p>
-   <select id="adSubPick" onchange="adminRenderSubPerms()" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select>
-   <div id="adSubPerms" style="margin-top:8px"></div>
+ <section class="sec on" id="sPlay">
+  <div class="box">
+   <h3>Pick a game</h3>
+   <p class="hint">Choose your option, set your bet, then play.</p>
+   <div id="gameGrid" class="grid" style="margin-top:9px"></div>
   </div>
  </section>
- <section id="deposit" class="section">
+ <section class="sec" id="sWallet">
+  <div class="box" style="text-align:center">
+   <h3>💳 Wallet</h3>
+   <div class="big" id="wbal">—</div>
+   <p class="hint" id="wsub">—</p>
+   <div class="row"><button class="btn alt" id="btnSync" type="button">🔄 Refresh balance</button></div>
+  </div>
+ </section>
+ <section class="sec" id="sDep">
   <div class="box">
    <h3>📥 Deposit</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Pick a method, pay, then upload your screenshot for approval</p>
-   <div id="depMethodList" style="margin-top:10px"></div>
-   <input id="depAmount" inputmode="numeric" placeholder="Amount in USD (e.g. 50)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
-   <input id="depProofFile" type="file" accept="image/*" style="width:100%;margin-top:8px;color:#9aa3d1;font-size:11px"/>
-   <button class="btn" type="button" onclick="userSubmitDeposit()">📎 Upload Screenshot & Submit</button>
-   <p id="depMsg" style="color:#ffd966;font-size:11px;margin-top:6px"></p>
+   <p class="hint">Choose a method, pay, then attach your payment screenshot.</p>
+   <div id="depMethods" style="margin-top:9px"></div>
+   <label class="lb">Amount in USD</label>
+   <input id="depAmt" type="number" min="1" placeholder="e.g. 50"/>
+   <label class="lb">Payment screenshot</label>
+   <input id="depFile" type="file" accept="image/*"/>
+   <button class="btn" id="depGo" type="button">📎 Submit deposit</button>
+   <p class="hint" id="depMsg" style="margin-top:7px"></p>
   </div>
-  <div class="box" style="margin-top:10px">
+ </section>
+ <section class="sec" id="sWd">
+  <div class="box">
    <h3>📤 Withdraw</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Choose method, type your details, confirm</p>
-   <div id="wdMethodList" style="margin-top:10px"></div>
-   <input id="wdAmount" inputmode="numeric" placeholder="Amount in coins" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
-   <div id="wdFieldWrap" style="margin-top:8px"></div>
-   <button class="btn" type="button" onclick="userSubmitWithdraw()">📤 Submit Withdraw</button>
-   <p id="wdMsg" style="color:#ffd966;font-size:11px;margin-top:6px"></p>
+   <p class="hint">Choose a method, fill your details, then confirm.</p>
+   <div id="wdMethods" style="margin-top:9px"></div>
+   <label class="lb">Amount in coins</label>
+   <input id="wdAmt" type="number" min="10" placeholder="e.g. 600"/>
+   <div id="wdFields"></div>
+   <button class="btn" id="wdGo" type="button">📤 Submit withdraw</button>
+   <p class="hint" id="wdMsg" style="margin-top:7px"></p>
   </div>
  </section>
- <section id="account" class="section">
+ <section class="sec" id="sAcc">
   <div class="box" style="text-align:center">
-   <h3>👤 My Account</h3>
-   <p id="accLine" style="color:#ffd966;font-size:12px;margin-top:6px"></p>
+   <h3>👤 My account</h3>
+   <p class="hint" id="accLine">—</p>
+   <p class="vtxt" id="accIds">—</p>
   </div>
-  <div class="box" style="margin-top:10px">
-   <h3>✏️ Edit Profile</h3>
-   <input id="acFirst" placeholder="First name" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
-   <input id="acLast" placeholder="Last name" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
-   <input id="acUser" placeholder="Username" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
-   <input id="acPass" type="password" placeholder="New password (leave blank to keep)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
-   <button class="btn" type="button" onclick="saveProfile()">💾 Save Profile</button>
-   <p id="acMsg" style="color:#ffd966;font-size:11px;margin-top:6px"></p>
+  <div class="box">
+   <h3>✏️ Edit profile</h3>
+   <input id="acFirst" placeholder="First name"/>
+   <input id="acLast" placeholder="Last name"/>
+   <input id="acUser" placeholder="Username"/>
+   <input id="acPass" type="password" placeholder="New password (leave blank to keep)"/>
+   <button class="btn" id="acSave" type="button">💾 Save profile</button>
+   <p class="hint" id="acMsg" style="margin-top:7px"></p>
   </div>
-  <div class="box" style="margin-top:10px;border-color:#7c4dff">
-   <h3>👑 Admin Access</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Your Telegram ID: <b id="myIdLbl" style="color:#ffd966">—</b></p>
-   <p id="adminStateLbl" style="font-size:11px;margin-top:4px;color:#ff8a80">Not the owner — ADMIN tab is hidden.</p>
-   <button class="btn" type="button" style="background:linear-gradient(135deg,#7c4dff,#e040fb);color:#fff" onclick="adminTry()">👑 Open Admin Panel</button>
-   <p style="color:#9aa3d1;font-size:10px;margin-top:6px">Server checks your ID. If you are the owner, the panel opens.</p>
-   <a class="btn2" href="https://t.me/PlaynEarnbot?text=/claim_admin" style="text-decoration:none;display:block;text-align:center;margin-top:8px">🔑 Claim Owner Access</a>
-   <p style="color:#9aa3d1;font-size:10px;margin-top:6px">Opens the bot — send /claim_admin, then reopen this Mini App.</p>
-  </div>
-  <div class="box" style="margin-top:10px;margin-bottom:10px">
-   <h3>🔐 Session</h3>
-   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">You stay logged in on this device until you log out.</p>
-   <button class="btn2" type="button" style="border-color:#ff5252;color:#ff8a80" onclick="doLogout()">🚪 Logout</button>
+  <div class="box">
+   <button class="btn alt" id="btnLogout" type="button" style="border-color:#7f1d1d;color:#ff8a80">🚪 Log out</button>
   </div>
  </section>
- <section id="settings" class="section">
-  <div class="box" style="text-align:center"><h3>🌍 Language — 100+ Worldwide</h3><p id="lblLanguage" style="color:#9aa3d1;font-size:11px">🌍 Language</p><select id="langSel" onchange="setLanguage(this.value)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select><p style="color:#9aa3d1;font-size:10px;margin-top:6px">Whole system changes instantly — menus, buttons, texts</p></div>
-  <div class="box" style="margin-top:10px;text-align:center"><h3>💱 Currency — 100+ Worldwide</h3><p id="lblCurrency" style="color:#9aa3d1;font-size:11px">💱 Currency</p><select id="curSel" onchange="setCurrency(this.value)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select><p style="color:#9aa3d1;font-size:10px;margin-top:6px">Balance shows coins + $ + your local currency (live rates)</p></div>
-  <div class="box" style="text-align:center;margin-top:10px"><h3>⚙️ Settings — System</h3><p style="color:#9aa3d1;font-size:11px">One tap clears system cache so whole app refreshes from GitHub</p><button class="btn" type="button" style="background:#1a1f4a;border:1px solid #ff5252;color:#ff8a80" onclick="purgeCache()">🗑️ Purge Cache — Clear System</button><p style="color:#ff8a80;font-size:10px;margin-top:6px">Clears Telegram + browser cache + reloads fresh</p></div>
-  <div class="box" style="margin-top:10px"><h3>ℹ️ About</h3><p style="color:#9aa3d1;font-size:11px">Build: <span id="buildInfo" style="color:#ffd966"></span> • Games: 10 (best selection)</p></div>
+ <section class="sec" id="sSet">
+  <div class="box">
+   <h3>💱 Currency</h3>
+   <p class="hint">Shows your balance in a local currency using live rates.</p>
+   <select id="curSel"></select>
+  </div>
+  <div class="box">
+   <h3>🌍 Language</h3>
+   <p class="hint">Changes the main menu labels.</p>
+   <select id="langSel"></select>
+  </div>
+  <div class="box">
+   <h3>🧹 Cache</h3>
+   <p class="hint">Reload the app from the server to pick up a new version.</p>
+   <button class="btn alt" id="btnPurge" type="button">🗑️ Clear cache and reload</button>
+  </div>
+  <div class="box">
+   <h3>ℹ️ Version</h3>
+   <p class="vtxt" id="aboutBox">—</p>
+  </div>
+ </section>
+ <section class="sec" id="sAdm">
+  <div class="box" style="border-color:var(--pur)">
+   <h3>👑 ADMIN PANEL</h3>
+   <p class="hint" id="adWho">—</p>
+   <div class="row"><button class="btn alt" id="adRefresh" type="button">🔄 Refresh all</button></div>
+   <p class="vtxt" id="adStats">—</p>
+  </div>
+  <div class="box">
+   <h3>🎛️ Global result</h3>
+   <p class="hint">Overrides every game for every player.</p>
+   <div class="row">
+    <button class="btn alt" id="adGN" type="button">🌐 Normal</button>
+    <button class="btn alt" id="adGW" type="button">✅ All win</button>
+    <button class="btn alt" id="adGL" type="button">❌ All lose</button>
+   </div>
+   <p class="hint" id="adGlobal" style="margin-top:6px"></p>
+  </div>
+  <div class="box">
+   <h3>🎮 Per-game control</h3>
+   <div id="adGames"></div>
+  </div>
+  <div class="box">
+   <h3>🧾 Users</h3>
+   <p class="hint">Everyone the bot has seen, with balance.</p>
+   <div class="row"><button class="btn alt" id="adUsersBtn" type="button">🔄 Load users</button></div>
+   <div id="adUsers"></div>
+  </div>
+  <div class="box">
+   <h3>👤 Balance control</h3>
+   <input id="adTarget" placeholder="Telegram user ID"/>
+   <div class="row">
+    <button class="btn alt" id="adInfo" type="button">🔍 Look up</button>
+   </div>
+   <p class="hint" id="adTargetInfo" style="margin-top:6px"></p>
+   <input id="adAmount" type="number" min="1" placeholder="Amount in coins"/>
+   <div class="row">
+    <button class="btn alt" id="adAdd" type="button">➕ Add</button>
+    <button class="btn alt" id="adRem" type="button">➖ Remove</button>
+    <button class="btn alt" id="adSet" type="button">🟰 Set</button>
+   </div>
+  </div>
+  <div class="box">
+   <h3>📥 Deposits</h3>
+   <div class="row"><button class="btn alt" id="adDepBtn" type="button">🔄 Load deposits</button></div>
+   <div id="adDeps"></div>
+  </div>
+  <div class="box">
+   <h3>📤 Withdraws</h3>
+   <div class="row"><button class="btn alt" id="adWdBtn" type="button">🔄 Load withdraws</button></div>
+   <div id="adWds"></div>
+  </div>
+  <div class="box">
+   <h3>💳 Deposit methods</h3>
+   <p class="hint">One per line: Name | payment details</p>
+   <textarea id="adDepMethods" rows="5"></textarea>
+   <button class="btn" id="adDepSave" type="button">💾 Save methods</button>
+  </div>
+  <div class="box">
+   <h3>👥 Admin team</h3>
+   <p class="hint" id="adTeamInfo">—</p>
+   <input id="adTeamId" placeholder="Telegram ID"/>
+   <div class="row">
+    <button class="btn alt" id="adTeamEq" type="button">➕ Equal (2)</button>
+    <button class="btn alt" id="adTeamSub" type="button">➕ Sub (10)</button>
+   </div>
+   <div id="adTeamList"></div>
+  </div>
  </section>
 </main>
-<div id="ov"><div class="ovCard" id="ovCard"><button class="ovClose" type="button" onclick="forceCloseOv()" aria-label="Close">✕</button><div class="pulseRing"></div><div id="ovVisual" style="min-height:110px;display:flex;align-items:center;justify-content:center"></div><div id="ovTitle" style="font-weight:800;margin-top:10px;font-family:'Cinzel',serif">Game</div><div id="ovSub" style="color:#ffd966;font-size:12px;margin-top:4px">Starting…</div><div class="bar"><div id="ovFill" class="fill"></div></div><div id="ovPct" style="color:#ffcc33;font-size:11px">14%</div><div id="ovExtra" style="color:#9aa3d1;font-size:11px;margin-top:6px"></div></div></div>
-<div class="bottomNav">
- <button class="bNav active" type="button" onclick="showTab('home')"><span>🏠</span>Home</button><button class="bNav" type="button" onclick="showTab('playearn')"><span>💰</span>PLAY&EARN</button><button class="bNav" type="button" onclick="showTab('freegames')"><span>🌐</span>Free</button><button class="bNav" type="button" onclick="showTab('wallet')"><span>💳</span>Wallet</button><button class="bNav" type="button" onclick="showTab('deposit')"><span>📥</span>Deposit</button><button class="bNav" type="button" onclick="showTab('settings')"><span>⚙️</span>Settings</button><button class="bNav" type="button" id="bAdminNav" style="display:none;color:#b39ddb" onclick="showTab('admin')"><span>👑</span>Admin</button>
+<div id="ov"><div class="ovc"><button class="cls" id="ovClose" type="button">✕</button><div class="vstage" id="ovStage"></div><div class="res" id="ovTitle">Playing…</div><div class="bar"><div class="fill" id="ovFill"></div></div><div class="pct" id="ovPct">14%</div><div class="hint" id="ovSub" style="margin-top:6px"></div></div></div>
+<div class="menu" id="menu">
+ <button class="mi on" data-go="sPlay" type="button"><span>🎮</span>Play</button>
+ <button class="mi" data-go="sWallet" type="button"><span>💳</span>Wallet</button>
+ <button class="mi" data-go="sDep" type="button"><span>📥</span>Deposit</button>
+ <button class="mi" data-go="sWd" type="button"><span>📤</span>Withdraw</button>
+ <button class="mi" data-go="sAcc" type="button"><span>👤</span>Account</button>
+ <button class="mi" data-go="sAdm" id="miAdm" style="display:none" type="button"><span>👑</span>Admin</button>
 </div>
-<div id="gate" style="display: none; position: fixed; inset: 0; z-index: 200; background: #080a1e; align-items: center; justify-content: center; padding: 18px; overflow-y: auto">
- <div style="width: 100%; max-width: 380px; background: linear-gradient(180deg, #1a1f4a, #0f1330); border: 1px solid #2a3266; border-radius: 18px; padding: 18px">
-  <div style="text-align: center; margin-bottom: 12px">
-   <div style="font-size: 30px">🎰</div>
-   <h2 style="font-family: 'Cinzel', serif; font-size: 17px; color: #ffd966">PLAY&EARN</h2>
-   <p style="color: #9aa3d1; font-size: 11px; margin-top: 3px">Create your account to play</p>
-  </div>
-  <div id="gateForm"></div>
-  <p id="gateMsg" style="color: #ff8a80; font-size: 11px; margin-top: 8px; text-align: center; min-height: 14px"></p>
-  <div id="gateSwitch" style="text-align: center; margin-top: 10px; font-size: 11px"></div>
+<div id="gate"><div class="gc">
+ <div style="text-align:center">
+  <div style="font-size:28px">🎰</div>
+  <div class="logo" style="margin-top:3px">PLAY &amp; EARN</div>
+  <p class="hint" id="gateSub">Create your account to start playing.</p>
  </div>
-</div>
-<div id="topUser" style="display: none; position: relative; z-index: 6; background: #0a0d2a; border-bottom: 1px solid #2a2f6e; padding: 7px 12px; display: none; justify-content: space-between; align-items: center">
- <span id="topUserName" style="font-size: 11px; color: #ffd966"></span>
- <span>
-  <button class="btn2" type="button" style="width: auto; margin: 0; padding: 4px 9px; font-size: 10px; display: inline-block" onclick="showTab('account')">👤 Account</button>
-  <button class="btn2" type="button" style="width: auto; margin: 0 0 0 5px; padding: 4px 9px; font-size: 10px; display: inline-block; border-color: #ff5252; color: #ff8a80" onclick="doLogout()">Logout</button>
- </span>
-</div>
-<div id="toast" class="toast"></div>
+ <div id="gateForm"></div>
+ <p class="gmsg" id="gateMsg"></p>
+ <div class="gsw" id="gateSwitch"></div>
+</div></div>
+<div id="toast"></div>
 <script>
-(function(){
- function showErr(txt){
-  try{
-   var d=document.getElementById('jsErrBanner');
-   if(!d){
-    d=document.createElement('div');
-    d.id='jsErrBanner';
-    d.style.cssText='position:fixed;top:0;left:0;right:0;z-index:9999;background:#b00020;color:#fff;font-size:11px;padding:8px;font-family:monospace;white-space:pre-wrap;max-height:40vh;overflow:auto';
-    document.body.appendChild(d);
-   }
-   d.textContent='SCRIPT ERROR - send this screenshot to admin:'+String.fromCharCode(10)+txt;
-  }catch(e){}
- }
- window.onerror=function(m,src,ln,col){ showErr(m+' @ line '+ln+' col '+col); return false; };
- window.addEventListener('unhandledrejection',function(ev){ showErr('Promise '+((ev&&ev.reason&&ev.reason.message)?ev.reason.message:String(ev&&ev.reason))); });
-})();
-</script>
-<script>
-const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
-const BOT="PlaynEarnbot";
-const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Sswvao_VSvInFKjcsv7F2aQ3n1_N9Bw_F0cQ31CFDhLHqCXVM5IG8DII7RgWfTEB_D24DE4QS8BgimMsp5noenWWqfF72Erqv2rbnKFW5T7NjmuIzw_qlkzBmset4jdLwDUCoiafXjbm7L1Nw04_2EUBtwRI6fjm1Mab66sY_smbQdepG5yjSjadaBM50uoQPUU";
-const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Ssw5XgwkJQcas4aWjvFzGlaWNItD76FEe8EYdy8u68dWHU4eImM9qeTcPCpRyK5kfPthPXRZoWo_NIWJ33IeZeaoBmrPgl-Ta0xPHfLUaF1jfTKQKrUmAiA9txa8Vo3giCL-ivPkg4JmyOy-M9Y8ZMeVq0ClUur0rZAPW_ugOM72U5JcJm4Yi0H8cZ57Wc6QKbI";
-const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4Ssw3ySSgelZA5LPdRJReqnkflJLfGW599qVGr7glFCz30T2PJYLlCEUEjuqHOVSV8eDJbyGael7fpZOGJeUf3OcLfhy9KozU40WwOZxuXINnlhdUB6VKb3T4RnmMDAlHjAMcK5OiOVVYXkIoaNO8ecxKTkUOl5r_e1Lct7VLdV3j1uhsJg7sRhHnDOhH4YQRzL6EktDr3GLCEYl1SnAWqagew%3D%3D";
-const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4SswnxoyTLDAGgPwbbr0IqexGwxBIqTQIVoiHykM_54_Imz2YmkLKW6bsljAX7DNGE2lJufRfRnGwgyA-O2ffpl4EUWt60h7ivp11FCJfRtSYfAipcKnTJ-oQRrQbaJsG3pG61JohYRIrXxeK7hGA12ua_Hr0i2TL9I2_S6kZOTtZxrt84-AEafE7sldxIQ8QZ35";
-let accToken="", accUser=null, accChecking=true;
-let isAdmin=false, isFullAdmin=false;
-let selBal=0;
-let _updBalInterval=null;
-function startBalSync(){ if(_updBalInterval) clearInterval(_updBalInterval); _updBalInterval=setInterval(()=> syncBal(false), 4000); syncBal(false); }
-let audioCtx=null;
-function getAudio(){ try{ if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)(); if(audioCtx.state==='suspended') audioCtx.resume(); return audioCtx; }catch(e){ return null; } }
-let _sfxInts=[], _sfxTouts=[];
-function clearSfx(){ try{ _sfxInts.forEach(id=>clearInterval(id)); _sfxInts=[]; _sfxTouts.forEach(id=>clearTimeout(id)); _sfxTouts=[]; }catch(e){} }
-function regInt(id){ _sfxInts.push(id); return id; }
-function regTout(id){ _sfxTouts.push(id); return id; }
-function tone(freq,dur,type='sine',vol=.18,slide){
- try{
-  const ctx=getAudio(); if(!ctx) return;
-  const o=ctx.createOscillator(), g=ctx.createGain(), f=ctx.createBiquadFilter();
-  o.type=type; f.type='lowpass'; f.frequency.value=3200; f.Q.value=0.7;
-  o.frequency.value=freq;
-  o.connect(f); f.connect(g); g.connect(ctx.destination);
-  const now=ctx.currentTime;
-  g.gain.setValueAtTime(0, now);
-  g.gain.linearRampToValueAtTime(vol, now+0.008);
-  g.gain.exponentialRampToValueAtTime(0.001, now+dur);
-  if(slide) o.frequency.exponentialRampToValueAtTime(slide, now+dur*0.92);
-  o.start(now); o.stop(now+dur+0.02);
- }catch(e){}
-}
-function clickSound(){ tone(880,.08,'sine',.15,1100); }
-function winSound(){ tone(620,.14,'sine',.20,880); regTout(setTimeout(()=>tone(780,.14,'sine',.18,1040),130)); regTout(setTimeout(()=>{ tone(980,.22,'sine',.20,1240); },280)); }
-function loseSound(){ tone(240,.18,'triangle',.14,180); regTout(setTimeout(()=>tone(180,.28,'sine',.12,120),170)); }
-function getUID(){try{if(TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user&&TG.initDataUnsafe.user.id) return parseInt(TG.initDataUnsafe.user.id);}catch(e){} try{let p=new URLSearchParams(location.search);let v=p.get("tgid")||p.get("uid")||p.get("playnearn_uid")||p.get("start_param")||p.get("tgWebAppStartParam"); if(v){ let n=String(v).match(/\d{5,}/); if(n) return parseInt(n[0]); let c=String(v).replace(/\D/g,''); if(c.length>=5) return parseInt(c);} }catch(e){} try{if(window.__TG_UID) return parseInt(window.__TG_UID);}catch(e){} return 0;}
-function storeUID(uid){ try{ if(uid&&uid>0){ window.__TG_UID=parseInt(uid); localStorage.setItem('playnearn_uid', String(uid)); } }catch(e){}}
-function loadUID(){ try{ let v=localStorage.getItem('playnearn_uid'); if(v&&/^\d+$/.test(v)) { window.__TG_UID=parseInt(v); return parseInt(v);} }catch(e){} return 0; }
-try{if(TG){TG.ready();TG.expand();let u=TG.initDataUnsafe&&TG.initDataUnsafe.user; if(u){document.getElementById('badge').textContent='👤 '+(u.first_name||'')+' • '+u.id; storeUID(u.id);} else { setTimeout(()=>{ try{let u2=TG.initDataUnsafe&&TG.initDataUnsafe.user?TG.initDataUnsafe.user:null; if(u2&&u2.id){storeUID(u2.id); document.getElementById('badge').textContent='👤 '+(u2.first_name||'')+' • '+u2.id; syncBal(false);} }catch(e){} },800);}}}catch(e){} try{ loadUID(); let chk=setInterval(()=>{ if(getUID()>0){ clearInterval(chk); syncBal(false);} },1500); setTimeout(()=>clearInterval(chk),12000);}catch(e){}
-function toast(m){let t=document.getElementById('toast'); if(!t) return; t.textContent=m; t.style.display='block'; setTimeout(()=>t.style.display='none',2400);}
-window.purgeCache=function(){
- try{
-  localStorage.clear();
-  sessionStorage.clear();
-  if('caches' in window){ caches.keys().then(n=> n.forEach(k=> caches.delete(k))); }
- }catch(e){}
- toast('🗑️ Purge Cache — reloading fresh from GitHub…');
- setTimeout(()=>{
-  let u=location.href.split('?')[0]+'?v='+Date.now()+(getUID()?'&uid='+getUID():'');
-  location.href=u;
-  setTimeout(()=> location.reload(true), 700);
- }, 900);
-};
-function withUIDParam(url){ let uid=getUID(); if(!uid) uid=loadUID(); if(uid&&url&&url.includes('?')) url+='&uid='+uid; else if(uid) url+='?uid='+uid; return url;}
-async function api(obj){
- let uid=getUID(); if(!uid) uid=loadUID();
- if(!uid){ toast('Open via Telegram 🎰 Start — no uid'); let ap=document.getElementById('badge'); if(ap) ap.textContent='❌ open via Bot Start'; return {ok:false,error:'no uid'}; }
- storeUID(uid);
- let payload=Object.assign({},obj,{user_id:uid,uid:uid, start_param:uid});
- try{ let r=await fetch(withUIDParam(API),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)}); let j=await r.json(); return j; }catch(e){ return {ok:false,error:String(e).slice(0,80)}; }
-}
-let balLoaded=false, lastBalErr='', balOk=false, balStamp='', srvUid='';
-let apiHost='(unknown)';
-try{ apiHost=new URL(API).hostname; }catch(e){ apiHost=String(API).slice(0,40); }
-window.adminTry=function(){
- toast('Checking owner access…');
- adminApi({action:'admin_stats'}).then(function(j){
-  if(j && j.ok){
-   isAdmin=true; balLoaded=true; lastBalErr='';
-   refreshAdminUI();
-   showTab('admin');
-   toast('👑 Admin panel unlocked');
-  } else {
-   balLoaded=true;
-   lastBalErr=(j && j.error) ? String(j.error) : 'not authorized';
-   refreshAdminUI();
-   toast('Not owner: '+lastBalErr);
-  }
- });
-};
-function refreshAdminUI(){
- let at=document.getElementById('adminTab'); if(at) at.style.display=isAdmin?'block':'none';
- let an=document.getElementById('bAdminNav'); if(an) an.style.display=isAdmin?'flex':'none';
- let asl=document.getElementById('adminStateLbl'); if(!asl) return;
- if(isAdmin){ asl.textContent='✅ Server confirms you are the owner — ADMIN tab is unlocked above.'; asl.style.color='#00e676'; }
- else if(!balLoaded){ asl.textContent='Checking owner status with the server…'; asl.style.color='#ffd966'; }
- else { asl.textContent='❌ Server says NOT owner. Reason: '+(lastBalErr||'is_admin=false')+' — your ID '+getUID(); asl.style.color='#ff8a80'; }
-}
-async function syncBal(show){
- let j=await api({action:'balance'});
- if(j&&j.ok){
-  let b=parseInt(j.bal); if(isNaN(b)) b=parseInt(j.coins); if(isNaN(b)) b=0;
-  selBal=b; balOk=true; balStamp=new Date().toLocaleTimeString();
-  srvUid=String(j.srv_uid||'');
-  updBal();
-  isAdmin=!!j.is_admin;
-  balLoaded=true; lastBalErr='';
-  refreshAdminUI();
-  if(show) toast('💰 '+selBal+' coins');
- } else {
-  balOk=false; balLoaded=true;
-  lastBalErr=(j&&j.error)?String(j.error):'no reply from server';
-  updBal(); refreshAdminUI();
-  if(show) toast('Balance not loaded: '+lastBalErr);
- }
-}
-function updBal(){ document.getElementById('balTop').textContent=selBal+' coins'; document.getElementById('usdTop').textContent='≈ $'+(selBal/RATE).toFixed(2); document.getElementById('balBig').textContent=selBal+' coins'; document.getElementById('walletSub').textContent='≈ $'+(selBal/RATE).toFixed(2)+' — 1$='+RATE+'c'; document.getElementById('rateLbl').textContent='1$='+RATE+'c'; }
-window.showTab=function(id){ document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); let el=document.getElementById(id); if(el) el.classList.add('active'); document.querySelectorAll('.tabs .tab').forEach(b=>b.classList.toggle('active', b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+id+"'"))); if(id==='wallet') syncBal(false); if(id==='freegames') loadFree('all'); if(id==='admin'){ adminRefresh(); } if(id==='deposit'){ loadDepMethods(); loadWdMethods(); } window.scrollTo({top:0,behavior:'smooth'}); };
-const GAMES=[
- {id:1,name:'Coin Flip',emoji:'🪙',cost:10,mult:1.9,cat:'classic'},{id:2,name:'Dice Duel',emoji:'🎲',cost:10,mult:2.0,cat:'classic'},{id:3,name:'Lucky Slots',emoji:'🎰',cost:15,mult:3.0,cat:'slots'},{id:4,name:'Crash Rocket',emoji:'🚀',cost:20,mult:2.5,cat:'crash'},{id:5,name:'Mines',emoji:'💣',cost:15,mult:2.2,cat:'mines'},{id:6,name:'Plinko',emoji:'🔴',cost:10,mult:1.8,cat:'plinko'},{id:7,name:'Wheel Fortune',emoji:'🎡',cost:20,mult:2.8,cat:'wheel'},{id:8,name:'Hi-Lo Card',emoji:'🃏',cost:10,mult:2.0,cat:'cards'},{id:9,name:'Roulette Rapid',emoji:'🎯',cost:25,mult:2.5,cat:'roulette'},{id:10,name:'Blackjack',emoji:'♠️',cost:20,mult:2.0,cat:'cards'},{id:11,name:'Tower Climb',emoji:'🏗️',cost:15,mult:2.4,cat:'tower'},{id:12,name:'Aviator',emoji:'✈️',cost:25,mult:3.5,cat:'crash'},{id:13,name:'Keno',emoji:'🔢',cost:10,mult:5.0,cat:'keno'},{id:14,name:'Scratch Card',emoji:'🎫',cost:10,mult:2.0,cat:'scratch'},{id:15,name:'Poker Flip',emoji:'♣️',cost:15,mult:2.2,cat:'cards'},{id:16,name:'Fruit Slots',emoji:'🍒',cost:10,mult:2.5,cat:'slots'},{id:17,name:'Lucky Numbers',emoji:'🍀',cost:10,mult:4.0,cat:'keno'},{id:18,name:'Rock Paper',emoji:'✊',cost:10,mult:1.9,cat:'classic'},{id:19,name:'Spin & Win',emoji:'🌀',cost:15,mult:2.0,cat:'wheel'},{id:20,name:'Guess Number',emoji:'🤔',cost:10,mult:3.0,cat:'classic'},{id:21,name:'Dragon Tiger',emoji:'🐉',cost:20,mult:2.0,cat:'cards'},{id:22,name:'Andar Bahar',emoji:'🃒',cost:15,mult:2.0,cat:'cards'},{id:23,name:'Teen Patti',emoji:'👳',cost:20,mult:2.5,cat:'cards'},{id:24,name:'Baccarat',emoji:'💵',cost:25,mult:1.95,cat:'cards'},{id:25,name:'Sic Bo',emoji:'🎎',cost:15,mult:3.0,cat:'dice'},{id:26,name:'Limbo',emoji:'📈',cost:10,mult:2.0,cat:'crash'},{id:27,name:'Dice Master',emoji:'🎲',cost:10,mult:3.5,cat:'dice'},{id:28,name:'Hilo Turbo',emoji:'🔺',cost:10,mult:1.9,cat:'cards'},{id:29,name:'Mines Pro',emoji:'💥',cost:20,mult:3.0,cat:'mines'},{id:30,name:'Plinko X',emoji:'⚪',cost:10,mult:2.5,cat:'plinko'},{id:31,name:'Coin Tower',emoji:'🪙',cost:15,mult:2.4,cat:'tower'},{id:32,name:'Fishing King',emoji:'🎣',cost:15,mult:2.8,cat:'arcade'},{id:33,name:'Crash X',emoji:'💹',cost:20,mult:3.2,cat:'crash'},{id:34,name:'Slots Deluxe',emoji:'💎',cost:15,mult:4.0,cat:'slots'},{id:35,name:'Wheel X',emoji:'☸️',cost:20,mult:3.5,cat:'wheel'},{id:36,name:'Card War',emoji:'⚔️',cost:10,mult:2.0,cat:'cards'},{id:37,name:'Lucky Wheel',emoji:'🎡',cost:15,mult:2.2,cat:'wheel'},{id:38,name:'Dice Blitz',emoji:'🎲',cost:10,mult:2.8,cat:'dice'},{id:39,name:'Coin Rush',emoji:'🪙',cost:10,mult:2.0,cat:'classic'},{id:40,name:'Jackpot Spin',emoji:'💰',cost:25,mult:5.0,cat:'slots'},{id:41,name:'Roulette Euro',emoji:'🎡',cost:25,mult:2.7,cat:'roulette'},{id:42,name:'Keno Turbo',emoji:'🔢',cost:10,mult:4.5,cat:'keno'}
+var APP="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4S3d3V2rCDbfSe747fpC6b_Y9Zw3sKZ1_wquo-ewlMr87wJ4s856qRKWi6A5ry6wVZqZ3azEmly4K1gdYp2xvbj_nm72xHJQqbajt1qe4F2buNY5fju43NgHI5xyrcBc_viVo5g6zBAL0oTTnVNUZQ1O98cNMJcVznO9r1HvdSRbX0_W1PdPlm-d1zjggnT6ysdJ";
+var VER_EXPECTED=7;
+var TG=null;
+try{ if(window.Telegram&&window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
+var state={uid:0,tgUser:null,token:"",coins:0,rate:100,isAdmin:false,isFull:false,registered:false,loggedIn:false,balOk:false,srvUid:"",ver:0,cur:"USD",lang:"en",depMethods:[],wdMethods:[],wdSel:null,users:[],deps:[],wds:[]};
+var GAMES=[
+ {id:1,name:"Coin Flip",em:"🪙",cost:10,mult:1.9,pick:"head",opts:[["head","HEAD"],["tail","TAIL"]],type:"coin"},
+ {id:2,name:"Dice Duel",em:"🎲",cost:10,mult:2,pick:"4",opts:[["1","1"],["2","2"],["3","3"],["4","4"],["5","5"],["6","6"]],type:"dice",cols:3},
+ {id:4,name:"Crash Rocket",em:"🚀",cost:20,mult:2.5,pick:"",opts:[],type:"crash"},
+ {id:5,name:"Mines",em:"💣",cost:15,mult:2.2,pick:"1",opts:[["1","T1"],["2","T2"],["3","T3"],["4","T4"],["5","T5"],["6","T6"],["7","T7"],["8","T8"]],type:"mine",cols:4},
+ {id:6,name:"Plinko",em:"🔴",cost:10,mult:1.8,pick:"center",opts:[["left","LEFT"],["center","CENTER"],["right","RIGHT"]],type:"plinko"},
+ {id:7,name:"Wheel Fortune",em:"🎡",cost:20,mult:2.8,pick:"red",opts:[["red","RED"],["black","BLACK"],["green","GREEN"]],type:"wheel"},
+ {id:9,name:"Roulette",em:"🎯",cost:25,mult:2.5,pick:"red",opts:[["red","RED"],["black","BLACK"],["green","GREEN"]],type:"wheel"},
+ {id:12,name:"Aviator",em:"✈️",cost:25,mult:3.5,pick:"",opts:[],type:"crash"},
+ {id:13,name:"Keno",em:"🔢",cost:10,mult:5,pick:"7",opts:[["1","1"],["3","3"],["7","7"],["11","11"],["15","15"],["20","20"]],type:"keno",cols:3},
+ {id:25,name:"Sic Bo",em:"🎎",cost:15,mult:3,pick:"4",opts:[["1","1"],["2","2"],["3","3"],["4","4"],["5","5"],["6","6"]],type:"dice",cols:3}
 ];
-let pendingPick={game:0, choice:""};
-let curWinG=null, curWon=0, curCost=10, curBal=0, curResult="";
-let _autoCloseId=null;
-const TOP10=[1,2,4,5,6,7,9,12,13,25];
-const CATMAP={all:null, dice:['classic','dice'], crash:['crash'], wheel:['wheel','roulette'], board:['mines','plinko'], keno:['keno']};
-function renderPlay(filter){
- let grid=document.getElementById('playGrid'); if(!grid) return; grid.innerHTML='';
- let cats=CATMAP[filter]||null;
- let list=GAMES.filter(function(g){ return TOP10.includes(g.id) && (!cats || cats.indexOf(g.cat)>-1) });
- list.forEach(g=>{
-  let d=document.createElement('div'); d.className='card';
-  let pickHTML='';
-  let cp=function(opts){ let h='<div class="choiceRow">'; for(let i=0;i<opts.length;i++){ h+='<button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\''+opts[i][0]+'\')">'+opts[i][1]+'</button>'; } return h+'</div>'; };
-  let cg=function(opts,cols){ let h='<div style="display:grid;grid-template-columns:'+cols+';gap:4px;margin-top:6px">'; for(let i=0;i<opts.length;i++){ h+='<button class="choiceBtn" type="button" onclick="pick(this,'+g.id+',\''+opts[i][0]+'\')">'+opts[i][1]+'</button>'; } return h+'</div>'; };
-  let g3='1fr 1fr 1fr'; let g4='1fr 1fr 1fr 1fr';
-  let RBG=[['red','RED'],['black','BLACK'],['green','GREEN']];
-  if([1,39].includes(g.id)) pickHTML=cp([['head','HEAD'],['tail','TAIL']]);
-  else if([2,25,27,38].includes(g.id)) pickHTML=cg([['1','1'],['2','2'],['3','3'],['4','4'],['5','5'],['6','6']],g3);
-  else if([5,29].includes(g.id)) pickHTML=cg([['1','T1'],['2','T2'],['3','T3'],['4','T4'],['5','T5'],['6','T6'],['7','T7'],['8','T8']],g4);
-  else if([6,30].includes(g.id)) pickHTML=cp([['left','LEFT'],['center','CENTER'],['right','RIGHT']]);
-  else if([7,19,35,37,9,41].includes(g.id)) pickHTML=cp(RBG);
-  else if([8,28,36].includes(g.id)) pickHTML=cp([['high','HIGH'],['low','LOW']]);
-  else if(g.id===10) pickHTML=cp([['hit','HIT'],['stand','STAND']]);
-  else if([11,31].includes(g.id)) pickHTML=cp([['left','LEFT'],['right','RIGHT']]);
-  else if([13,17,42].includes(g.id)) pickHTML=cg([['1','1'],['7','7'],['14','14'],['21','21']],g4);
-  else if(g.id===18) pickHTML=cp([['rock','✊ ROCK'],['paper','✋ PAPER'],['scissors','✌️ SCISSORS']]);
-  else if([15,23].includes(g.id)) pickHTML=cp([['player','PLAYER'],['dealer','DEALER']]);
-  else if(g.id===20) pickHTML=cg([['1','1'],['5','5'],['7','7'],['10','10']],g4);
-  else if(g.id===21) pickHTML=cp([['dragon','🐉 DRAGON'],['tiger','🐯 TIGER']]);
-  else if(g.id===22) pickHTML=cp([['andar','ANDAR'],['bahar','BAHAR']]);
-  else if(g.id===24) pickHTML=cp([['banker','BANKER'],['player','PLAYER']]);
-  else if([4,12,26,33].includes(g.id)) pickHTML='<div style="display:flex;gap:4px;margin-top:6px"><input id="multIn'+g.id+'" type="number" step="0.1" min="1.1" placeholder="Target x e.g. 1.5" style="flex:1; background:#0a0d2a; border:1px solid #2a2f6e; color:#fff; padding:6px; border-radius:8px"/><button class="btn2" type="button" style="flex:0; padding:6px 10px" onclick="setMult('+g.id+')">✓</button></div>';
-  else if([3,16,34,40].includes(g.id)) pickHTML='<div style="color:#9aa3d1;font-size:10px;margin-top:6px">Spin — match 3 symbols</div>';
-  else pickHTML='<div style="color:#9aa3d1;font-size:10px;margin-top:6px">Tap Play → 3-5s animation</div>';
-  let stakeRow='<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px;margin-top:6px"><button class="stakeBtn btn2" type="button" style="padding:6px;font-size:10px" data-v="10" onclick="setStake(this,'+g.id+',10)">10c</button><button class="stakeBtn btn2" type="button" style="padding:6px;font-size:10px" data-v="50" onclick="setStake(this,'+g.id+',50)">50c</button><button class="stakeBtn btn2" type="button" style="padding:6px;font-size:10px" data-v="100" onclick="setStake(this,'+g.id+',100)">100c</button><button class="stakeBtn btn2" type="button" style="padding:6px;font-size:10px" data-v="1000" onclick="setStake(this,'+g.id+',1000)">1k</button></div><div style="display:flex;gap:4px;margin-top:6px"><input type="number" inputmode="numeric" placeholder="Custom c" min="1" id="stakeIn'+g.id+'" style="flex:1;background:#0a0d2a;border:1px solid #2a2f6e;color:#fff;padding:6px 8px;border-radius:8px;font-size:11px" oninput="pendingStake['+g.id+']=parseInt(this.value)||0"/><button class="btn2" type="button" style="padding:6px 10px;font-size:10px" onclick="applyCustom('+g.id+')">✓</button></div>';
-  d.innerHTML='<div class="emoji">'+g.emoji+'</div><div style="font-weight:700;margin-top:4px">'+g.name+'</div><div style="color:#9aa3d1;font-size:11px">'+g.cost+'c ×'+g.mult+' • '+g.cat+'</div>'+pickHTML+'<button class="btn" type="button" onclick="play('+g.id+')">▶ Play Betting</button>'+stakeRow;
-  grid.appendChild(d);
- });
-}
-let pendingStake={};
-window.setStake=function(el,gid,v){
- pendingStake[gid]=parseInt(v);
- let card=el.closest('.card');
- if(card){ card.querySelectorAll('.stakeBtn').forEach(b=>b.classList.remove('active')); }
- el.classList.add('active');
- let inp=document.getElementById('stakeIn'+gid); if(inp) inp.value=v;
- clickSound();
+var picks={};
+var stakes={};
+var ovTimer=null, ovSeq=0, ovEndAt=0;
+var CURR=[["USD","$","🇺🇸"],["EUR","€","🇪🇺"],["GBP","£","🇬🇧"],["INR","₹","🇮🇳"],["NPR","₨","🇳🇵"],["PKR","₨","🇵🇰"],["BDT","৳","🇧🇩"],["LKR","₨","🇱🇰"],["CNY","¥","🇨🇳"],["JPY","¥","🇯🇵"],["KRW","₩","🇰🇷"],["RUB","₽","🇷🇺"],["TRY","₺","🇹🇷"],["SAR","﷼","🇸🇦"],["AED","د.إ","🇦🇪"],["QAR","﷼","🇶🇦"],["KWD","د.ك","🇰🇼"],["ILS","₪","🇮🇱"],["EGP","£","🇪🇬"],["ZAR","R","🇿🇦"],["NGN","₦","🇳🇬"],["KES","KSh","🇰🇪"],["GHS","₵","🇬🇭"],["AUD","$","🇦🇺"],["NZD","$","🇳🇿"],["CAD","$","🇨🇦"],["MXN","$","🇲🇽"],["BRL","R$","🇧🇷"],["ARS","$","🇦🇷"],["CLP","$","🇨🇱"],["COP","$","🇨🇴"],["PEN","S/","🇵🇪"],["SEK","kr","🇸🇪"],["NOK","kr","🇳🇴"],["DKK","kr","🇩🇰"],["CHF","CHF","🇨🇭"],["PLN","zł","🇵🇱"],["CZK","Kč","🇨🇿"],["HUF","Ft","🇭🇺"],["RON","lei","🇷🇴"],["UAH","₴","🇺🇦"],["GEL","₾","🇬🇪"],["KZT","₸","🇰🇿"],["UZS","so'm","🇺🇿"],["SGD","S$","🇸🇬"],["MYR","RM","🇲🇾"],["IDR","Rp","🇮🇩"],["THB","฿","🇹🇭"],["VND","₫","🇻🇳"],["PHP","₱","🇵🇭"],["TWD","NT$","🇹🇼"],["HKD","HK$","🇭🇰"],["KRW2","₩","🇰🇵"],["MAD","د.م.","🇲🇦"],["DZD","د.ج","🇩🇿"],["TND","د.ت","🇹🇳"],["ETB","Br","🇪🇹"],["TZS","TSh","🇹🇿"],["UGX","USh","🇺🇬"],["BWP","P","🇧🇼"],["MUR","₨","🇲🇺"]];
+var LANGS=[["en","English"],["hi","हिन्दी"],["ne","नेपाली"],["ur","اردو"],["bn","বাংলা"],["ar","العربية"],["es","Español"],["fr","Français"],["de","Deutsch"],["ru","Русский"],["zh","中文"],["tr","Türkçe"],["pt","Português"],["id","Indonesia"],["ja","日本語"],["ko","한국어"],["fa","فارسی"],["uk","Українська"],["pl","Polski"],["vi","Tiếng Việt"]];
+var LBL={
+ en:{play:"Play",wallet:"Wallet",dep:"Deposit",wd:"Withdraw",acc:"Account",adm:"Admin",set:"Settings"},
+ hi:{play:"खेलें",wallet:"वॉलेट",dep:"जमा",wd:"निकासी",acc:"खाता",adm:"एडमिन",set:"सेटिंग्स"},
+ ne:{play:"खेल",wallet:"वालेट",dep:"जम्मा",wd:"निकासी",acc:"खाता",adm:"एडमिन",set:"सेटिङ"},
+ ur:{play:"کھیلیں",wallet:"والٹ",dep:"جمع",wd:"نکاسی",acc:"اکاؤنٹ",adm:"ایڈمن",set:"سیٹنگز"},
+ bn:{play:"খেলুন",wallet:"ওয়ালেট",dep:"জমা",wd:"উত্তোলন",acc:"অ্যাকাউন্ট",adm:"অ্যাডমিন",set:"সেটিংস"},
+ ar:{play:"العب",wallet:"المحفظة",dep:"إيداع",wd:"سحب",acc:"الحساب",adm:"المشرف",set:"الإعدادات"},
+ es:{play:"Jugar",wallet:"Cartera",dep:"Depósito",wd:"Retiro",acc:"Cuenta",adm:"Admin",set:"Ajustes"},
+ fr:{play:"Jouer",wallet:"Portefeuille",dep:"Dépôt",wd:"Retrait",acc:"Compte",adm:"Admin",set:"Réglages"},
+ de:{play:"Spielen",wallet:"Wallet",dep:"Einzahlung",wd:"Auszahlung",acc:"Konto",adm:"Admin",set:"Einstellungen"},
+ ru:{play:"Играть",wallet:"Кошелёк",dep:"Депозит",wd:"Вывод",acc:"Аккаунт",adm:"Админ",set:"Настройки"},
+ zh:{play:"游戏",wallet:"钱包",dep:"充值",wd:"提现",acc:"账户",adm:"管理",set:"设置"},
+ tr:{play:"Oyna",wallet:"Cüzdan",dep:"Yatır",wd:"Çek",acc:"Hesap",adm:"Yönetici",set:"Ayarlar"},
+ pt:{play:"Jogar",wallet:"Carteira",dep:"Depósito",wd:"Saque",acc:"Conta",adm:"Admin",set:"Config"},
+ id:{play:"Main",wallet:"Dompet",dep:"Deposit",wd:"Tarik",acc:"Akun",adm:"Admin",set:"Setelan"},
+ ja:{play:"プレイ",wallet:"ウォレット",dep:"入金",wd:"出金",acc:"アカウント",adm:"管理",set:"設定"},
+ ko:{play:"플레이",wallet:"지갑",dep:"입금",wd:"출금",acc:"계정",adm:"관리자",set:"설정"},
+ fa:{play:"بازی",wallet:"کیف پول",dep:"واریز",wd:"برداشت",acc:"حساب",adm:"مدیر",set:"تنظیمات"},
+ uk:{play:"Грати",wallet:"Гаманець",dep:"Депозит",wd:"Вивести",acc:"Акаунт",adm:"Адмін",set:"Налаштування"},
+ pl:{play:"Graj",wallet:"Portfel",dep:"Wpłata",wd:"Wypłata",acc:"Konto",adm:"Admin",set:"Ustawienia"},
+ vi:{play:"Chơi",wallet:"Ví",dep:"Nạp",wd:"Rút",acc:"Tài khoản",adm:"Admin",set:"Cài đặt"}
 };
-window.applyCustom=function(gid){
- let inp=document.getElementById('stakeIn'+gid);
- let v=parseInt(inp?inp.value:0);
- if(!v || v<1){ toast('Enter custom bet 1c+'); return; }
- pendingStake[gid]=v;
- // highlight no preset, custom active
- let card=inp?inp.closest('.card'):null;
- if(card){ card.querySelectorAll('.stakeBtn').forEach(b=>b.classList.remove('active')); }
- toast('Custom '+v+'c set — tap ▶ Play Betting');
-};
-window.pick=function(el,gid,choice){
- pendingPick[gid]=choice;
- let card=el.closest('.card');
- if(card){ card.querySelectorAll('.choiceBtn').forEach(b=>b.classList.remove('active')); }
- el.classList.add('active');
- clickSound();
-};
-window.setMult=function(gid){
- let inp=document.getElementById('multIn'+gid);
- let v=parseFloat(inp?inp.value:0);
- if(!v||v<1.1){ toast('Enter target x 1.1+'); return; }
- pendingPick[gid]=String(v);
- clickSound();
- toast('Target x'+v+' set — tap Play');
-};
-window.filterPlay=function(cat,el){ document.querySelectorAll('#playearn .tab').forEach(b=>b.classList.remove('active')); if(el) el.classList.add('active'); renderPlay(cat); };
-let ovTimer=null;
-let _playSeq=0;
-function ovDur(){ return 3000 + Math.floor(Math.random()*2000); }
-function buildVisual(g, resultChoice){
- const v=document.getElementById('ovVisual'); if(!v) return; v.innerHTML='';
- let res=resultChoice||'';
- let PIPS={'1':'⚀','2':'⚁','3':'⚂','4':'⚃','5':'⚄','6':'⚅'};
- if([1,39].includes(g.id)){
-  let r=String(res).toLowerCase();
-  let sym=r==='tail'?'🦅':'🪙';
-  let lab=r==='tail'?'TAIL':'HEAD';
-  v.innerHTML='<div class="coin3d">'+sym+'</div><div style="color: #ffd966; font-size: 12px; letter-spacing: 1px; margin-top: 8px">'+lab+'</div>';
-  regInt(setInterval(function(){ tone(1580,.04,'sine',.09) },260));
- } else if([2,25,27,38].includes(g.id)){
-  let n=res||'4'; let p1=PIPS[n]||'⚄'; let p2=PIPS[String(((parseInt(n)||1)+2)%6+1)]||'⚅';
-  v.innerHTML='<div class="diceWrap"><div class="diceBox diceRollA">'+p1+'</div><div class="diceBox diceRollB">'+p2+'</div></div><div style="color: #ffd966; font-weight: 700; margin-top: 8px">DICE SHOWS '+n+'</div>';
-  regInt(setInterval(function(){ tone(420,.05,'sine',.10,260) },300));
- } else if([3,16,34,40].includes(g.id)){
-  v.innerHTML='<div class="slotMachine"><div class="reel"><div class="reelStrip"><div class="sym">🍒</div><div class="sym">💎</div><div class="sym">7️⃣</div><div class="sym">🔔</div></div></div><div class="reel"><div class="reelStrip" style="animation-delay: .06s"><div class="sym">🔔</div><div class="sym">🍋</div><div class="sym">💎</div><div class="sym">🍒</div></div></div><div class="reel"><div class="reelStrip" style="animation-delay: .12s"><div class="sym">7️⃣</div><div class="sym">💎</div><div class="sym">🔔</div><div class="sym">🍋</div></div></div></div>';
-  let si=regInt(setInterval(function(){ tone(1450,.045,'sine',.11) },130)); regTout(setTimeout(function(){ clearInterval(si) },1400));
- } else if([4,26,33].includes(g.id)){
-  v.innerHTML='<div class="rocketStage"><div class="rocketIcon">🚀<span class="flameFlicker">🔥</span></div><div class="altitude" id="altLbl">x1.00</div></div>';
-  tone(160,.42,'triangle',.14,880);
-  let a=1.0; let iv=regInt(setInterval(function(){ a=a+0.14; let l=document.getElementById('altLbl'); if(l) l.textContent='x'+a.toFixed(2); if(a<2.2) tone(820,.05,'sine',.08) },280)); regTout(setTimeout(function(){ clearInterval(iv) },2800));
- } else if(g.id===12){
-  v.innerHTML='<div class="aviatorStage"><div class="aviatorPlane">✈️</div><div class="altitude" id="aviAlt">x1.00</div></div>';
-  tone(160,.45,'triangle',.14,900);
-  let av=1.0; let avi=regInt(setInterval(function(){ av=av+0.15; let l=document.getElementById('aviAlt'); if(l) l.textContent='x'+av.toFixed(2); if(av>2.4) tone(820,.06,'triangle',.12) },260)); regTout(setTimeout(function(){ clearInterval(avi) },3000));
- } else if([5,29].includes(g.id)){
-  let cells='';
-  for(let i=1;i<=8;i++){ let lit=(res && String(i)===String(res)); cells+='<div class="mineCell'+(lit?' lit':'')+'">'+(lit?'💎':'❓')+'</div>'; }
-  v.innerHTML='<div class="mineGrid">'+cells+'</div><div style="color: #ffd966; font-size: 11px; margin-top: 8px">TILE '+(res||'…')+'</div>';
-  regInt(setInterval(function(){ tone(540,.05,'sine',.10) },240));
- } else if([6,30].includes(g.id)){
-  v.innerHTML='<div class="plinkoBoard"><div class="peg" style="left: 22px; top: 18px"></div><div class="peg" style="left: 52px; top: 18px"></div><div class="peg" style="left: 82px; top: 18px"></div><div class="peg" style="left: 112px; top: 18px"></div><div class="peg" style="left: 142px; top: 18px"></div><div class="peg" style="left: 37px; top: 42px"></div><div class="peg" style="left: 67px; top: 42px"></div><div class="peg" style="left: 97px; top: 42px"></div><div class="peg" style="left: 127px; top: 42px"></div><div class="plinkoBall"></div></div>';
-  let tt=regInt(setInterval(function(){ tone(680+Math.random()*120,.05,'sine',.11) },210)); regTout(setTimeout(function(){ clearInterval(tt) },1200));
- } else if([7,19,35,37,9,41].includes(g.id)){
-  v.innerHTML='<div class="wheelWrap"><div class="pointerTop">▼</div><div class="wheelMain wheelSpinAnim"></div><div class="wheelCenter"></div></div><div style="color: #ffd966; font-size: 11px; margin-top: 8px">'+(res?String(res).toUpperCase():'SPINNING')+'</div>';
-  let wi=regInt(setInterval(function(){ tone(1450,.04,'sine',.11) },120)); regTout(setTimeout(function(){ clearInterval(wi) },1600));
- } else if([8,10,15,21,22,23,24,28,36].includes(g.id)){
-  v.innerHTML='<div class="cardFlipWrap"><div class="cardFlipEl">'+(g.emoji||'🃏')+'</div></div><div style="color: #ffd966; font-size: 11px; letter-spacing: 1px; margin-top: 8px">'+(res?String(res).toUpperCase():'DEALING')+' ♠ ♥ ♦ ♣</div>';
-  tone(740,.09,'triangle',.14,980);
- } else if([11,31].includes(g.id)){
-  v.innerHTML='<div style="display: flex; gap: 8px; align-items: flex-end; height: 90px"><div class="towerBar" style="height: 30px"></div><div class="towerBar" style="height: 52px"></div><div class="towerBar" style="height: 74px"></div><div class="towerBar" style="height: 88px"></div></div><div style="color: #ffd966; font-size: 11px; margin-top: 6px">'+(res?String(res).toUpperCase():'CLIMBING')+'</div>';
-  tone(520,.12,'sine',.14,720);
- } else if([13,17,42].includes(g.id)){
-  v.innerHTML='<div class="kenoBalls"><div class="kenoBall">7</div><div class="kenoBall">14</div><div class="kenoBall">32</div><div class="kenoBall">48</div><div class="kenoBall">61</div></div><div style="color: #9aa3d1; font-size: 10px; margin-top: 8px">Drew '+(res||'…')+'</div>';
-  let ki=regInt(setInterval(function(){ tone(560+Math.random()*180,.06,'sine',.11) },190)); regTout(setTimeout(function(){ clearInterval(ki) },1200));
- } else if(g.id===14){
-  v.innerHTML='<div class="scratchFoil">SCRATCH<div class="scratchTrail"></div></div>';
-  tone(600,.18,'sine',.14,800);
- } else if(g.id===18){
-  let r=String(res||''); let icon=r==='paper'?'✋':(r==='scissors'?'✌️':'✊');
-  v.innerHTML='<div style="font-size: 56px; animation: fishSwim .4s alternate infinite">'+icon+'</div><div style="color: #ffd966; font-size: 11px">'+(r?r.toUpperCase():'SHOOTING')+'</div>';
-  tone(520,.09,'sine',.14);
- } else if(g.id===20){
-  v.innerHTML='<div class="box" style="width: 160px"><div style="font-size: 28px">'+(res||'?')+'</div><div style="color: #9aa3d1; font-size: 11px">Guess locks</div></div>';
-  tone(440,.12,'sine',.13,660);
- } else if(g.id===32){
-  v.innerHTML='<div class="fishStage"><div class="fish" style="left: 20px; top: 16px">🐟</div><div class="fish" style="left: 70px; top: 36px">🐠</div><div class="fish" style="left: 120px; top: 56px">🐡</div><div style="position: absolute; left: 8px; top: 6px; font-size: 16px">🎣</div></div>';
-  tone(300,.22,'sine',.12,500);
- } else {
-  v.innerHTML='<div style="font-size: 44px">'+(g.emoji||'🎮')+'</div><div style="color: #9aa3d1; font-size: 11px; margin-top: 6px">'+g.name+'</div>';
- }
+function T(k){ var d=LBL[state.lang]||LBL["en"]; return d[k]||LBL["en"][k]||k; }
+function el(id){ return document.getElementById(id); }
+function toast(m){ var t=el("toast"); if(!t) return; t.textContent=String(m); t.style.display="block"; setTimeout(function(){ t.style.display="none"; },2600); }
+function esc(s){ return String(s==null?"":s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function readTG(){
+ try{ if(TG&&TG.initDataUnsafe&&TG.initDataUnsafe.user&&TG.initDataUnsafe.user.id){ return TG.initDataUnsafe.user; } }catch(e){}
+ return null;
 }
-function buildVisualOld(g, resultChoice){
- const v=document.getElementById('ovVisual'); if(!v) return; v.innerHTML='';
- if(g.id===1){
-  let res=(resultChoice||'head').toLowerCase();
-  let sym=res==='head'?'👤':'🦅';
-  let label=res==='head'?'HEAD':'TAIL';
-  v.innerHTML='<div style="text-align:center"><div style="font-size:10px;color:#ffd966;letter-spacing:1px">'+label+'</div><div style="font-size:44px;margin-top:4px">'+sym+'</div><div class="coin3d" style="width:72px;height:72px;font-size:34px;margin-top:8px">'+sym+'</div></div>';
- } else if(g.id===2||g.id===27||g.id===38){
-  let res=resultChoice||'4';
-  v.innerHTML='<div style="text-align:center"><div style="font-size:10px;color:#ffd966">DICE SHOWS</div><div style="background:linear-gradient(145deg,#fff,#e8e8e8);border-radius:12px;width:58px;height:58px;display:flex;align-items:center;justify-content:center;font-size:30px;margin:8px auto;box-shadow:0 8px 22px rgba(0,0,0,.4)">'+res+'</div></div>';
- } else if(g.id===18){
-  let res=resultChoice||'rock';
-  let icon=res==='rock'?'✊':(res==='paper'?'✋':'✌️');
-  v.innerHTML='<div style="text-align:center"><div style="font-size:42px">'+icon+'</div><div style="color:#ffd966;font-size:11px">'+res.toUpperCase()+'</div></div>';
- } else {
-  let sym=g.emoji||'🎮';
-  v.innerHTML='<div style="text-align:center"><div style="font-size:42px">'+sym+'</div><div style="color:#9aa3d1;font-size:11px;margin-top:6px">'+g.name+'</div><div style="color:#666;font-size:10px;margin-top:4px">Result: '+(resultChoice||'…')+'</div></div>';
- }
-}
-function showOv(g){
- clearSfx();
- if(_autoCloseId){ clearTimeout(_autoCloseId); _autoCloseId=null; }
- curWinG=g; curWon=0; curCost=g.cost; curBal=selBal; curResult="";
- let ov=document.getElementById('ov'); if(!ov) return 3200;
- document.getElementById('ovTitle').textContent=g.name+' — Spinning…';
- document.getElementById('ovSub').textContent='Bet '+g.cost+'c placed…';
- document.getElementById('ovExtra').textContent='Win ×'+g.mult+' — 3-5s close view';
- document.getElementById('ovFill').style.width='14%';
- document.getElementById('ovPct').textContent='14%';
- buildVisual(g, '');
- clickSound();
- ov.classList.add('show');
- _playSeq++;
- let total=ovDur();
- let steps=[{p:26,t:'Bet locked '+g.cost+'c…'}, {p:50,t:'Running close simulation…'}, {p:70,t:'Almost there…'}, {p:86,t:'Revealing in 3…'}, {p:93,t:'2…'}, {p:98,t:'1…'}];
- let stepMs=Math.floor((total-620)/steps.length);
- let idx=0;
- function n(){ if(idx>=steps.length) return; let s=steps[idx++]; let sub=document.getElementById('ovSub'); if(sub) sub.textContent=s.t; let f=document.getElementById('ovFill'); if(f) f.style.width=s.p+'%'; let pc=document.getElementById('ovPct'); if(pc) pc.textContent=s.p+'%'; }
- if(ovTimer) clearInterval(ovTimer);
- ovTimer=regInt(setInterval(n, stepMs));
- return total;
-}
-function hideOv(){
- clearSfx();
- if(_autoCloseId){ clearTimeout(_autoCloseId); _autoCloseId=null; }
- let ov=document.getElementById('ov'); if(ov) ov.classList.remove('show');
- if(ovTimer){clearInterval(ovTimer);ovTimer=null;}
-}
-window.forceCloseOv=function(){ hideOv(); };
-function finishOv(win,g,won,cost,bal,result,detail){
- if(_autoCloseId){ clearTimeout(_autoCloseId); _autoCloseId=null; }
- document.getElementById('ovFill').style.width='100%'; document.getElementById('ovPct').textContent='100%';
- buildVisual(g, result||'');
- let title=document.getElementById('ovTitle');
- let sub=document.getElementById('ovSub');
- let extra=document.getElementById('ovExtra');
- let story=detail||'';
- if(win){
-  if(title) title.textContent='🎉 WON +'+won+'c';
-  if(sub) sub.textContent='Balance '+bal+'c';
-  if(extra) extra.innerHTML='<span style="color:#00e676;font-weight:800">+'+won+'c credited</span><br><span style="color:#ffd966;font-size:11px">'+story+'</span>';
-  winSound();
-  let card=document.getElementById('ovCard');
-  if(card){ for(let i=0;i<12;i++){ let c=document.createElement('div'); c.className='confettiReal'; c.style.left=(10+Math.random()*80)+'%'; c.style.top='12px'; c.style.background=['#ffcc33','#00e676','#2979ff'][i%3]; card.appendChild(c); regTout(setTimeout(function(){ try{c.remove()}catch(e){} },1200)); } }
- } else {
-  if(title) title.textContent='💥 LOST -'+cost+'c';
-  if(sub) sub.textContent='Balance '+bal+'c';
-  if(extra) extra.innerHTML='<span style="color:#ff5252">You lost '+cost+'c</span><br><span style="color:#ffd966;font-size:11px">'+story+'</span>';
-  loseSound();
- }
- _autoCloseId=regTout(setTimeout(hideOv, 2200));
-}
-function finishOvOld(win,g,won,cost,bal,result){
- if(_autoCloseId){ clearTimeout(_autoCloseId); _autoCloseId=null; }
- document.getElementById('ovFill').style.width='100%'; document.getElementById('ovPct').textContent='100%';
- curWinG=g; curWon=won; curCost=cost; curBal=bal; curResult=result||'';
- buildVisual(g, curResult);
- let title=document.getElementById('ovTitle');
- let sub=document.getElementById('ovSub');
- let extra=document.getElementById('ovExtra');
- if(win){
-  if(title) title.textContent='🎉 WON +'+won+'c';
-  if(sub) sub.textContent='Result: '+(result||'win').toUpperCase()+' • Bal '+bal+'c';
-  if(extra) extra.innerHTML='<span style="color:#00e676;font-weight:800">+'+won+'c credited ✨</span> <span style="color:#9aa3d1">(x'+g.mult+')</span>';
-  winSound();
-  let card=document.getElementById('ovCard');
-  if(card){ for(let i=0;i<12;i++){ let c=document.createElement('div'); c.className='confettiReal'; c.style.left=(10+Math.random()*80)+'%'; c.style.top='12px'; c.style.background=['#ffcc33','#00e676','#2979ff'][i%3]; c.style.animationDelay=(Math.random()*0.2)+'s'; card.appendChild(c); regTout(setTimeout(()=>{ try{c.remove();}catch(e){} },1200)); } }
- } else {
-  if(title) title.textContent='💥 LOST -'+cost+'c';
-  if(sub) sub.textContent='Result: '+(result||'lose').toUpperCase()+' • Bal '+bal+'c';
-  if(extra) extra.innerHTML='<span style="color:#ff5252">You lost — pick was different</span> <span style="color:#9aa3d1">(cost '+cost+'c)</span>';
-  loseSound();
- }
- // ★ FIX: keep result 1.6s then auto-close, and close button always works
- _autoCloseId=regTout(setTimeout(hideOv, 1600));
-}
-window.play=async function(id){
- let g=GAMES.find(x=>x.id===id); if(!g) return toast('Game not found');
- let stk=pendingStake[id]||g.cost;
- let needPick=[1,2,5,6,7,9,13,25];
- let crashPick=[4,12];
- let choice=pendingPick[id]||"";
- if(needPick.includes(id) && !choice){ toast('Pick your option first 👆'); return; }
- if(crashPick.includes(id) && !choice){ toast('Enter target x first (e.g. 1.5) 👆'); return; }
- await syncBal(false);
- if(!balOk){ toast('⚠ Balance not loaded — tap 🔄 Sync in Wallet'); return; }
- if(selBal < stk){ toast('No balance — need '+stk+'c, you have '+selBal+'c. Deposit first.'); return; }
- let dur=showOv(g);
- let mySeq=_playSeq;
+function uidFromUrl(){
  try{
-  let payload={action:'play', game:id, stake:stk};
-  if(choice) payload.choice=choice;
-  let to=new Promise(function(res){ setTimeout(function(){ res({ok:false,error:'Server slow — try again'}) }, 9000); });
-  let j=await Promise.race([api(payload), to]);
-  if(mySeq!==_playSeq) return;
-  if(j&&j.ok){
-   let nb=parseInt(j.bal); if(isNaN(nb)) nb=selBal; selBal=nb; updBal();
-   setTimeout(function(){ if(mySeq!==_playSeq) return; finishOv(j.win,g, j.won||0, j.cost||stk, selBal, j.result, j.detail); }, Math.max(420,dur-580));
-  } else { hideOv(); toast((j&&j.error)? j.error : 'Play failed'); }
- }catch(e){ hideOv(); toast('Connection failed'); }
-};
-// close on overlay background tap (outside card)
-document.addEventListener('click', function(e){
- let ov=document.getElementById('ov');
- if(ov && ov.classList.contains('show') && e.target===ov){ hideOv(); }
-});
-window.loadFree=async function(cat){
- let hint=document.getElementById('freeHint'); let grid=document.getElementById('freeGrid');
- if(hint) hint.textContent='Loading FreeToGame live API…';
- try{
-  let r=await fetch('https://www.freetogame.com/api/games?category='+encodeURIComponent('shooter')+'&sort-by=popularity');
-  let list=await r.json();
-  if(hint) hint.textContent='Live from FreeToGame — '+list.length+' games (online playable)';
-  grid.innerHTML='';
-  list.slice(0,24).forEach(g=>{
-   let d=document.createElement('div'); d.className='card';
-   d.innerHTML='<img src="'+g.thumbnail+'" loading="lazy" style="width:100%;border-radius:10px"/><div style="font-weight:700;font-size:11px;margin-top:6px">'+g.title+'</div><div style="color:#9aa3d1;font-size:10px">'+(g.genre||'')+' • '+g.platform+'</div><a href="'+g.game_url+'" target="_blank" onclick="clickSound()" style="display:block;margin-top:6px;background:#1a1f4a;border:1px solid #2a2f6e;color:#fff;padding:6px;border-radius:8px;text-align:center;text-decoration:none">▶ Play Free</a>';
-   grid.appendChild(d);
-  });
- }catch(e){
-  if(hint) hint.textContent='Free API offline — retry 🌐';
-  if(grid) grid.innerHTML='<div class="box" style="grid-column:1/-1">Can\'t reach FreeToGame now. Tap Reload.</div>';
- }
-};
-const CUR_LIST=[["USD","$","🇺🇸"],["EUR","€","🇪🇺"],["GBP","£","🇬🇧"],["INR","₹","🇮🇳"],["NPR","₨","🇳🇵"],["PKR","₨","🇵🇰"],["BDT","৳","🇧🇩"],["LKR","₨","🇱🇰"],["CNY","¥","🇨🇳"],["JPY","¥","🇯🇵"],["KRW","₩","🇰🇷"],["RUB","₽","🇷🇺"],["UAH","₴","🇺🇦"],["TRY","₺","🇹🇷"],["SAR","﷼","🇸🇦"],["AED","د.إ","🇦🇪"],["QAR","﷼","🇶🇦"],["KWD","د.ك","🇰🇼"],["BHD","د.ب","🇧🇭"],["OMR","﷼","🇴🇲"],["JOD","د.ا","🇯🇴"],["ILS","₪","🇮🇱"],["EGP","£","🇪🇬"],["MAD","د.م.","🇲🇦"],["DZD","د.ج","🇩🇿"],["TND","د.ت","🇹🇳"],["LYD","ل.د","🇱🇾"],["ZAR","R","🇿🇦"],["NGN","₦","🇳🇬"],["GHS","₵","🇬🇭"],["KES","KSh","🇰🇪"],["TZS","TSh","🇹🇿"],["UGX","USh","🇺🇬"],["ETB","Br","🇪🇹"],["SOS","Sh","🇸🇴"],["RWF","FRw","🇷🇼"],["ZMW","ZK","🇿🇲"],["MZN","MT","🇲🇿"],["AOA","Kz","🇦🇴"],["BWP","P","🇧🇼"],["NAD","$","🇳🇦"],["MUR","₨","🇲🇺"],["MGA","Ar","🇲🇬"],["CDF","FC","🇨🇩"],["SDG","ج.س","🇸🇩"],["AUD","$","🇦🇺"],["NZD","$","🇳🇿"],["CAD","$","🇨🇦"],["MXN","$","🇲🇽"],["BRL","R$","🇧🇷"],["ARS","$","🇦🇷"],["CLP","$","🇨🇱"],["COP","$","🇨🇴"],["PEN","S/","🇵🇪"],["UYU","$U","🇺🇾"],["PYG","₲","🇵🇾"],["BOB","Bs","🇧🇴"],["VES","Bs","🇻🇪"],["GTQ","Q","🇬🇹"],["CRC","₡","🇨🇷"],["PAB","B/.","🇵🇦"],["DOP","RD$","🇩🇴"],["JMD","J$","🇯🇲"],["TTD","TT$","🇹🇹"],["BBD","Bds$","🇧🇧"],["BSD","B$","🇧🇸"],["HTG","G","🇭🇹"],["HNL","L","🇭🇳"],["NIO","C$","🇳🇮"],["BZD","BZ$","🇧🇿"],["SEK","kr","🇸🇪"],["NOK","kr","🇳🇴"],["DKK","kr","🇩🇰"],["ISK","kr","🇮🇸"],["CHF","CHF","🇨🇭"],["PLN","zł","🇵🇱"],["CZK","Kč","🇨🇿"],["HUF","Ft","🇭🇺"],["RON","lei","🇷🇴"],["BGN","лв","🇧🇬"],["RSD","дин","🇷🇸"],["BAM","KM","🇧🇦"],["MKD","ден","🇲🇰"],["ALL","L","🇦🇱"],["MDL","L","🇲🇩"],["BYN","Br","🇧🇾"],["GEL","₾","🇬🇪"],["AMD","դր","🇦🇲"],["AZN","₼","🇦🇿"],["KZT","₸","🇰🇿"],["UZS","so'm","🇺🇿"],["KGS","сом","🇰🇬"],["TJS","SM","🇹🇯"],["TMT","m","🇹🇲"],["MNT","₮","🇲🇳"],["AFN","؋","🇦🇫"],["IRR","﷼","🇮🇷"],["IQD","ع.د","🇮🇶"],["SYP","£","🇸🇾"],["LBP","ل.ل","🇱🇧"],["YER","﷼","🇾🇪"],["SGD","S$","🇸🇬"],["MYR","RM","🇲🇾"],["IDR","Rp","🇮🇩"],["THB","฿","🇹🇭"],["VND","₫","🇻🇳"],["PHP","₱","🇵🇭"],["TWD","NT$","🇹🇼"],["HKD","HK$","🇭🇰"],["MOP","MOP$","🇲🇴"],["BND","B$","🇧🇳"],["KHR","៛","🇰🇭"],["LAK","₭","🇱🇦"],["MMK","K","🇲🇲"],["FJD","FJ$","🇫🇯"],["PGK","K","🇵🇬"],["WST","T","🇼🇸"],["TOP","T$","🇹🇴"],["VUV","VT","🇻🇺"],["SBD","SI$","🇸🇧"],["XPF","F","🇵🇫"]];
-const LANG_LIST=[["🇬🇧 English","en"],["🇨🇳 中文","zh"],["🇷🇺 Русский","ru"],["🇮🇳 हिन्दी","hi"],["🇳🇵 नेपाली","ne"],["🇵🇰 اردو","ur"],["🇧🇩 বাংলা","bn"],["🇸🇦 العربية","ar"],["🇪🇸 Español","es"],["🇹🇷 Türkçe","tr"],["🇫🇷 Français","fr"],["🇩🇪 Deutsch","de"],["🇵🇹 Português","pt"],["🇮🇹 Italiano","it"],["🇯🇵 日本語","ja"],["🇰🇷 한국어","ko"],["🇮🇩 Indonesia","id"],["🇻🇳 Tiếng Việt","vi"],["🇹🇭 ไทย","th"],["🇮🇷 فارسی","fa"],["🇺🇦 Українська","uk"],["🇵🇱 Polski","pl"],["🇳🇱 Nederlands","nl"],["🇸🇪 Svenska","sv"],["🇳🇴 Norsk","no"],["🇩🇰 Dansk","da"],["🇫🇮 Suomi","fi"],["🇬🇷 Ελληνικά","el"],["🇮🇱 עברית","he"],["🇷🇴 Română","ro"],["🇭🇺 Magyar","hu"],["🇨🇿 Čeština","cs"],["🇸🇰 Slovenčina","sk"],["🇧🇬 Български","bg"],["🇷🇸 Српски","sr"],["🇭🇷 Hrvatski","hr"],["🇸🇮 Slovenščina","sl"],["🇲🇾 Melayu","ms"],["🇵🇭 Filipino","tl"],["🇲🇲 မြန်မာ","my"],["🇰🇭 ខ្មែរ","km"],["🇱🇦 ລາວ","lo"],["🇱🇰 සිංහල","si"],["🇮🇳 தமிழ்","ta"],["🇮🇳 తెలుగు","te"],["🇮🇳 ಕನ್ನಡ","kn"],["🇮🇳 മലയാളം","ml"],["🇮🇳 ગુજરાતી","gu"],["🇮🇳 मराठी","mr"],["🇮🇳 ਪੰਜਾਬੀ","pa"],["🇮🇳 ଓଡ଼ିଆ","or"],["🇮🇳 অসমীয়া","as"],["🇵🇰 سنڌي","sd"],["🇦🇫 پښتو","ps"],["🇮🇶 Kurdî","ku"],["🇦🇿 Azərbaycan","az"],["🇬🇪 ქართული","ka"],["🇦🇲 Հայերեն","hy"],["🇺🇿 Oʻzbek","uz"],["🇰🇿 Қазақ","kk"],["🇰🇬 Кыргыз","ky"],["🇹🇯 Тоҷикӣ","tg"],["🇹🇲 Türkmen","tk"],["🇲🇳 Монгол","mn"],["🇪🇪 Eesti","et"],["🇱🇻 Latviešu","lv"],["🇱🇹 Lietuvių","lt"],["🇧🇾 Беларуская","be"],["🇦🇱 Shqip","sq"],["🇲🇰 Македонски","mk"],["🇧🇦 Bosanski","bs"],["🇲🇹 Malti","mt"],["🇮🇸 Íslenska","is"],["🇮🇪 Gaeilge","ga"],["🇪🇸 Català","ca"],["🇭🇹 Kreyòl","ht"],["🇿🇦 Afrikaans","af"],["🇪🇹 አማርኛ","am"],["🇸🇴 Soomaali","so"],["🇰🇪 Kiswahili","sw"],["🇳🇬 Hausa","ha"],["🇳🇬 Yorùbá","yo"],["🇳🇬 Igbo","ig"],["🇿🇦 Zulu","zu"],["🇪🇹 Tigrinya","ti"],["🇭🇰 粵語","yue"],["🇮🇳 Bhojpuri","bho"],["🇪🇬 مصرى","arz"],["🇲🇦 Darija","ary"],["🇩🇿 Kabyle","kab"],["🇸🇬 English-SG","en-sg"],["🇭🇰 English-HK","en-hk"],["🇦🇪 Gulf AR","ar-ae"],["🇧🇳 Jawi","ms-arab"],["🇱🇰 Tamil-LK","ta-lk"],["🇲🇾 Tamil-MY","ta-my"]];
-const I18N={en:{home:"Home",playearn:"PLAY&EARN",freegames:"FREE GAMES",wallet:"Wallet",deposit:"Deposit",settings:"Settings",admin:"Admin",currency:"Currency",language:"Language"},hi:{home:"होम",playearn:"खेलें और कमाएँ",freegames:"फ्री गेम्स",wallet:"वॉलेट",deposit:"जमा",settings:"सेटिंग्स",admin:"एडमिन",currency:"मुद्रा",language:"भाषा"},ne:{home:"गृह",playearn:"खेल र कमाउ",freegames:"निःशुल्क खेल",wallet:"वालेट",deposit:"जम्मा",settings:"सेटिङ",admin:"एडमिन",currency:"मुद्रा",language:"भाषा"},ur:{home:"ہوم",playearn:"کھیلیں اور کمائیں",freegames:"مفت گیمز",wallet:"والٹ",deposit:"جمع",settings:"سیٹنگز",admin:"ایڈمن",currency:"کرنسی",language:"زبان"},bn:{home:"হোম",playearn:"খেলুন ও আয় করুন",freegames:"ফ্রি গেমস",wallet:"ওয়ালেট",deposit:"জমা",settings:"সেটিংস",admin:"অ্যাডমিন",currency:"মুদ্রা",language:"ভাষা"},ar:{home:"الرئيسية",playearn:"العب واربح",freegames:"ألعاب مجانية",wallet:"المحفظة",deposit:"إيداع",settings:"الإعدادات",admin:"المشرف",currency:"العملة",language:"اللغة"},es:{home:"Inicio",playearn:"JUGAR Y GANAR",freegames:"JUEGOS GRATIS",wallet:"Cartera",deposit:"Depósito",settings:"Ajustes",admin:"Admin",currency:"Moneda",language:"Idioma"},fr:{home:"Accueil",playearn:"JOUER & GAGNER",freegames:"JEUX GRATUITS",wallet:"Portefeuille",deposit:"Dépôt",settings:"Réglages",admin:"Admin",currency:"Devise",language:"Langue"},de:{home:"Start",playearn:"SPIELEN & VERDIENEN",freegames:"GRATIS SPIELE",wallet:"Wallet",deposit:"Einzahlung",settings:"Einstellungen",admin:"Admin",currency:"Währung",language:"Sprache"},ru:{home:"Главная",playearn:"ИГРАЙ И ЗАРАБАТЫВАЙ",freegames:"БЕСПЛАТНЫЕ ИГРЫ",wallet:"Кошелёк",deposit:"Депозит",settings:"Настройки",admin:"Админ",currency:"Валюта",language:"Язык"},zh:{home:"首页",playearn:"游戏赚币",freegames:"免费游戏",wallet:"钱包",deposit:"充值",settings:"设置",admin:"管理",currency:"货币",language:"语言"},tr:{home:"Ana Sayfa",playearn:"OYNA & KAZAN",freegames:"ÜCRETSİZ OYUNLAR",wallet:"Cüzdan",deposit:"Yatırım",settings:"Ayarlar",admin:"Yönetici",currency:"Para Birimi",language:"Dil"},pt:{home:"Início",playearn:"JOGAR E GANHAR",freegames:"JOGOS GRÁTIS",wallet:"Carteira",deposit:"Depósito",settings:"Configurações",admin:"Admin",currency:"Moeda",language:"Idioma"},id:{home:"Beranda",playearn:"MAIN & HASILKAN",freegames:"GAME GRATIS",wallet:"Dompet",deposit:"Deposit",settings:"Pengaturan",admin:"Admin",currency:"Mata Uang",language:"Bahasa"},ja:{home:"ホーム",playearn:"プレイ＆アーン",freegames:"無料ゲーム",wallet:"ウォレット",deposit:"入金",settings:"設定",admin:"管理者",currency:"通貨",language:"言語"},ko:{home:"홈",playearn:"플레이&언",freegames:"무료 게임",wallet:"지갑",deposit:"입금",settings:"설정",admin:"관리자",currency:"통화",language:"언어"}};
-let curCode="USD", fxRates={}, langCode="en";
-function curInfo(code){ for(let i=0;i<CUR_LIST.length;i++){ if(CUR_LIST[i][0]===code) return CUR_LIST[i]; } return ["USD","$","🇺🇸"]; }
-function L(k){ let d=I18N[langCode]||I18N["en"]; return (d&&d[k])?d[k]:(I18N["en"][k]||k); }
-function renderCurSel(){
- let s=document.getElementById('curSel'); if(!s) return; s.innerHTML='';
- for(let i=0;i<CUR_LIST.length;i++){ let c=CUR_LIST[i]; let o=document.createElement('option'); o.value=c[0]; o.textContent=c[2]+' '+c[0]+' '+c[1]; if(c[0]===curCode) o.selected=true; s.appendChild(o); }
+  var q=new URLSearchParams(location.search);
+  var keys=["tg_id","uid","user_id","id","start_param"];
+  for(var i=0;i<keys.length;i++){
+   var v=q.get(keys[i]);
+   if(v){
+    var m=String(v).match(/[0-9]{5,}/);
+    if(m) return parseInt(m[0]);
+   }
+  }
+ }catch(e){}
+ try{ var s=localStorage.getItem("pe_uid"); if(s&&/^[0-9]+$/.test(s)) return parseInt(s); }catch(e){}
+ return 0;
 }
-function renderLangSel(){
- let s=document.getElementById('langSel'); if(!s) return; s.innerHTML='';
- for(let i=0;i<LANG_LIST.length;i++){ let l=LANG_LIST[i]; let o=document.createElement('option'); o.value=l[1]; o.textContent=l[0]; if(l[1]===langCode) o.selected=true; s.appendChild(o); }
+function getUID(){ var u=readTG(); if(u&&u.id) return parseInt(u.id); return uidFromUrl(); }
+function saveUID(id){ try{ if(id>0) localStorage.setItem("pe_uid",String(id)); }catch(e){} }
+function call(action,extra){
+ var p={
+  action:action,
+  tg_id:state.uid||getUID()||0,
+  tg_username:(function(){ var u=readTG(); return u&&u.username?String(u.username):""; })(),
+  tg_first:(function(){ var u=readTG(); return u&&u.first_name?String(u.first_name):""; })(),
+  tg_last:(function(){ var u=readTG(); return u&&u.last_name?String(u.last_name):""; })(),
+  token:state.token||""
+ };
+ if(extra){ for(var k in extra){ p[k]=extra[k]; } }
+ return fetch(APP,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})
+  .then(function(r){ return r.json(); })
+  .catch(function(e){ return {ok:false,error:"network error"}; });
+}
+function showTab(id){
+ var secs=document.querySelectorAll(".sec");
+ for(var i=0;i<secs.length;i++){ secs[i].classList.toggle("on",secs[i].id===id); }
+ var tabs=document.querySelectorAll(".tabs .tab");
+ for(var j=0;j<tabs.length;j++){ tabs[j].classList.toggle("on",tabs[j].getAttribute("data-t")===id); }
+ var mis=document.querySelectorAll(".mi");
+ for(var k=0;k<mis.length;k++){ mis[k].classList.toggle("on",mis[k].getAttribute("data-go")===id); }
+ window.scrollTo(0,0);
+ if(id==="sWallet"){ loadBalance(true); }
+ if(id==="sDep"){ loadDepMethods(); }
+ if(id==="sWd"){ loadWdMethods(); }
+ if(id==="sAdm"){ adminRefresh(); }
+}
+function bindTab(btnId,secId){
+ var b=el(btnId);
+ if(b){ b.setAttribute("data-t",secId); b.addEventListener("click",function(){ showTab(secId); }); }
+}
+function setAdminUI(){
+ var on=!!state.isAdmin;
+ var t=el("tAdm"); if(t) t.style.display=on?"block":"none";
+ var m=el("miAdm"); if(m) m.style.display=on?"flex":"none";
+ var w=el("adWho");
+ if(w) w.textContent=on?(state.isFull?"You are the MAIN admin (full control).":"You are a sub admin (limited)."):"Not an admin.";
+}
+function updBal(){
+ var ok=state.balOk;
+ var b=el("bal"); if(b) b.textContent=ok?(state.coins+" coins"):"—";
+ var usd=state.coins/(state.rate||100);
+ var ci=null;
+ for(var i=0;i<CURR.length;i++){ if(CURR[i][0]===state.cur){ ci=CURR[i]; } }
+ var sym=ci?ci[1]:"$";
+ var txt="";
+ if(ok){ txt="≈ $"+usd.toFixed(2); }
+ if(ci&&ci[0]!=="USD"&&ok&&state.fx){ txt="≈ "+sym+(usd*state.fx).toFixed(2); }
+ var u=el("balusd"); if(u) u.textContent=txt;
+ var ri=el("rateinfo"); if(ri) ri.textContent="1$ = "+(state.rate||100)+"c";
+ var wb=el("wbal"); if(wb) wb.textContent=ok?(state.coins+" coins"):"not loaded";
+ var ws=el("wsub");
+ if(ws){
+  if(ok){ ws.innerHTML="≈ $"+usd.toFixed(2)+(ci&&ci[0]!=="USD"&&state.fx?(" ≈ "+sym+(usd*state.fx).toFixed(2)):"")+"<br>server ID "+esc(state.srvUid||"?")+" • app ID "+esc(state.uid); }
+  else { ws.innerHTML="<span class="miss">balance could not be loaded</span><br>app ID "+esc(state.uid); }
+ }
+ var vi=el("verinfo"); if(vi) vi.textContent="v"+state.ver;
+ var ab=el("aboutBox");
+ if(ab) ab.innerHTML="app expects v"+VER_EXPECTED+"<br>server replied v"+state.ver+"<br>endpoint "+esc(APP.split("//")[1]||APP)+"<br>telegram ID "+esc(state.uid)+"<br>server saw ID "+esc(state.srvUid||"?")+"<br>"+(state.ver===VER_EXPECTED?"<span class="win">up to date</span>":"<span class="miss">STALE — server code is older or unreachable</span>");
+ var ac=el("accLine");
+ if(ac) ac.textContent=state.registered?(state.first+" "+state.last+" • @"+state.username):"No profile yet";
+ var ai=el("accIds"); if(ai) ai.textContent="Telegram ID "+state.uid+(state.tgUser?(" • @"+state.tgUser):"");
 }
 function applyLang(){
- let tabs=document.querySelectorAll('#tabs .tab');
- let keys=['home','playearn','freegames','wallet','deposit','settings','admin'];
- let icons=['🏠 ','💰 ','🌐 ','💳 ','💳 ','⚙️ ','👑 '];
- for(let i=0;i<tabs.length;i++){ if(keys[i]) tabs[i].textContent=icons[i]+L(keys[i]); }
- let navs=document.querySelectorAll('.bottomNav .bNav');
- let ico2=['🏠','💰','🌐','💳','⚙️','👑'];
- for(let i=0;i<navs.length;i++){ if(keys[i]){ navs[i].textContent=''; let sp=document.createElement('span'); sp.textContent=ico2[i]; navs[i].appendChild(sp); navs[i].appendChild(document.createTextNode(L(keys[i]))); } }
- let lc=document.getElementById('lblCurrency'); if(lc) lc.textContent='💱 '+L('currency');
- let ll=document.getElementById('lblLanguage'); if(ll) ll.textContent='🌍 '+L('language');
+ document.querySelectorAll(".mi").forEach(function(m){
+  var sec=m.getAttribute("data-go"); if(!sec) return;
+  var map={sPlay:"play",sWallet:"wallet",sDep:"dep",sWd:"wd",sAcc:"acc",sAdm:"adm"};
+  var key=map[sec];
+  if(key){ var sp=m.querySelector("span"); var label=T(key); m.textContent=""; if(sp){ m.appendChild(sp); } m.appendChild(document.createTextNode(label)); }
+ });
 }
-window.setCurrency=function(v){ curCode=v; try{ localStorage.setItem('pe_cur',v); }catch(e){} updBal(); toast('Currency: '+v); };
-window.setLanguage=function(v){ langCode=v; try{ localStorage.setItem('pe_lang',v); }catch(e){} applyLang(); renderLangSel(); toast('Language: '+v); };
-async function fetchFx(){
- try{ let r=await fetch('https://open.er-api.com/v6/latest/USD'); let j=await r.json(); if(j&&j.rates&&j.rates[curCode]) fxRates=j.rates; }catch(e){}
+function loadBalance(show){
+ return call("balance").then(function(j){
+  if(j&&j.ok){
+   state.balOk=true;
+   state.coins=parseInt(j.coins||0)||0;
+   state.rate=parseInt(j.rate||100)||100;
+   state.isAdmin=!!j.is_admin;
+   state.isFull=!!j.is_full;
+   state.srvUid=String(j.server_uid||"");
+   state.ver=parseInt(j.v||0)||0;
+   state.registered=!!j.registered;
+   state.loggedIn=!!j.logged_in;
+   updBal(); setAdminUI();
+   if(show) toast("Balance "+state.coins+" coins");
+  } else {
+   state.balOk=false;
+   state.ver=parseInt((j&&j.v)||0)||0;
+   updBal();
+   if(show) toast((j&&j.error)?j.error:"balance failed");
+  }
+  return j;
+ });
+}
+function renderGames(){
+ var g=el("gameGrid"); if(!g) return;
+ g.innerHTML="";
+ GAMES.forEach(function(gm){
+  var c=document.createElement("div"); c.className="card";
+  var h="";
+  h+="<div class="em">"+gm.em+"</div>";
+  h+="<div class="nm">"+esc(gm.name)+"</div>";
+  h+="<div class="sub">"+gm.cost+"c • win x"+gm.mult+"</div>";
+  c.innerHTML=h;
+  if(gm.opts&&gm.opts.length){
+   var chips=document.createElement("div");
+   chips.className="chips";
+   if(gm.cols===4){ chips.className="stack"; }
+   gm.opts.forEach(function(o){
+    var b=document.createElement("button");
+    b.type="button"; b.className="chip"; b.textContent=o[1];
+    if(gm.cols===4){ b.className="st"; }
+    if((picks[gm.id]||gm.pick)===o[0]){ b.classList.add("on"); }
+    b.addEventListener("click",function(){
+     picks[gm.id]=o[0];
+     var sib=chips.querySelectorAll("button");
+     for(var i=0;i<sib.length;i++){ sib[i].classList.remove("on"); }
+     b.classList.add("on");
+    });
+    chips.appendChild(b);
+   });
+   c.appendChild(chips);
+  } else {
+   var inp=document.createElement("input");
+   inp.type="number"; inp.step="0.1"; inp.min="1.1"; inp.placeholder="target x e.g. 1.5";
+   inp.addEventListener("input",function(){ picks[gm.id]=inp.value; });
+   c.appendChild(inp);
+   var tag=document.createElement("div");
+   tag.className="sub"; tag.textContent="cash out at your target";
+   c.appendChild(tag);
+  }
+  var st=document.createElement("div"); st.className="stack";
+  [10,50,100,1000].forEach(function(v){
+   var b=document.createElement("button");
+   b.type="button"; b.className="st"; b.textContent=(v>=1000?"1k":v+"c");
+   if((stakes[gm.id]||0)===v) b.classList.add("on");
+   b.addEventListener("click",function(){
+    stakes[gm.id]=v;
+    var sib=st.querySelectorAll("button");
+    for(var i=0;i<sib.length;i++){ sib[i].classList.remove("on"); }
+    b.classList.add("on");
+    toast("Bet set to "+v+"c");
+   });
+   st.appendChild(b);
+  });
+  c.appendChild(st);
+  var pb=document.createElement("button");
+  pb.type="button"; pb.className="btn"; pb.textContent="▶ Play";
+  pb.addEventListener("click",function(){ playGame(gm.id); });
+  c.appendChild(pb);
+  g.appendChild(c);
+ });
+}
+function clearStage(){ var s=el("ovStage"); if(s) s.innerHTML=""; }
+function stageCoin(){
+ var s=el("ovStage"); if(!s) return;
+ s.innerHTML="<div class="coin"></div><div class="res">flipping…</div>";
+}
+function stageDice(){
+ var s=el("ovStage"); if(!s) return;
+ s.innerHTML="<div class="dw"><div class="db da">⚄</div><div class="db dbb">⚁</div></div><div class="res">rolling…</div>";
+}
+function stageWheel(){
+ var s=el("ovStage"); if(!s) return;
+ s.innerHTML="<div class="wheel"></div><div class="res">spinning…</div>";
+}
+function stageCrash(){
+ var s=el("ovStage"); if(!s) return;
+ s.innerHTML="<div class="rk"><div class="rki">🚀</div><div class="alt" id="altLbl">x1.00</div></div>";
+ var a=1;
+ var iv=setInterval(function(){
+  a=a+0.15;
+  var l=el("altLbl"); if(l) l.textContent="x"+a.toFixed(2);
+  if(a>2.6) clearInterval(iv);
+ },220);
+ ovTimers.push(iv);
+}
+function stagePlinko(){
+ var s=el("ovStage"); if(!s) return;
+ var h="<div class="pb">";
+ var pts=[[24,14],[56,14],[88,14],[120,14],[40,36],[72,36],[104,36],[136,36],[56,58],[88,58],[120,58]];
+ pts.forEach(function(p){ h+="<div class="pg" style="left:"+p[0]+"px;top:"+p[1]+"px"></div>"; });
+ h+="<div class="bl"></div></div><div class="res">dropping…</div>";
+ s.innerHTML=h;
+}
+function stageMine(){
+ var s=el("ovStage"); if(!s) return;
+ var h="<div class="mg">";
+ for(var i=1;i<=8;i++){ h+="<div class="mc">❓</div>"; }
+ h+="</div><div class="res">picking…</div>";
+ s.innerHTML=h;
+}
+function stageKeno(){
+ var s=el("ovStage"); if(!s) return;
+ s.innerHTML="<div class="kb"><div class="kn">7</div><div class="kn">14</div><div class="kn">21</div><div class="kn">32</div><div class="kn">45</div></div><div class="res">drawing…</div>";
+}
+function stageSlots(){
+ var s=el("ovStage"); if(!s) return;
+ s.innerHTML="<div class="sl"><div class="re"><div class="rs"><div>🍒</div><div>💎</div><div>7️⃣</div><div>🔔</div></div></div><div class="re"><div class="rs"><div>🔔</div><div>🍋</div><div>💎</div><div>🍒</div></div></div><div class="re"><div class="rs"><div>7️⃣</div><div>💎</div><div>🔔</div><div>🍋</div></div></div></div><div class="res">spinning…</div>";
+}
+var ovTimers=[];
+function showOv(gm){
+ stopOv();
+ var ov=el("ov"); if(ov) ov.classList.add("show");
+ if(ov) ov.classList.add("on");
+ el("ovTitle").textContent=gm.name;
+ el("ovSub").textContent="Bet "+(stakes[gm.id]||gm.cost)+"c placed";
+ el("ovFill").style.width="14%";
+ el("ovPct").textContent="14%";
+ if(gm.type==="coin") stageCoin();
+ else if(gm.type==="dice") stageDice();
+ else if(gm.type==="wheel") stageWheel();
+ else if(gm.type==="crash") stageCrash();
+ else if(gm.type==="plinko") stagePlinko();
+ else if(gm.type==="mine") stageMine();
+ else if(gm.type==="keno") stageKeno();
+ else stageSlots();
+ var steps=[24,42,58,72,84,92,98];
+ var i=0;
+ ovTimer=setInterval(function(){
+  if(i>=steps.length){ return; }
+  var p=steps[i]; i++;
+  el("ovFill").style.width=p+"%";
+  el("ovPct").textContent=p+"%";
+ },420);
+ ovTimers.push(ovTimer);
+ ovEndAt=Date.now()+3200;
+}
+function stopOv(){
+ if(ovTimer){ clearInterval(ovTimer); ovTimer=null; }
+ ovTimers.forEach(function(t){ clearInterval(t); });
+ ovTimers=[];
+}
+function hideOv(){
+ stopOv();
+ var ov=el("ov"); if(ov){ ov.classList.remove("on"); ov.classList.remove("show"); }
+}
+function finishOv(gm,res){
+ stopOv();
+ el("ovFill").style.width="100%";
+ el("ovPct").textContent="100%";
+ var win=!!res.win;
+ var t=el("ovTitle");
+ if(t){ t.textContent=win?("🎉 WON +"+res.won+"c"):("💥 LOST -"+res.cost+"c"); t.className="res "+(win?"win":"miss"); }
+ var s=el("ovSub"); if(s) s.textContent=res.detail||"";
+ var st=el("ovStage");
+ if(st){
+  var rr=esc(res.result||"");
+  if(gm.type==="coin"){ st.innerHTML="<div class="coin"></div><div class="res">"+rr.toUpperCase()+"</div>"; }
+  else if(gm.type==="dice"){ st.innerHTML="<div class="db" style="width:56px;height:56px;font-size:30px;margin:0 auto">"+rr+"</div><div class="res">dice shows "+rr+"</div>"; }
+  else if(gm.type==="wheel"){ st.innerHTML="<div class="wheel"></div><div class="res">"+rr.toUpperCase()+"</div>"; }
+  else if(gm.type==="crash"){ st.innerHTML="<div class="rk"><div class="rki" style="animation:none;bottom:36px;left:56px">🚀</div><div class="alt">x"+rr+"</div></div>"; }
+  else if(gm.type==="plinko"){ st.innerHTML="<div class="res">ball went "+rr.toUpperCase()+"</div>"; }
+  else if(gm.type==="mine"){ var h="<div class="mg">"; for(var i=1;i<=8;i++){ var lit=(String(i)===String(res.result)); h+="<div class="mc"+(lit?" lit":"")+"">"+(lit?"💎":"❓")+"</div>"; } h+="</div><div class="res">tile "+esc(res.result)+"</div>"; st.innerHTML=h; }
+  else if(gm.type==="keno"){ st.innerHTML="<div class="res">drew "+rr+"</div>"; }
+  else { st.innerHTML="<div class="res">"+rr.toUpperCase()+"</div>"; }
+ }
+ state.coins=parseInt(res.coins||state.coins)||0;
+ state.balOk=true;
  updBal();
+ setTimeout(hideOv,2400);
 }
-updBal=function(){
- let c=curInfo(curCode);
- let usd=selBal/RATE;
- let loc=null;
- if(fxRates[curCode]) loc=(usd*fxRates[curCode]).toFixed(2);
- let localTxt = loc ? (' ≈ '+c[2]+' '+c[1]+loc) : (curCode==='USD'?'' : ' ≈ local n/a');
- let bt=document.getElementById('balTop'); if(bt) bt.textContent = balOk ? (selBal+' coins') : '— coins';
- let ut=document.getElementById('usdTop'); if(ut) ut.textContent = balOk ? ('≈ $'+usd.toFixed(2)+localTxt) : 'not connected';
- let bb=document.getElementById('balBig'); if(bb) bb.textContent = balOk ? (selBal+' coins') : 'not loaded';
- let ws=document.getElementById('walletSub');
- let mine=String(getUID()||'');
- let mismatch = balOk && srvUid && mine && srvUid !== mine;
- if(ws) ws.innerHTML = balOk
-  ? ('≈ $'+usd.toFixed(2)+localTxt+' — 1$='+RATE+'c<br><span style="color:#00e676;font-size:10px">✓ server read ID '+ (srvUid||'?') +' • app sent ID '+ (mine||'?') +' • '+balStamp+'</span><br><span style="color:#9aa3d1;font-size:9px">API: '+apiHost+'</span>'+(mismatch ? ('<br><span style="color:#ff8a80;font-size:10px">⚠ MISMATCH — you are seeing the wrong account</span>') : ''))
-  : ('<span style="color:#ff8a80">⚠ '+String(lastBalErr||'balance not loaded')+'<br>app ID '+mine+' • Tap Sync Real Balance to retry</span>');
- let rl=document.getElementById('rateLbl'); if(rl) rl.textContent=c[2]+' '+c[0]+' • 1$='+RATE+'c';
-};
-const ADMIN_GAMES=[[1,'🪙 Coin Flip'],[2,'🎲 Dice Duel'],[4,'🚀 Crash Rocket'],[5,'💣 Mines'],[6,'🔴 Plinko'],[7,'🎡 Wheel Fortune'],[9,'🎯 Roulette Rapid'],[12,'✈️ Aviator'],[13,'🔢 Keno'],[25,'🎎 Sic Bo']];
-async function adminApi(obj){
- let uit=getUID(); if(!uit) uit=loadUID();
- if(!uit) return {ok:false,error:'no uid'};
- let payload=Object.assign({},obj,{user_id:uit,uid:uit});
- try{
-  let r=await fetch(withUIDParam(ADMIN_API),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
-  let j=await r.json(); return j;
- }catch(e){ return {ok:false,error:String(e).slice(0,80)}; }
-}
-window.adminRefresh=function(){
- adminLoadStats(); adminLoadAccounts(); adminLoadDeposits(); adminLoadWithdraws(); adminLoadDepMethods(); adminLoadTeam();
-};
-async function adminLoadAccounts(){
- let j=await adminApi({action:'list_accounts'});
- let el=document.getElementById('adminAccList'); if(!el) return;
- if(!j||!j.ok){ el.textContent=(j&&j.error)||'no access'; return; }
- let list=j.accounts||[];
- if(!list.length){ el.innerHTML='<span style="color:#9aa3d1;font-size:11px">No users found</span>'; return; }
- el.innerHTML='';
- let regN=0; for(let q=0;q<list.length;q++){ if(list[q].registered) regN++; }
- let hdr=document.createElement('div');
- hdr.style.cssText='font-size:11px;color:#ffd966;margin-bottom:6px';
- hdr.textContent='Total '+j.total+' • Registered '+regN+' • Loaded '+list.length;
- el.appendChild(hdr);
- for(let i=0;i<list.length;i++){
-  let a=list[i];
-  let card=document.createElement('div');
-  card.style.cssText='padding:8px;border:1px solid #2a2f6e;border-radius:10px;margin-bottom:8px';
-  let blk=a.blocked?'<span style="color:#ff5252;font-size:10px"> 🚫 BLOCKED</span>':'';
-  let tag=a.registered?'<span style="color:#00e676;font-size:9px">📝 registered</span>':'<span style="color:#9aa3d1;font-size:9px">📱 telegram only</span>';
-  let nm=(a.first||'')+' '+(a.last||'');
-  if(!nm.trim()) nm='(no profile)';
-  let dt=a.created?new Date(a.created*1000).toLocaleDateString():'—';
-  card.innerHTML='<div style="font-size:11px"><b>'+nm+'</b>'+blk+'</div><div style="font-size:10px;color:#9aa3d1">@'+(a.username||'—')+' • ID '+a.id+' • '+dt+'</div>'+tag+'<div style="font-size:11px;color:#ffd966">💰 '+a.coins+' coins</div>';
-  let b1=document.createElement('button'); b1.className='btn2'; b1.textContent=a.blocked?'✅ Unblock':'🚫 Block'; b1.style.cssText='padding:4px 8px;font-size:10px;width:auto;margin:6px 4px 0 0';
-  b1.onclick=function(){ adminAccBlock(a.id, !a.blocked) };
-  let b2=document.createElement('button'); b2.className='btn2'; b2.textContent='🔐 Reset password'; b2.style.cssText='padding:4px 8px;font-size:10px;width:auto;margin:6px 4px 0 0';
-  b2.onclick=function(){ adminAccResetPw(a.id) };
-  let b3=document.createElement('button'); b3.className='btn2'; b3.textContent='👤 Use for balance'; b3.style.cssText='padding:4px 8px;font-size:10px;width:auto;margin:6px 4px 0 0';
-  b3.onclick=function(){ let f=document.getElementById('adUserId'); if(f) f.value=a.id; adminFindUser(); };
-  card.appendChild(b1); card.appendChild(b2); card.appendChild(b3);
-  el.appendChild(card);
- }
-}
-window.adminRebuildIndex=async function(){
- toast('Rebuilding user list…');
- let j=await adminApi({action:'rebuild_index'});
- toast(j&&j.ok ? ('Rebuilt — '+j.total+' known users') : ((j&&j.error)||'failed'));
- if(j&&j.ok) adminLoadAccounts();
-};
-window.adminAccBlock=async function(tid,on){
- let j=await adminApi({action:'account_block', target:String(tid), blocked:!!on});
- toast(j&&j.ok?(on?'User blocked':'User unblocked'):((j&&j.error)||'failed'));
- if(j&&j.ok) adminLoadAccounts();
-};
-window.adminAccResetPw=async function(tid){
- let np=prompt('New password for user '+tid+' (4+ characters)');
- if(!np) return;
- let j=await adminApi({action:'account_reset_pw', target:String(tid), password:np});
- toast(j&&j.ok?'Password reset':((j&&j.error)||'failed'));
-};
-window.adminAccDelete=async function(tid){
- let j=await adminApi({action:'account_delete', target:String(tid)});
- toast(j&&j.ok?'Profile deleted':((j&&j.error)||'failed'));
- if(j&&j.ok) adminLoadAccounts();
-};
-async function adminLoadStats(){
- let j=await adminApi({action:'admin_stats'});
- let el=document.getElementById('adminStats');
- if(!j||!j.ok){ if(el) el.textContent=(j&&j.error)?j.error:'no access'; return; }
- isFullAdmin=!!j.is_full;
- let who=document.getElementById('adminWho');
- if(who) who.textContent='You: '+getUID()+' — '+(j.is_full?'👑 Full Admin (boss access)':'👤 Sub Admin (limited)');
- if(el) el.innerHTML='👥 Users: <b>'+j.users+'</b><br>📥 Pending deposits: <b>'+j.pending_deposits+'</b><br>📤 Pending withdraws: <b>'+j.pending_withdraws+'</b><br>💬 Chats: <b>'+j.chats+'</b>';
- let gm=document.getElementById('globalModeNow');
- if(gm) gm.textContent='Global now: '+(j.global_mode||'normal');
- let ctr=j.controls||{};
- let box=document.getElementById('adminGameList');
- if(box){
-  box.innerHTML='';
-  for(let i=0;i<ADMIN_GAMES.length;i++){
-   let gid=ADMIN_GAMES[i][0], nm=ADMIN_GAMES[i][1];
-   let m=(ctr[String(gid)]&&ctr[String(gid)].mode)||'normal';
-   let row=document.createElement('div');
-   row.style.cssText='display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid #2a2f6e';
-   let tag=m==='force_win'?'✅ WIN':(m==='force_loss'?'❌ LOSS':'⚪ NORMAL');
-   row.innerHTML='<span style="font-size: 11px">'+nm+'</span><span style="font-size: 10px; color: #ffd966">'+tag+'</span>';
-   let bs=document.createElement('div');
-   bs.style.cssText='display: flex; gap: 4px; margin-top: 4px';
-   let b1=document.createElement('button'); b1.className='btn2'; b1.textContent='WIN'; b1.style.cssText='padding: 4px 8px; font-size: 10px; margin: 0'; b1.onclick=function(){ adminSetGame(gid,'force_win') };
-   let b2=document.createElement('button'); b2.className='btn2'; b2.textContent='LOSS'; b2.style.cssText='padding: 4px 8px; font-size: 10px; margin: 0'; b2.onclick=function(){ adminSetGame(gid,'force_loss') };
-   let b3=document.createElement('button'); b3.className='btn2'; b3.textContent='NORM'; b3.style.cssText='padding: 4px 8px; font-size: 10px; margin: 0'; b3.onclick=function(){ adminSetGame(gid,'normal') };
-   bs.appendChild(b1); bs.appendChild(b2); bs.appendChild(b3);
-   let wrap=document.createElement('div');
-   wrap.style.cssText='padding: 6px 0; border-bottom: 1px solid #2a2f6e';
-   wrap.appendChild(row); wrap.appendChild(bs);
-   box.appendChild(wrap);
+function playGame(gid){
+ var gm=null;
+ GAMES.forEach(function(x){ if(x.id===gid) gm=x; });
+ if(!gm) return;
+ var choice=picks[gid]||gm.pick||"";
+ if(!choice){ toast(gm.type==="crash"?"Enter a target like 1.5 first":"Pick an option first"); return; }
+ var stake=stakes[gid]||gm.cost;
+ if(!state.balOk){ loadBalance(false).then(function(){ playGame(gid); }); return; }
+ if(state.coins<stake){ toast("Not enough balance — you have "+state.coins+"c, need "+stake+"c"); return; }
+ showOv(gm);
+ ovSeq++;
+ var mySeq=ovSeq;
+ call("play",{game:gid,stake:stake,choice:choice}).then(function(j){
+  if(mySeq!==ovSeq) return;
+  if(!j||!j.ok){
+   hideOv();
+   toast((j&&j.error)?j.error:"play failed");
+   if(j&&typeof j.coins!=="undefined"){ state.coins=parseInt(j.coins)||0; state.balOk=true; updBal(); }
+   return;
   }
+  var wait=ovEndAt-Date.now();
+  if(wait<0) wait=0;
+  setTimeout(function(){
+   if(mySeq!==ovSeq) return;
+   finishOv(gm,j);
+  },wait);
+ });
+}
+function gateMsg(m){ var g=el("gateMsg"); if(g) g.textContent=m||""; }
+function gateMode(mode){
+ var f=el("gateForm"); if(!f) return;
+ var sw=el("gateSwitch");
+ if(mode==="signup"){
+  f.innerHTML="<input id="gFirst" placeholder="First name"/><input id="gLast" placeholder="Last name"/><input id="gUser" placeholder="Username"/><input id="gPass" type="password" placeholder="Password"/>";
+  var b=document.createElement("button"); b.type="button"; b.className="btn"; b.textContent="Create account";
+  b.addEventListener("click",doSignup); f.appendChild(b);
+  sw.innerHTML="";
+  var s1=document.createElement("span"); s1.textContent="Already have an account? ";
+  var l1=document.createElement("b"); l1.textContent="Log in"; l1.style.cursor="pointer";
+  l1.addEventListener("click",function(){ gateMode("login"); });
+  sw.appendChild(s1); sw.appendChild(l1);
+ } else {
+  f.innerHTML="<input id="gUser" placeholder="Username"/><input id="gPass" type="password" placeholder="Password"/>";
+  var b2=document.createElement("button"); b2.type="button"; b2.className="btn"; b2.textContent="Log in";
+  b2.addEventListener("click",doLogin); f.appendChild(b2);
+  sw.innerHTML="";
+  var s2=document.createElement("span"); s2.textContent="No account yet? ";
+  var l2=document.createElement("b"); l2.textContent="Sign up"; l2.style.cursor="pointer";
+  l2.addEventListener("click",function(){ gateMode("signup"); });
+  sw.appendChild(s2); sw.appendChild(l2);
  }
 }
-window.adminSetGame=async function(gid,mode){
- let j=await adminApi({action:'set_force', gid:gid, mode:mode});
- toast(j&&j.ok ? ('Game '+gid+' → '+mode) : ((j&&j.error)||'failed'));
- if(j&&j.ok) adminLoadStats();
-};
-window.setGlobalMode=async function(mode){
- let j=await adminApi({action:'set_global_mode', mode:mode});
- toast(j&&j.ok ? ('Global → '+mode) : ((j&&j.error)||'failed'));
- if(j&&j.ok) adminLoadStats();
-};
-window.adminFindUser=async function(){
- let tid=(document.getElementById('adUserId').value||'').trim();
- if(!tid) return toast('Enter user ID');
- let j=await adminApi({action:'search_user', target:tid});
- let el=document.getElementById('adUserInfo');
- if(j&&j.ok){ if(el) el.innerHTML='👤 '+(j.name||'Player')+'<br>💰 '+j.coins+' coins'; }
- else { if(el) el.textContent=(j&&j.error)||'not found'; }
-};
-window.adminBal=async function(op){
- let tid=(document.getElementById('adUserId').value||'').trim();
- let amt=parseInt(document.getElementById('adUserAmt').value||'0');
- if(!tid) return toast('Enter user ID');
- if(!amt||amt<1) return toast('Enter amount');
- let j=await adminApi({action:'user_balance', target:tid, op:op, amount:amt});
- if(j&&j.ok){ toast(op+' '+amt+' → now '+j.after+'c'); adminFindUser(); }
- else toast((j&&j.error)||'failed');
-};
-async function adminLoadDeposits(){
- let j=await adminApi({action:'get_deposits'});
- let el=document.getElementById('adminDepList'); if(!el) return;
- if(!j||!j.ok){ el.textContent=(j&&j.error)||'no access'; return; }
- let list=j.pending||[];
- if(!list.length){ el.innerHTML='<span style="color: #9aa3d1; font-size: 11px">No pending deposits</span>'; return; }
- el.innerHTML='';
- for(let i=0;i<list.length;i++){
-  let d=list[i];
-  let card=document.createElement('div');
-  card.style.cssText='padding: 8px; border: 1px solid #2a2f6e; border-radius: 10px; margin-bottom: 8px';
-  card.innerHTML='<div style="font-size: 11px"><b>'+d.name+'</b> <code style="color: #9aa3d1">'+d.user+'</code></div><div style="font-size: 11px; color: #ffd966">$'+d.amount+' → '+d.coins+' coins • '+d.method+'</div>';
-  if(d.proof && d.proof!=='none'){
-   let pv=document.createElement('button'); pv.className='btn2'; pv.textContent='📎 View Screenshot'; pv.style.cssText='padding:5px 8px;font-size:10px;width:auto;margin:6px 4px 0 0;border-color:#7c4dff';
-   pv.onclick=function(){ adminViewProof(d.id) };
-   card.appendChild(pv);
+function showGate(on){
+ var g=el("gate");
+ if(g) g.classList.toggle("on",!!on);
+ var body=document.querySelector("header"); if(body) body.style.display=on?"none":"block";
+ var tabs=el("tabs"); if(tabs) tabs.style.display=on?"none":"flex";
+ var main=document.querySelector("main"); if(main) main.style.display=on?"none":"block";
+ var menu=el("menu"); if(menu) menu.style.display=on?"none":"flex";
+}
+function doSignup(){
+ var f=el("gFirst"),l=el("gLast"),u=el("gUser"),p=el("gPass");
+ var fd=f?f.value:"", ld=l?l.value:"", ud=u?u.value:"", pd=p?p.value:"";
+ if(fd.trim().length<2) return gateMsg("Enter your first name");
+ if(ld.trim().length<1) return gateMsg("Enter your last name");
+ if(ud.trim().length<3) return gateMsg("Username needs 3+ characters");
+ if(pd.length<4) return gateMsg("Password needs 4+ characters");
+ gateMsg("Creating account…");
+ call("register",{first:fd,last:ld,username:ud,password:pd}).then(function(j){
+  if(j&&j.ok){
+   state.token=j.token||"";
+   try{ localStorage.setItem("pe_token",state.token); }catch(e){}
+   state.registered=true;
+   if(j.user){ state.first=j.user.first; state.last=j.user.last; state.username=j.user.username; }
+   state.coins=parseInt(j.coins||0)||0;
+   state.rate=parseInt(j.rate||100)||100;
+   state.isAdmin=!!j.is_admin;
+   state.ver=parseInt(j.v||0)||0;
+   state.balOk=true;
+   gateMsg("");
+   showGate(false);
+   applySessionUI();
+   toast("Welcome "+state.first);
+  } else {
+   gateMsg((j&&j.error)||"could not create account");
   }
-  let ok=document.createElement('button'); ok.className='btn2'; ok.textContent='✅ Approve'; ok.style.cssText='padding: 5px 8px; font-size: 10px; border-color: #00e676; margin-top: 6px';
-  ok.onclick=function(){ adminDepAct(d.id,'approve') };
-  let no=document.createElement('button'); no.className='btn2'; no.textContent='❌ Reject'; no.style.cssText='padding: 5px 8px; font-size: 10px; border-color: #ff5252; margin-top: 6px';
-  no.onclick=function(){ adminDepAct(d.id,'reject') };
-  card.appendChild(ok); card.appendChild(no);
-  el.appendChild(card);
- }
+ });
 }
-window.adminViewProof=async function(did){
- toast('Loading screenshot…');
- let j=await adminApi({action:'get_deposit_image', did:String(did)});
- if(!j||!j.ok||!j.image){ toast((j&&j.error)||'no screenshot stored'); return; }
- let old=document.getElementById('proofModal'); if(old){ old.remove(); }
- let m=document.createElement('div');
- m.id='proofModal';
- m.style.cssText='position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.9);display:flex;align-items:center;justify-content:center;padding:14px';
- let box=document.createElement('div');
- box.style.cssText='background:#0f1330;border:1px solid #7c4dff;border-radius:14px;padding:12px;max-width:94vw;max-height:90vh;overflow:auto;text-align:center';
- let x=document.createElement('button'); x.className='btn2'; x.textContent='✕ Close'; x.style.cssText='width:auto;padding:6px 12px;margin:0 0 8px 0'; x.onclick=function(){ m.remove() };
- let im=document.createElement('img'); im.src=j.image; im.style.cssText='max-width:100%;border-radius:10px;display:block';
- box.appendChild(x); box.appendChild(im);
- m.appendChild(box);
- m.onclick=function(e){ if(e.target===m){ m.remove(); } };
- document.body.appendChild(m);
-};
-window.adminDepAct=async function(did,op){
- let j=await adminApi({action:'deposit_action', did:did, do:op});
- toast(j&&j.ok ? (op+' done') : ((j&&j.error)||'failed'));
- if(j&&j.ok){ adminLoadDeposits(); adminLoadStats(); }
-};
-async function adminLoadWithdraws(){
- let j=await adminApi({action:'get_withdraws'});
- let el=document.getElementById('adminWdList'); if(!el) return;
- if(!j||!j.ok){ el.textContent=(j&&j.error)||'no access'; return; }
- let list=j.pending||[];
- if(!list.length){ el.innerHTML='<span style="color: #9aa3d1; font-size: 11px">No pending withdraws</span>'; return; }
- el.innerHTML='';
- for(let i=0;i<list.length;i++){
-  let w=list[i];
-  let card=document.createElement('div');
-  card.style.cssText='padding: 8px; border: 1px solid #2a2f6e; border-radius: 10px; margin-bottom: 8px';
-  card.innerHTML='<div style="font-size: 11px"><code style="color: #9aa3d1">'+w.user+'</code> → <b>'+w.amount+' coins</b></div><div style="font-size: 10px; color: #ffd966">'+w.details+'</div>';
-  let ok=document.createElement('button'); ok.className='btn2'; ok.textContent='✅ Paid'; ok.style.cssText='padding: 5px 8px; font-size: 10px; border-color: #00e676; margin-top: 6px';
-  ok.onclick=function(){ adminWdAct(w.id,'approve') };
-  let no=document.createElement('button'); no.className='btn2'; no.textContent='❌ Reject + refund'; no.style.cssText='padding: 5px 8px; font-size: 10px; border-color: #ff5252; margin-top: 6px';
-  no.onclick=function(){ adminWdAct(w.id,'reject') };
-  card.appendChild(ok); card.appendChild(no);
-  el.appendChild(card);
- }
+function doLogin(){
+ var u=el("gUser"),p=el("gPass");
+ var ud=u?u.value:"", pd=p?p.value:"";
+ if(!ud.trim()) return gateMsg("Enter your username");
+ if(!pd) return gateMsg("Enter your password");
+ gateMsg("Logging in…");
+ call("login",{username:ud,password:pd}).then(function(j){
+  if(j&&j.ok){
+   state.token=j.token||"";
+   try{ localStorage.setItem("pe_token",state.token); }catch(e){}
+   state.registered=true; state.loggedIn=true;
+   if(j.user){ state.first=j.user.first; state.last=j.user.last; state.username=j.user.username; }
+   state.coins=parseInt(j.coins||0)||0;
+   state.rate=parseInt(j.rate||100)||100;
+   state.isAdmin=!!j.is_admin;
+   state.isFull=!!j.is_full;
+   state.srvUid=String(j.server_uid||"");
+   state.ver=parseInt(j.v||0)||0;
+   state.balOk=true;
+   gateMsg("");
+   showGate(false);
+   applySessionUI();
+   toast("Welcome back");
+  } else {
+   gateMsg((j&&j.error)||"login failed");
+  }
+ });
 }
-window.adminWdAct=async function(wid,op){
- let j=await adminApi({action:'withdraw_action', wid:wid, do:op});
- toast(j&&j.ok ? (op+' done') : ((j&&j.error)||'failed'));
- if(j&&j.ok){ adminLoadWithdraws(); adminLoadStats(); }
-};
-async function adminLoadDepMethods(){
- let j=await adminApi({action:'get_deposit_methods'});
- let el=document.getElementById('adminDepMethods'); if(!el) return;
- if(!j||!j.ok){ el.textContent=(j&&j.error)||'no access'; return; }
- let ms=j.methods||[];
- el.innerHTML='';
- for(let i=0;i<ms.length;i++){
-  let m=ms[i];
-  let row=document.createElement('div');
-  row.style.cssText='padding: 6px; border: 1px solid #2a2f6e; border-radius: 8px; margin-bottom: 6px';
-  let n=document.createElement('input'); n.value=m.name||''; n.placeholder='Method name'; n.setAttribute('data-f','name'); n.setAttribute('data-i',String(i)); n.style.cssText='width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 11px';
-  let d=document.createElement('textarea'); d.value=m.details||''; d.placeholder='Payment details shown to user'; d.setAttribute('data-f','details'); d.setAttribute('data-i',String(i)); d.style.cssText='width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 11px; margin-top: 4px; height: 52px';
-  row.appendChild(n); row.appendChild(d);
-  el.appendChild(row);
- }
+function applySessionUI(){
+ var w=el("who");
+ var nm=state.first?state.first:(state.tgFirst||"Player");
+ if(w) w.textContent="👤 "+String(nm||"Player")+" • "+state.uid;
+ var af=el("acFirst"); if(af) af.value=state.first||"";
+ var al=el("acLast"); if(al) al.value=state.last||"";
+ var au=el("acUser"); if(au) au.value=state.username||"";
+ updBal(); setAdminUI();
 }
-window.adminAddDepMethod=function(){
- let el=document.getElementById('adminDepMethods'); if(!el) return;
- let i=el.children.length;
- let row=document.createElement('div');
- row.style.cssText='padding: 6px; border: 1px solid #2a2f6e; border-radius: 8px; margin-bottom: 6px';
- let n=document.createElement('input'); n.placeholder='New method name'; n.setAttribute('data-f','name'); n.setAttribute('data-i',String(i)); n.style.cssText='width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 11px';
- let d=document.createElement('textarea'); d.placeholder='Payment details'; d.setAttribute('data-f','details'); d.setAttribute('data-i',String(i)); d.style.cssText='width: 100%; padding: 6px; border-radius: 6px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 11px; margin-top: 4px; height: 52px';
- row.appendChild(n); row.appendChild(d); el.appendChild(row);
-};
-window.adminSaveDepMethods=async function(){
- let el=document.getElementById('adminDepMethods'); if(!el) return;
- let inputs=el.querySelectorAll('input[data-f], textarea[data-f]');
- let map={};
- for(let i=0;i<inputs.length;i++){
-  let idx=inputs[i].getAttribute('data-i');
-  let f=inputs[i].getAttribute('data-f');
-  if(!map[idx]) map[idx]={};
-  map[idx][f]=inputs[i].value;
- }
- let methods=[];
- for(let k in map){
-  let mv=map[k];
-  if(!mv.name) continue;
-  methods.push({id: mv.name.toLowerCase().replace(/[^a-z0-9]/g,'').slice(0,12)||('m'+k), name: mv.name, details: mv.details||'', enabled: true});
- }
- if(methods.length<1) return toast('Add at least one method');
- let j=await adminApi({action:'set_deposit_methods', methods:methods});
- toast(j&&j.ok ? ('Saved '+j.count+' methods') : ((j&&j.error)||'failed'));
-};
-async function adminLoadTeam(){
- let j=await adminApi({action:'get_admins'});
- if(!j||!j.ok) return;
- let info=document.getElementById('adminTeamInfo');
- let eq=j.equal||[]; let sub=j.sub||{};
- if(info) info.innerHTML='Main: <b>'+j.main+'</b> • Equal: '+eq.length+'/2 • Sub: '+Object.keys(sub).length+'/10';
- let el=document.getElementById('adminTeamList'); if(!el) return;
- el.innerHTML='';
- for(let i=0;i<eq.length;i++){
-  let id=eq[i];
-  let d=document.createElement('div');
-  d.style.cssText='display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 11px';
-  d.innerHTML='<span>👑 Equal '+id+'</span>';
-  let b=document.createElement('button'); b.className='btn2'; b.textContent='✕'; b.style.cssText='padding: 3px 8px; font-size: 10px; width: auto; margin: 0; border-color: #ff5252';
-  b.onclick=function(){ adminRemoveTeam('equal', id) };
-  d.appendChild(b); el.appendChild(d);
- }
- for(let k in sub){
-  let d=document.createElement('div');
-  d.style.cssText='display: flex; justify-content: space-between; align-items: center; padding: 5px 0; font-size: 11px';
-  d.innerHTML='<span>👤 Sub '+k+'</span>';
-  let b=document.createElement('button'); b.className='btn2'; b.textContent='✕'; b.style.cssText='padding: 3px 8px; font-size: 10px; width: auto; margin: 0; border-color: #ff5252';
-  b.onclick=function(){ adminRemoveTeam('sub', k) };
-  d.appendChild(b); el.appendChild(d);
- }
- let sel=document.getElementById('adSubPick');
- if(sel){
-  sel.innerHTML='';
-  let first=document.createElement('option'); first.value=''; first.textContent='— pick sub-admin —'; sel.appendChild(first);
-  for(let k in sub){ let o=document.createElement('option'); o.value=k; o.textContent='Sub '+k; sel.appendChild(o); }
- }
- adminRenderSubPerms();
+function doLogout(){
+ call("logout").then(function(){
+  state.token=""; state.loggedIn=false; state.registered=false;
+  try{ localStorage.removeItem("pe_token"); }catch(e){}
+  showGate(true); gateMode("login"); gateMsg("You have been logged out.");
+ });
 }
-window.adminAddTeam=async function(kind){
- let v=(document.getElementById('adAddId').value||'').trim();
- if(!v) return toast('Enter Telegram ID');
- let j;
- if(kind==='equal') j=await adminApi({action:'add_equal', new_id:v});
- else j=await adminApi({action:'add_sub', new_id:v});
- toast(j&&j.ok ? ('Added '+kind) : ((j&&j.error)||'failed'));
- if(j&&j.ok){ document.getElementById('adAddId').value=''; adminLoadTeam(); }
-};
-window.adminRemoveTeam=async function(kind,id){
- let j;
- if(kind==='equal') j=await adminApi({action:'remove_equal', rem_id:id});
- else j=await adminApi({action:'remove_sub', rem_id:id});
- toast(j&&j.ok ? 'Removed' : ((j&&j.error)||'failed'));
- if(j&&j.ok) adminLoadTeam();
-};
-const PERM_LIST=[['users','👥 Users & balance'],['deposits','📥 Deposits'],['withdraws','📤 Withdraws'],['games','🎮 Game control'],['settings','⚙️ Settings'],['chats','💬 Chats']];
-let _subCache={};
-window.adminRenderSubPerms=async function(){
- let sel=document.getElementById('adSubPick'); if(!sel) return;
- let sid=sel.value;
- let box=document.getElementById('adSubPerms'); if(!box) return;
- if(!sid){ box.innerHTML='<span style="color: #9aa3d1; font-size: 11px">Pick a sub-admin above</span>'; return; }
- let j=await adminApi({action:'get_admins'});
- if(!j||!j.ok) return;
- let sub=j.sub||{};
- let perms=(sub[sid]&&sub[sid].perms)?sub[sid].perms:{};
- _subCache[sid]=Object.assign({},perms);
- box.innerHTML='';
- for(let i=0;i<PERM_LIST.length;i++){
-  let key=PERM_LIST[i][0], label=PERM_LIST[i][1];
-  let on=perms[key]===true;
-  let row=document.createElement('div');
-  row.style.cssText='display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid #2a2f6e';
-  row.innerHTML='<span style="font-size: 11px">'+label+'</span><span style="font-size: 10px; color: '+(on?'#00e676':'#ff8a80')+'">'+(on?'ALLOWED':'blocked')+'</span>';
-  let b=document.createElement('button'); b.className='btn2'; b.textContent=on?'Turn OFF':'Turn ON'; b.style.cssText='padding: 4px 8px; font-size: 10px; width: auto; margin: 0';
-  b.onclick=function(){ adminTogglePerm(sid,key) };
-  row.appendChild(b); box.appendChild(row);
- }
-};
-window.adminTogglePerm=async function(sid,key){
- let cur=_subCache[sid]||{};
- cur[key]=!(cur[key]===true);
- let j=await adminApi({action:'set_sub_perms', sub_id:sid, perms:cur});
- toast(j&&j.ok ? (key+' updated') : ((j&&j.error)||'failed'));
- if(j&&j.ok) adminRenderSubPerms();
-};
-async function loadDepMethods(){
- let el=document.getElementById('depMethodList'); if(!el) return;
- let j=await api({action:'get_deposit_methods'});
- let ms=(j&&j.ok&&j.methods)?j.methods:[];
- if(!ms.length){
-  ms=[{id:'bank',name:'🏦 Bank Transfer',details:'Pay then upload screenshot — admin confirms',enabled:true},
-      {id:'usdt',name:'💲 USDT TRC20',details:'Send USDT on TRC20 network, then upload screenshot',enabled:true},
-      {id:'stars',name:'⭐ Telegram Stars',details:'Buy coins with Telegram Stars',enabled:true}];
- }
- el.innerHTML='';
- for(let i=0;i<ms.length;i++){
-  let m=ms[i];
-  if(m.enabled===false) continue;
-  let row=document.createElement('label');
-  row.style.cssText='display: flex; gap: 8px; align-items: center; padding: 8px; border: 1px solid #2a2f6e; border-radius: 10px; margin-bottom: 6px';
-  let r=document.createElement('input'); r.type='radio'; r.name='depm'; r.value=m.id||m.name;
-  let t=document.createElement('div'); t.style.fontSize='11px';
-  t.innerHTML='<b>'+(m.name||'')+'</b><br><span style="color: #9aa3d1; font-size: 10px">'+String(m.details||'').replace(/</g,'&lt;').slice(0,90)+'</span>';
-  row.appendChild(r); row.appendChild(t); el.appendChild(row);
- }
+function saveProfile(){
+ var f=el("acFirst"),l=el("acLast"),u=el("acUser"),p=el("acPass");
+ var m=el("acMsg"); if(m) m.textContent="Saving…";
+ call("profile",{first:f?f.value:"",last:l?l.value:"",username:u?u.value:"",password:p?p.value:""}).then(function(j){
+  if(j&&j.ok){
+   if(j.user){ state.first=j.user.first; state.last=j.user.last; state.username=j.user.username; }
+   if(p) p.value="";
+   if(m) m.textContent="Saved";
+   applySessionUI();
+   toast("Profile saved");
+  } else if(m){ m.textContent=(j&&j.error)||"save failed"; }
+ });
 }
-async function loadWdMethods(){
- let el=document.getElementById('wdMethodList'); if(!el) return;
- let j=await api({action:'get_withdraw_methods'});
- let ms=(j&&j.ok&&j.methods)?j.methods:[];
- el.innerHTML='';
- for(let i=0;i<ms.length;i++){
-  let m=ms[i];
-  let row=document.createElement('label');
-  row.style.cssText='display: flex; gap: 8px; align-items: center; padding: 8px; border: 1px solid #2a2f6e; border-radius: 10px; margin-bottom: 6px';
-  let r=document.createElement('input'); r.type='radio'; r.name='wdm'; r.value=m.id||m.name;
-  r.setAttribute('data-fields', (m.fields||[]).join('|'));
-  r.onchange=function(){ renderWdFields(m) };
-  let t=document.createElement('div'); t.style.fontSize='11px'; t.innerHTML='<b>'+(m.name||'')+'</b>';
-  row.appendChild(r); row.appendChild(t); el.appendChild(row);
- }
+function loadDepMethods(){
+ var box=el("depMethods"); if(!box) return;
+ box.innerHTML="<p class="hint">Loading methods…</p>";
+ call("deposit_methods").then(function(j){
+  state.depMethods=(j&&j.ok&&j.methods)?j.methods:[];
+  box.innerHTML="";
+  if(!state.depMethods.length){ box.innerHTML="<p class="hint miss">No methods available. Ask admin to add one.</p>"; return; }
+  state.depMethods.forEach(function(m,idx){
+   var row=document.createElement("label");
+   row.className="urow";
+   row.style.display="flex"; row.style.gap="8px"; row.style.alignItems="center";
+   var r=document.createElement("input");
+   r.type="radio"; r.name="depm"; r.value=m.id; r.style.width="auto"; r.style.margin="0";
+   if(idx===0) r.checked=true;
+   var d=document.createElement("div");
+   d.innerHTML="<div class="nm">"+esc(m.name)+"</div><div class="meta">"+esc(m.details||"")+"</div>";
+   row.appendChild(r); row.appendChild(d); box.appendChild(row);
+  });
+ });
+}
+function fileToData(file,maxW,cb){
+ var fr=new FileReader();
+ fr.onload=function(){
+  var img=new Image();
+  img.onload=function(){
+   var w=img.width,h=img.height;
+   if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
+   var c=document.createElement("canvas");
+   c.width=w; c.height=h;
+   c.getContext("2d").drawImage(img,0,0,w,h);
+   cb(c.toDataURL("image/jpeg",0.5));
+  };
+  img.onerror=function(){ cb(""); };
+  img.src=fr.result;
+ };
+ fr.onerror=function(){ cb(""); };
+ fr.readAsDataURL(file);
+}
+function submitDeposit(){
+ var msg=el("depMsg");
+ var amt=parseInt((el("depAmt")||{}).value||"0");
+ var sel=document.querySelector("input[name=depm]:checked");
+ var f=el("depFile");
+ var file=(f&&f.files&&f.files[0])?f.files[0]:null;
+ if(!sel){ toast("Choose a deposit method"); return; }
+ if(!amt||amt<1){ toast("Enter the amount in USD"); return; }
+ if(!file){ toast("Attach your payment screenshot"); return; }
+ if(msg) msg.textContent="Uploading…";
+ fileToData(file,720,function(data){
+  if(!data){ if(msg) msg.textContent="Could not read image"; return; }
+  call("deposit_submit",{method:sel.value,amount:amt,proof:data}).then(function(j){
+   if(j&&j.ok){
+    if(msg) msg.textContent="Submitted. "+j.coins+" coins pending approval.";
+    toast("Deposit submitted");
+    var a=el("depAmt"); if(a) a.value="";
+    var ff=el("depFile"); if(ff) ff.value="";
+   } else if(msg){ msg.textContent=(j&&j.error)||"failed"; }
+  });
+ });
+}
+function loadWdMethods(){
+ var box=el("wdMethods"); if(!box) return;
+ box.innerHTML="<p class="hint">Loading methods…</p>";
+ call("withdraw_methods").then(function(j){
+  state.wdMethods=(j&&j.ok&&j.methods)?j.methods:[];
+  box.innerHTML="";
+  if(!state.wdMethods.length){ box.innerHTML="<p class="hint miss">No withdraw methods set.</p>"; return; }
+  state.wdMethods.forEach(function(m,idx){
+   var row=document.createElement("label");
+   row.className="urow";
+   row.style.display="flex"; row.style.gap="8px"; row.style.alignItems="center";
+   var r=document.createElement("input");
+   r.type="radio"; r.name="wdm"; r.value=m.id; r.style.width="auto"; r.style.margin="0";
+   if(idx===0){ r.checked=true; state.wdSel=m; }
+   r.addEventListener("change",function(){ state.wdSel=m; renderWdFields(m); });
+   var d=document.createElement("div");
+   d.innerHTML="<div class="nm">"+esc(m.name)+"</div>";
+   row.appendChild(r); row.appendChild(d); box.appendChild(row);
+  });
+  if(state.wdMethods[0]) renderWdFields(state.wdMethods[0]);
+ });
 }
 function renderWdFields(m){
- let w=document.getElementById('wdFieldWrap'); if(!w) return;
- w.innerHTML='';
- let fields=m.fields||[];
- for(let i=0;i<fields.length;i++){
-  let inp=document.createElement('input');
-  inp.placeholder=fields[i];
-  inp.setAttribute('data-field', fields[i]);
-  inp.className='wdf';
-  inp.style.cssText='width: 100%; padding: 8px; border-radius: 8px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 11px; margin-bottom: 6px';
-  w.appendChild(inp);
+ var box=el("wdFields"); if(!box) return;
+ box.innerHTML="";
+ var fs=(m&&m.fields)?m.fields:["Payment details"];
+ fs.forEach(function(f){
+  var i=document.createElement("input");
+  i.placeholder=f;
+  i.setAttribute("data-f",f);
+  box.appendChild(i);
+ });
+}
+function submitWithdraw(){
+ var msg=el("wdMsg");
+ var amt=parseInt((el("wdAmt")||{}).value||"0");
+ var sel=document.querySelector("input[name=wdm]:checked");
+ if(!sel){ toast("Choose a withdraw method"); return; }
+ if(!amt||amt<10){ toast("Minimum withdraw is 10 coins"); return; }
+ var ins=document.querySelectorAll("#wdFields input");
+ var det="";
+ for(var i=0;i<ins.length;i++){
+  if(ins[i].value){ det=det+ins[i].getAttribute("data-f")+": "+ins[i].value+"; "; }
+ }
+ if(!det){ toast("Fill your payment details"); return; }
+ if(msg) msg.textContent="Submitting…";
+ call("withdraw_submit",{amount:amt,method:sel.value,details:det}).then(function(j){
+  if(j&&j.ok){
+   state.coins=parseInt(j.coins||state.coins)||0;
+   state.balOk=true; updBal();
+   if(msg) msg.textContent="Submitted. Waiting for admin approval.";
+   toast("Withdraw submitted");
+  } else if(msg){ msg.textContent=(j&&j.error)||"failed"; }
+ });
+}
+function adminRefresh(){
+ call("admin_home").then(function(j){
+  var st=el("adStats");
+  if(!j||!j.ok){
+   if(st) st.textContent="Admin check failed: "+((j&&j.error)||"unknown");
+   return;
+  }
+  state.isAdmin=true;
+  state.isFull=!!j.is_full;
+  setAdminUI();
+  if(st) st.textContent="Users: "+j.users+" • Pending deposits: "+j.pending_deposits+" • Pending withdraws: "+j.pending_withdraws+" • Global: "+j.global_mode;
+  var g=el("adGlobal"); if(g) g.textContent="Global now: "+j.global_mode;
+  renderAdminGames(j.controls||{},j.global_mode);
+  adminLoadUsers();
+  adminLoadDeps();
+  adminLoadWds();
+  adminLoadDepMethods();
+  adminLoadTeam();
+ });
+}
+function renderAdminGames(ctrl,glob){
+ var box=el("adGames"); if(!box) return;
+ box.innerHTML="";
+ GAMES.forEach(function(gm){
+  var mode=ctrl[String(gm.id)]||"normal";
+  var row=document.createElement("div");
+  row.className="urow";
+  row.innerHTML="<div class="nm">"+gm.em+" "+esc(gm.name)+"</div><div class="meta">now: "+esc(mode)+"</div>";
+  var r=document.createElement("div"); r.className="row";
+  [["force_win","WIN"],["force_loss","LOSS"],["normal","NORM"]].forEach(function(p){
+   var b=document.createElement("button");
+   b.type="button"; b.className="btn alt"; b.textContent=p[1];
+   b.addEventListener("click",function(){ adminSetGame(gm.id,p[0]); });
+   r.appendChild(b);
+  });
+  row.appendChild(r);
+  box.appendChild(row);
+ });
+}
+function adminSetGame(gid,mode){
+ call("admin_set_game",{gid:gid,mode:mode}).then(function(j){
+  toast(j&&j.ok?("game "+gid+" -> "+mode):((j&&j.error)||"failed"));
+  if(j&&j.ok) adminRefresh();
+ });
+}
+function adminSetGlobal(mode){
+ call("admin_set_global",{mode:mode}).then(function(j){
+  toast(j&&j.ok?("global -> "+mode):((j&&j.error)||"failed"));
+  if(j&&j.ok) adminRefresh();
+ });
+}
+function adminLoadUsers(){
+ var box=el("adUsers"); if(!box) return;
+ box.innerHTML="<p class="hint">Loading…</p>";
+ call("admin_users").then(function(j){
+  if(!j||!j.ok){ box.innerHTML="<p class="hint miss">"+esc((j&&j.error)||"failed")+"</p>"; return; }
+  state.users=j.users||[];
+  box.innerHTML="";
+  var head=document.createElement("p");
+  head.className="hint";
+  head.textContent="Total "+j.total+" shown "+state.users.length;
+  box.appendChild(head);
+  if(!state.users.length){ var p=document.createElement("p"); p.className="hint"; p.textContent="No users yet."; box.appendChild(p); return; }
+  state.users.forEach(function(u){
+   var row=document.createElement("div");
+   row.className="urow";
+   var tag=u.registered?"<span class="tag reg">registered</span>":"<span class="tag">telegram</span>";
+   if(u.blocked) tag=tag+" <span class="tag blk">blocked</span>";
+   row.innerHTML="<div class="nm">"+esc(u.name||"-")+" "+tag+"</div><div class="meta">ID "+esc(u.id)+(u.username?(" • @"+esc(u.username)):"")+(u.tg_username?(" • tg @"+esc(u.tg_username)):"")+"</div><div class="meta">"+u.coins+" coins</div>";
+   var r=document.createElement("div"); r.className="row";
+   var b1=document.createElement("button");
+   b1.type="button"; b1.className="btn alt"; b1.textContent="Use";
+   b1.addEventListener("click",function(){ var t=el("adTarget"); if(t) t.value=u.id; adminLookup(); });
+   var b2=document.createElement("button");
+   b2.type="button"; b2.className="btn alt"; b2.textContent=u.blocked?"Unblock":"Block";
+   b2.addEventListener("click",function(){ adminBlock(u.id,!u.blocked); });
+   r.appendChild(b1); r.appendChild(b2);
+   row.appendChild(r);
+   box.appendChild(row);
+  });
+ });
+}
+function adminLookup(){
+ var t=el("adTarget"); var id=t?t.value:"";
+ if(!id) return toast("Enter a user ID");
+ call("admin_user_info",{target:id}).then(function(j){
+  var box=el("adTargetInfo");
+  if(!box) return;
+  if(j&&j.ok){
+   box.innerHTML="<b>"+esc(j.name||"-")+"</b> • ID "+esc(j.id)+"<br>"+(j.username?("@"+esc(j.username)+" • "):"")+(j.registered?"registered":"telegram only")+"<br>"+j.coins+" coins"+(j.blocked?" • BLOCKED":"");
+  } else {
+   box.textContent=(j&&j.error)||"not found";
+  }
+ });
+}
+function adminBalOp(op){
+ var t=el("adTarget"); var a=el("adAmount");
+ var id=t?t.value:""; var amt=a?a.value:"";
+ if(!id) return toast("Enter a user ID");
+ if(!amt||parseInt(amt)<1) return toast("Enter an amount");
+ call("admin_balance",{target:id,op:op,amount:amt}).then(function(j){
+  if(j&&j.ok){
+   toast(op+" done: "+j.before+" -> "+j.after+" coins");
+   adminLookup(); adminLoadUsers(); loadBalance(false);
+  } else {
+   toast((j&&j.error)||"failed");
+  }
+ });
+}
+function adminBlock(id,on){
+ call("admin_block",{target:id,blocked:!!on}).then(function(j){
+  toast(j&&j.ok?(on?"blocked":"unblocked"):((j&&j.error)||"failed"));
+  if(j&&j.ok) adminLoadUsers();
+ });
+}
+function adminLoadDeps(){
+ var box=el("adDeps"); if(!box) return;
+ box.innerHTML="<p class="hint">Loading…</p>";
+ call("admin_dep_list").then(function(j){
+  if(!j||!j.ok){ box.innerHTML="<p class="hint miss">"+esc((j&&j.error)||"failed")+"</p>"; return; }
+  state.deps=j.pending||[];
+  box.innerHTML="";
+  if(!state.deps.length){ var p=document.createElement("p"); p.className="hint"; p.textContent="No pending deposits."; box.appendChild(p); return; }
+  state.deps.forEach(function(d){
+   var row=document.createElement("div");
+   row.className="urow";
+   row.innerHTML="<div class="nm">"+esc(d.name||"-")+"</div><div class="meta">ID "+esc(d.user)+(d.tg_username?(" • @"+esc(d.tg_username)):"")+"</div><div class="meta">$"+d.amount+" = "+d.coins+" coins • "+esc(d.method)+"</div><div class="meta">"+(d.proof&&d.proof!=="none"?"screenshot saved":"no screenshot")+"</div>";
+   var r=document.createElement("div"); r.className="row";
+   if(d.proof&&d.proof!=="none"){
+    var pv=document.createElement("button");
+    pv.type="button"; pv.className="btn alt"; pv.textContent="📎 View";
+    pv.addEventListener("click",function(){ adminViewProof(d.id); });
+    r.appendChild(pv);
+   }
+   var ok=document.createElement("button");
+   ok.type="button"; ok.className="btn alt"; ok.textContent="✅ Approve";
+   ok.addEventListener("click",function(){ adminDepAct(d.id,"approve"); });
+   var no=document.createElement("button");
+   no.type="button"; no.className="btn alt"; no.textContent="❌ Reject";
+   no.addEventListener("click",function(){ adminDepAct(d.id,"reject"); });
+   r.appendChild(ok); r.appendChild(no);
+   row.appendChild(r); box.appendChild(row);
+  });
+ });
+}
+function adminDepAct(did,op){
+ call("admin_dep_action",{did:did,op:op}).then(function(j){
+  toast(j&&j.ok?(op+" done"):((j&&j.error)||"failed"));
+  if(j&&j.ok){ adminLoadDeps(); adminRefresh(); }
+ });
+}
+function adminViewProof(did){
+ call("admin_dep_proof",{did:did}).then(function(j){
+  if(!j||!j.ok||!j.image){ toast((j&&j.error)||"no screenshot"); return; }
+  var m=document.createElement("div");
+  m.className="mod";
+  var b=document.createElement("div");
+  b.className="mc2";
+  var x=document.createElement("button");
+  x.type="button"; x.className="btn alt"; x.textContent="✕ Close";
+  x.addEventListener("click",function(){ m.remove(); });
+  var img=document.createElement("img");
+  img.src=j.image;
+  b.appendChild(x); b.appendChild(img);
+  m.appendChild(b);
+  m.addEventListener("click",function(e){ if(e.target===m) m.remove(); });
+  document.body.appendChild(m);
+ });
+}
+function adminLoadWds(){
+ var box=el("adWds"); if(!box) return;
+ box.innerHTML="<p class="hint">Loading…</p>";
+ call("admin_wd_list").then(function(j){
+  if(!j||!j.ok){ box.innerHTML="<p class="hint miss">"+esc((j&&j.error)||"failed")+"</p>"; return; }
+  state.wds=j.pending||[];
+  box.innerHTML="";
+  if(!state.wds.length){ var p=document.createElement("p"); p.className="hint"; p.textContent="No pending withdraws."; box.appendChild(p); return; }
+  state.wds.forEach(function(w){
+   var row=document.createElement("div");
+   row.className="urow";
+   row.innerHTML="<div class="nm">"+w.coins+" coins</div><div class="meta">ID "+esc(w.user)+(w.username?(" • @"+esc(w.username)):"")+"</div><div class="meta">"+esc(w.method)+"</div><div class="meta">"+esc(w.details)+"</div>";
+   var r=document.createElement("div"); r.className="row";
+   var ok=document.createElement("button");
+   ok.type="button"; ok.className="btn alt"; ok.textContent="✅ Paid";
+   ok.addEventListener("click",function(){ adminWdAct(w.id,"approve"); });
+   var no=document.createElement("button");
+   no.type="button"; no.className="btn alt"; no.textContent="❌ Reject + refund";
+   no.addEventListener("click",function(){ adminWdAct(w.id,"reject"); });
+   r.appendChild(ok); r.appendChild(no);
+   row.appendChild(r); box.appendChild(row);
+  });
+ });
+}
+function adminWdAct(wid,op){
+ call("admin_wd_action",{wid:wid,op:op}).then(function(j){
+  toast(j&&j.ok?(op+" done"):((j&&j.error)||"failed"));
+  if(j&&j.ok){ adminLoadWds(); adminRefresh(); }
+ });
+}
+function adminLoadDepMethods(){
+ var t=el("adDepMethods"); if(!t) return;
+ call("admin_dep_methods").then(function(j){
+  var ms=(j&&j.ok&&j.methods)?j.methods:[];
+  var lines=[];
+  ms.forEach(function(m){ lines.push(String(m.name||"")+" | "+String(m.details||"")); });
+  t.value=lines.join(String.fromCharCode(10));
+ });
+}
+function adminSaveDepMethods(){
+ var t=el("adDepMethods"); if(!t) return;
+ var raw=String(t.value||"");
+ var lines=raw.split(String.fromCharCode(10));
+ var ms=[];
+ lines.forEach(function(ln){
+  var s=String(ln||"").trim();
+  if(!s) return;
+  var parts=s.split("|");
+  var nm=String(parts[0]||"").trim();
+  var dt=parts.length>1?String(parts.slice(1).join("|")).trim():"";
+  if(!nm) return;
+  ms.push({id:nm.toLowerCase().replace(/[^a-z0-9]/g,"").slice(0,14)||"m"+ms.length,name:nm,details:dt});
+ });
+ if(!ms.length) return toast("Add at least one method");
+ call("admin_set_dep_methods",{methods:ms}).then(function(j){
+  toast(j&&j.ok?("saved "+j.count+" methods"):((j&&j.error)||"failed"));
+ });
+}
+function adminLoadTeam(){
+ call("admin_teams").then(function(j){
+  var info=el("adTeamInfo");
+  if(!j||!j.ok){ if(info) info.textContent=(j&&j.error)||"failed"; return; }
+  var eq=j.equal||[];
+  var subs=j.sub||{};
+  var keys=[];
+  for(var k in subs){ keys.push(k); }
+  if(info) info.textContent="Main: "+j.main+" • Equal: "+eq.length+"/2 • Sub: "+keys.length+"/10";
+  var box=el("adTeamList"); if(!box) return;
+  box.innerHTML="";
+  eq.forEach(function(id){
+   var row=document.createElement("div");
+   row.className="urow";
+   row.innerHTML="<div class="nm">👑 Equal "+esc(id)+"</div>";
+   var r=document.createElement("div"); r.className="row";
+   var b=document.createElement("button");
+   b.type="button"; b.className="btn alt"; b.textContent="Remove";
+   b.addEventListener("click",function(){ adminDelTeam("equal",id); });
+   r.appendChild(b); row.appendChild(r); box.appendChild(row);
+  });
+  keys.forEach(function(id){
+   var row=document.createElement("div");
+   row.className="urow";
+   row.innerHTML="<div class="nm">👤 Sub "+esc(id)+"</div>";
+   var r=document.createElement("div"); r.className="row";
+   var b=document.createElement("button");
+   b.type="button"; b.className="btn alt"; b.textContent="Remove";
+   b.addEventListener("click",function(){ adminDelTeam("sub",id); });
+   r.appendChild(b); row.appendChild(r); box.appendChild(row);
+  });
+ });
+}
+function adminAddTeam(kind){
+ var t=el("adTeamId"); var id=t?t.value:"";
+ if(!id) return toast("Enter a Telegram ID");
+ call("admin_add_team",{kind:kind,target:id}).then(function(j){
+  toast(j&&j.ok?("added "+kind):((j&&j.error)||"failed"));
+  if(j&&j.ok){ var x=el("adTeamId"); if(x) x.value=""; adminLoadTeam(); }
+ });
+}
+function adminDelTeam(kind,id){
+ call("admin_del_team",{kind:kind,target:String(id)}).then(function(j){
+  toast(j&&j.ok?"removed":((j&&j.error)||"failed"));
+  if(j&&j.ok) adminLoadTeam();
+ });
+}
+function buildSelects(){
+ var cs=el("curSel");
+ if(cs){
+  cs.innerHTML="";
+  CURR.forEach(function(c){
+   var o=document.createElement("option");
+   o.value=c[0]; o.textContent=c[2]+" "+c[0]+" "+c[1];
+   if(c[0]===state.cur) o.selected=true;
+   cs.appendChild(o);
+  });
+  cs.addEventListener("change",function(){
+   state.cur=cs.value;
+   try{ localStorage.setItem("pe_cur",state.cur); }catch(e){}
+   loadFx(); updBal();
+  });
+ }
+ var ls=el("langSel");
+ if(ls){
+  ls.innerHTML="";
+  LANGS.forEach(function(l){
+   var o=document.createElement("option");
+   o.value=l[0]; o.textContent=l[1];
+   if(l[0]===state.lang) o.selected=true;
+   ls.appendChild(o);
+  });
+  ls.addEventListener("change",function(){
+   state.lang=ls.value;
+   try{ localStorage.setItem("pe_lang",state.lang); }catch(e){}
+   applyLang();
+  });
  }
 }
-function fileToDataUrl(file,maxW,cb){
- let r=new FileReader();
- r.onload=function(){
-  let img=new Image();
-  img.onload=function(){
-   let c=document.createElement('canvas');
-   let w=img.width, h=img.height;
-   if(w>maxW){ h=Math.round(h*maxW/w); w=maxW; }
-   c.width=w; c.height=h;
-   c.getContext('2d').drawImage(img,0,0,w,h);
-   cb(c.toDataURL('image/jpeg',0.55));
-  };
-  img.onerror=function(){ cb('') };
-  img.src=r.result;
- };
- r.onerror=function(){ cb('') };
- r.readAsDataURL(file);
+function loadFx(){
+ if(state.cur==="USD"){ state.fx=0; return; }
+ fetch("https://open.er-api.com/v6/latest/USD").then(function(r){ return r.json(); }).then(function(j){
+  if(j&&j.rates&&j.rates[state.cur]){ state.fx=j.rates[state.cur]; updBal(); }
+ }).catch(function(){});
 }
-window.userSubmitDeposit=function(){
- let el=document.getElementById('depMethodList');
- let picked='';
- let radios=el?el.querySelectorAll('input[name=depm]'):[];
- for(let i=0;i<radios.length;i++){ if(radios[i].checked) picked=radios[i].value; }
- let amt=parseInt(document.getElementById('depAmount').value||'0');
- let msg=document.getElementById('depMsg');
- if(!picked){ toast('Pick a deposit method'); return; }
- if(!amt||amt<1){ toast('Enter amount in USD'); return; }
- let f=document.getElementById('depProofFile');
- let file=f&&f.files?f.files[0]:null;
- if(!file){ toast('Choose your payment screenshot'); return; }
- if(msg) msg.textContent='Uploading screenshot…';
- fileToDataUrl(file,700,async function(dataUrl){
-  let uit=getUID(); if(!uit) uit=loadUID();
-  let body={action:'deposit_proof', user_id:uit, uid:uit, method:picked, amount:amt, proof:dataUrl, caption:'mini app upload'};
-  try{
-   let r=await fetch(withUIDParam(DEP_API),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
-   let j=await r.json();
-   if(j&&j.ok){ if(msg) msg.textContent='✅ Submitted $'+amt+' → '+j.coins+' coins. Waiting for admin approval.'; toast('Deposit submitted'); }
-   else { if(msg) msg.textContent=(j&&j.error)||'failed'; toast((j&&j.error)||'failed'); }
-  }catch(e){ if(msg) msg.textContent='Network error'; }
+function purge(){
+ try{ localStorage.removeItem("pe_token"); localStorage.removeItem("pe_uid"); }catch(e){}
+ toast("Reloading…");
+ setTimeout(function(){
+  var u=location.href.split("?")[0]+"?v="+Date.now();
+  location.href=u;
+ },700);
+}
+function boot(){
+ state.uid=getUID();
+ saveUID(state.uid);
+ var tu=readTG();
+ if(tu&&tu.username) state.tgUser=String(tu.username);
+ if(tu&&tu.first_name) state.tgFirst=String(tu.first_name);
+ try{ state.token=localStorage.getItem("pe_token")||""; }catch(e){ state.token=""; }
+ try{ state.cur=localStorage.getItem("pe_cur")||"USD"; }catch(e){}
+ try{ state.lang=localStorage.getItem("pe_lang")||"en"; }catch(e){}
+ var w=el("who");
+ if(w) w.textContent="👤 "+(state.tgFirst||"Player")+" • "+(state.uid||"?");
+ bindTab("tPlay","sPlay"); bindTab("tWallet","sWallet"); bindTab("tDep","sDep");
+ bindTab("tWd","sWd"); bindTab("tAcc","sAcc"); bindTab("tSet","sSet"); bindTab("tAdm","sAdm");
+ document.querySelectorAll(".mi").forEach(function(m){
+  m.addEventListener("click",function(){ var g=m.getAttribute("data-go"); if(g) showTab(g); });
  });
-};
-window.userSubmitWithdraw=async function(){
- let el=document.getElementById('wdMethodList');
- let picked='', fields='';
- let radios=el?el.querySelectorAll('input[name=wdm]'):[];
- for(let i=0;i<radios.length;i++){ if(radios[i].checked){ picked=radios[i].value; fields=radios[i].getAttribute('data-fields')||''; } }
- let amt=parseInt(document.getElementById('wdAmount').value||'0');
- let msg=document.getElementById('wdMsg');
- if(!picked){ toast('Pick a withdraw method'); return; }
- if(!amt||amt<10){ toast('Minimum 10 coins'); return; }
- let ins=document.querySelectorAll('.wdf');
- let det='';
- for(let i=0;i<ins.length;i++){ if(ins[i].value){ det+=ins[i].placeholder+': '+ins[i].value+' | '; } }
- if(!det){ toast('Type your payment details'); return; }
- let j=await api({action:'withdraw', amount:amt, details:det, method:picked});
- if(j&&j.ok){ if(msg) msg.textContent='✅ Withdraw '+amt+'c submitted. Balance now '+j.bal+'c'; toast('Withdraw submitted'); if(typeof j.bal!=='undefined'){ selBal=parseInt(j.bal)||selBal; updBal(); } }
- else { if(msg) msg.textContent=(j&&j.error)||'failed'; toast((j&&j.error)||'failed'); }
-};
-function accApi(obj){
- let u2 = getUID(); if(!u2) u2 = loadUID();
- if(!u2) return Promise.resolve({ ok:false, error:'no uid' });
- let payload = Object.assign({}, obj, { user_id:u2, uid:u2 });
- return fetch(withUIDParam(ACC_API), { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) })
-  .then(function(r){ return r.json(); })
-  .catch(function(e){ return { ok:false, error:'network error' }; });
-}
-let gateMode = 'signup';
-function setAppVisible(v){
- let h = document.querySelector('header'); if(h) h.style.display = v ? 'block' : 'none';
- let tb = document.getElementById('tabs'); if(tb) tb.style.display = v ? 'flex' : 'none';
- let mn = document.querySelector('main'); if(mn) mn.style.display = v ? 'block' : 'none';
- let bn = document.querySelector('.bottomNav'); if(bn) bn.style.display = v ? 'flex' : 'none';
- let tu = document.getElementById('topUser'); if(tu) tu.style.display = v ? 'flex' : 'none';
- let g = document.getElementById('gate'); if(g) g.style.display = v ? 'none' : 'flex';
-}
-function gateField(id, ph, type){
- return '<input id="'+id+'" placeholder="'+ph+'" type="'+(type||'text')+'" style="width: 100%; padding: 11px; border-radius: 10px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 12px; margin-top: 8px"/>';
-}
-window.renderGate = function(mode){
- gateMode = mode || gateMode;
- let box = document.getElementById('gateForm'); if(!box) return;
- let sw = document.getElementById('gateSwitch');
- let msg = document.getElementById('gateMsg'); if(msg) msg.textContent = '';
- if(gateMode === 'signup'){
-  box.innerHTML = gateField('gFirst','First name') + gateField('gLast','Last name') + gateField('gUser','Username') + gateField('gPass','Password','password') + '<button class="btn" type="button" onclick="doSignup()">Create Account</button>';
-  if(sw) sw.innerHTML = 'Already have an account? <b style="color: #ffd966; cursor: pointer" onclick="renderGate(&#39;login&#39;)">Log in</b>';
- } else {
-  box.innerHTML = gateField('gUser','Username') + gateField('gPass','Password','password') + '<button class="btn" type="button" onclick="doLogin()">Log In</button>';
-  if(sw) sw.innerHTML = 'No account yet? <b style="color: #ffd966; cursor: pointer" onclick="renderGate(&#39;signup&#39;)">Sign up</b>';
- }
-};
-function gateMsg(t){ let m = document.getElementById('gateMsg'); if(m) m.textContent = t || ''; }
-window.doSignup = function(){
- let f = (document.getElementById('gFirst')||{}).value || '';
- let l = (document.getElementById('gLast')||{}).value || '';
- let uu = (document.getElementById('gUser')||{}).value || '';
- let pp = (document.getElementById('gPass')||{}).value || '';
- if(f.trim().length < 2) return gateMsg('Enter your first name');
- if(l.trim().length < 2) return gateMsg('Enter your last name');
- if(uu.trim().length < 3) return gateMsg('Username needs 3+ characters');
- if(pp.length < 4) return gateMsg('Password needs 4+ characters');
- gateMsg('Creating account…');
- accApi({ action:'register', first:f, last:l, username:uu, password:pp }).then(function(j){
-  if(j && j.ok){
-   accToken = j.token || '';
-   accUser = j.user || null;
-   try{ localStorage.setItem('pe_token', accToken); }catch(e){}
-   toast('Welcome ' + (accUser ? accUser.first : '') + ' — account created');
-   enterApp();
-  } else {
-   gateMsg((j && j.error) || 'could not create account');
-  }
- });
-};
-window.doLogin = function(){
- let uu = (document.getElementById('gUser')||{}).value || '';
- let pp = (document.getElementById('gPass')||{}).value || '';
- if(!uu.trim()) return gateMsg('Enter your username');
- if(!pp) return gateMsg('Enter your password');
- gateMsg('Logging in…');
- accApi({ action:'login', username:uu, password:pp }).then(function(j){
-  if(j && j.ok){
-   accToken = j.token || '';
-   accUser = j.user || null;
-   try{ localStorage.setItem('pe_token', accToken); }catch(e){}
-   toast('Welcome back ' + (accUser ? accUser.first : ''));
-   enterApp();
-  } else {
-   gateMsg((j && j.error) || 'login failed');
-  }
- });
-};
-window.doLogout = function(){
- accApi({ action:'logout', token:accToken }).then(function(){
-  accToken = ''; accUser = null;
-  try{ localStorage.removeItem('pe_token'); }catch(e){}
-  setAppVisible(false);
-  renderGate('login');
-  gateMsg('You have been logged out.');
- });
-};
-function enterApp(){
- setAppVisible(true);
- let nm = document.getElementById('topUserName');
- if(nm && accUser) nm.textContent = '👤 ' + (accUser.first || '') + ' ' + (accUser.last || '') + ' • @' + (accUser.username || '');
- let af = document.getElementById('acFirst'); if(af && accUser) af.value = accUser.first || '';
- let al = document.getElementById('acLast'); if(al && accUser) al.value = accUser.last || '';
- let au = document.getElementById('acUser'); if(au && accUser) au.value = accUser.username || '';
- let ln = document.getElementById('accLine');
- if(ln && accUser) ln.innerHTML = '<b>' + (accUser.first||'') + ' ' + (accUser.last||'') + '</b><br>@' + (accUser.username||'') + '<br><span style="color: #9aa3d1; font-size: 11px">Telegram ID: ' + getUID() + '</span>';
- let mid=document.getElementById('myIdLbl'); if(mid) mid.textContent=String(getUID()||'not detected');
- refreshAdminUI();
- startBalSync();
-}
-function checkSession(){
- accApi({ action:'session', token: accToken }).then(function(j){
-  if(j && j.ok && j.logged_in){
-   accUser = j.user || null;
-   // admin flag from the session call too, so the tab does not depend
-   // on the balance request succeeding
-   if(typeof j.is_admin !== 'undefined'){ isAdmin = !!j.is_admin; balLoaded = true; lastBalErr = ''; }
-   enterApp();
-  } else {
-   if(j && j.ok && typeof j.is_admin !== 'undefined'){ isAdmin = !!j.is_admin; balLoaded = true; }
-   setAppVisible(false);
-   if(j && j.ok && j.registered){
-    renderGate('login');
-    gateMsg('Please log in to continue.');
-   } else {
-    renderGate('signup');
+ renderGames();
+ buildSelects();
+ applyLang();
+ loadFx();
+ var b1=el("btnSync"); if(b1) b1.addEventListener("click",function(){ loadBalance(true); });
+ var b2=el("btnPurge"); if(b2) b2.addEventListener("click",purge);
+ var b3=el("btnLogout"); if(b3) b3.addEventListener("click",doLogout);
+ var b4=el("acSave"); if(b4) b4.addEventListener("click",saveProfile);
+ var b5=el("depGo"); if(b5) b5.addEventListener("click",submitDeposit);
+ var b6=el("wdGo"); if(b6) b6.addEventListener("click",submitWithdraw);
+ var b7=el("ovClose"); if(b7) b7.addEventListener("click",hideOv);
+ var b8=el("adRefresh"); if(b8) b8.addEventListener("click",adminRefresh);
+ var b9=el("adGN"); if(b9) b9.addEventListener("click",function(){ adminSetGlobal("normal"); });
+ var b10=el("adGW"); if(b10) b10.addEventListener("click",function(){ adminSetGlobal("force_win"); });
+ var b11=el("adGL"); if(b11) b11.addEventListener("click",function(){ adminSetGlobal("force_loss"); });
+ var b12=el("adUsersBtn"); if(b12) b12.addEventListener("click",adminLoadUsers);
+ var b13=el("adInfo"); if(b13) b13.addEventListener("click",adminLookup);
+ var b14=el("adAdd"); if(b14) b14.addEventListener("click",function(){ adminBalOp("add"); });
+ var b15=el("adRem"); if(b15) b15.addEventListener("click",function(){ adminBalOp("remove"); });
+ var b16=el("adSet"); if(b16) b16.addEventListener("click",function(){ adminBalOp("set"); });
+ var b17=el("adDepBtn"); if(b17) b17.addEventListener("click",adminLoadDeps);
+ var b18=el("adWdBtn"); if(b18) b18.addEventListener("click",adminLoadWds);
+ var b19=el("adDepSave"); if(b19) b19.addEventListener("click",adminSaveDepMethods);
+ var b20=el("adTeamEq"); if(b20) b20.addEventListener("click",function(){ adminAddTeam("equal"); });
+ var b21=el("adTeamSub"); if(b21) b21.addEventListener("click",function(){ adminAddTeam("sub"); });
+ showGate(true);
+ gateMode("login");
+ call("session").then(function(j){
+  if(j&&j.ok){
+   state.ver=parseInt(j.v||0)||0;
+   state.isAdmin=!!j.is_admin;
+   state.isFull=!!j.is_full;
+   state.srvUid=String(j.server_uid||"");
+   state.coins=parseInt(j.coins||0)||0;
+   state.rate=parseInt(j.rate||100)||100;
+   state.balOk=true;
+   state.registered=!!j.registered;
+   if(j.user){
+    state.first=j.user.first; state.last=j.user.last; state.username=j.user.username;
+    if(j.user.tg_username) state.tgUser=j.user.tg_username;
    }
+   updBal(); setAdminUI();
+   if(j.logged_in){
+    state.loggedIn=true;
+    showGate(false);
+    applySessionUI();
+    loadDepMethods();
+    loadWdMethods();
+    return;
+   }
+   showGate(true);
+   gateMode(j.registered?"login":"signup");
+   gateMsg(j.registered?"Please log in to continue.":"");
+  } else {
+   updBal();
+   gateMsg("Cannot reach server: "+((j&&j.error)||"unknown"));
   }
  });
 }
-window.saveProfile = function(){
- let f = (document.getElementById('acFirst')||{}).value || '';
- let l = (document.getElementById('acLast')||{}).value || '';
- let uu = (document.getElementById('acUser')||{}).value || '';
- let pp = (document.getElementById('acPass')||{}).value || '';
- let m = document.getElementById('acMsg');
- if(m) m.textContent = 'Saving…';
- accApi({ action:'update_profile', token:accToken, first:f, last:l, username:uu }).then(function(j){
-  if(j && j.ok){
-   accUser = j.user || accUser;
-   if(m) m.textContent = '✅ Profile saved';
-   let nm = document.getElementById('topUserName');
-   if(nm && accUser) nm.textContent = '👤 ' + (accUser.first||'') + ' ' + (accUser.last||'') + ' • @' + (accUser.username||'');
-   if(pp && pp.length >= 4){
-    accApi({ action:'change_pass', token:accToken, password:pp });
-   }
-  } else if(m){ m.textContent = (j && j.error) || 'save failed'; }
- });
-};
-function bootLocalization(){
- try{ curCode=localStorage.getItem('pe_cur')||"USD"; }catch(e){}
- try{ langCode=localStorage.getItem('pe_lang')||"en"; }catch(e){}
- renderCurSel(); renderLangSel(); applyLang(); fetchFx();
-}
-function init(){
- bootLocalization();
- try{ accToken = localStorage.getItem('pe_token') || ''; }catch(e){ accToken = ''; }
- renderPlay('all'); loadFree('all');
- checkSession();
- try{ let b=document.getElementById('buildInfo'); if(b) b.textContent='v'+Date.now().toString().slice(-6)+' • '+new Date().toLocaleDateString(); }catch(e){}
- document.addEventListener('visibilitychange',()=>{ if(!document.hidden) syncBal(false); });
- window.addEventListener('focus',()=> syncBal(false));
-}
-if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init); else init();
+window.addEventListener("error",function(e){
+ try{ toast("Script error: "+e.message); }catch(x){}
+});
+if(document.readyState==="loading"){ document.addEventListener("DOMContentLoaded",boot); } else { boot(); }
 </script>
 </body>
 </html>
