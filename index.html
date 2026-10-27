@@ -109,6 +109,7 @@ main{padding:14px;position:relative;z-index:1}
  <button class="tab" type="button" onclick="showTab('freegames')">🌐 FREE GAMES</button>
  <button class="tab" type="button" onclick="showTab('wallet')">💳 Wallet</button>
  <button class="tab" type="button" onclick="showTab('deposit')">📥 Deposit</button>
+ <button class="tab" type="button" onclick="showTab('account')">👤 Account</button>
  <button class="tab" type="button" onclick="showTab('settings')">⚙️ Settings</button>
  <button class="tab" type="button" id="adminTab" style="display:none;background:linear-gradient(135deg,#7c4dff,#e040fb);color:#fff;border-color:#7c4dff" onclick="showTab('admin')">👑 ADMIN</button>
 </div>
@@ -156,6 +157,12 @@ main{padding:14px;position:relative;z-index:1}
    <h3>🎮 Per-Game Control</h3>
    <p style="color:#9aa3d1;font-size:11px;margin-top:4px">WIN / LOSS / Normal for each of the 10 games</p>
    <div id="adminGameList" style="margin-top:8px"></div>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>🧾 Registered Users (Signups)</h3>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">Name, username, coins — full control</p>
+   <div id="adminAccList" style="margin-top:8px"></div>
+   <button class="btn2" type="button" onclick="adminLoadAccounts()">🔄 Refresh Users</button>
   </div>
   <div class="box" style="margin-top:10px">
    <h3>👤 User Balance Control</h3>
@@ -227,6 +234,26 @@ main{padding:14px;position:relative;z-index:1}
    <p id="wdMsg" style="color:#ffd966;font-size:11px;margin-top:6px"></p>
   </div>
  </section>
+ <section id="account" class="section">
+  <div class="box" style="text-align:center">
+   <h3>👤 My Account</h3>
+   <p id="accLine" style="color:#ffd966;font-size:12px;margin-top:6px"></p>
+  </div>
+  <div class="box" style="margin-top:10px">
+   <h3>✏️ Edit Profile</h3>
+   <input id="acFirst" placeholder="First name" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
+   <input id="acLast" placeholder="Last name" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
+   <input id="acUser" placeholder="Username" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
+   <input id="acPass" type="password" placeholder="New password (leave blank to keep)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"/>
+   <button class="btn" type="button" onclick="saveProfile()">💾 Save Profile</button>
+   <p id="acMsg" style="color:#ffd966;font-size:11px;margin-top:6px"></p>
+  </div>
+  <div class="box" style="margin-top:10px;margin-bottom:10px">
+   <h3>🔐 Session</h3>
+   <p style="color:#9aa3d1;font-size:11px;margin-top:4px">You stay logged in on this device until you log out.</p>
+   <button class="btn2" type="button" style="border-color:#ff5252;color:#ff8a80" onclick="doLogout()">🚪 Logout</button>
+  </div>
+ </section>
  <section id="settings" class="section">
   <div class="box" style="text-align:center"><h3>🌍 Language — 100+ Worldwide</h3><p id="lblLanguage" style="color:#9aa3d1;font-size:11px">🌍 Language</p><select id="langSel" onchange="setLanguage(this.value)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select><p style="color:#9aa3d1;font-size:10px;margin-top:6px">Whole system changes instantly — menus, buttons, texts</p></div>
   <div class="box" style="margin-top:10px;text-align:center"><h3>💱 Currency — 100+ Worldwide</h3><p id="lblCurrency" style="color:#9aa3d1;font-size:11px">💱 Currency</p><select id="curSel" onchange="setCurrency(this.value)" style="width:100%;padding:10px;border-radius:10px;border:1px solid #2a2f6e;background:#0a0d2a;color:#fff;margin-top:8px"></select><p style="color:#9aa3d1;font-size:10px;margin-top:6px">Balance shows coins + $ + your local currency (live rates)</p></div>
@@ -238,14 +265,35 @@ main{padding:14px;position:relative;z-index:1}
 <div class="bottomNav">
  <button class="bNav active" type="button" onclick="showTab('home')"><span>🏠</span>Home</button><button class="bNav" type="button" onclick="showTab('playearn')"><span>💰</span>PLAY&EARN</button><button class="bNav" type="button" onclick="showTab('freegames')"><span>🌐</span>Free</button><button class="bNav" type="button" onclick="showTab('wallet')"><span>💳</span>Wallet</button><button class="bNav" type="button" onclick="showTab('deposit')"><span>📥</span>Deposit</button><button class="bNav" type="button" onclick="showTab('settings')"><span>⚙️</span>Settings</button><button class="bNav" type="button" id="bAdminNav" style="display:none;color:#b39ddb" onclick="showTab('admin')"><span>👑</span>Admin</button>
 </div>
+<div id="gate" style="display: none; position: fixed; inset: 0; z-index: 200; background: #080a1e; align-items: center; justify-content: center; padding: 18px; overflow-y: auto">
+ <div style="width: 100%; max-width: 380px; background: linear-gradient(180deg, #1a1f4a, #0f1330); border: 1px solid #2a3266; border-radius: 18px; padding: 18px">
+  <div style="text-align: center; margin-bottom: 12px">
+   <div style="font-size: 30px">🎰</div>
+   <h2 style="font-family: 'Cinzel', serif; font-size: 17px; color: #ffd966">PLAY&EARN</h2>
+   <p style="color: #9aa3d1; font-size: 11px; margin-top: 3px">Create your account to play</p>
+  </div>
+  <div id="gateForm"></div>
+  <p id="gateMsg" style="color: #ff8a80; font-size: 11px; margin-top: 8px; text-align: center; min-height: 14px"></p>
+  <div id="gateSwitch" style="text-align: center; margin-top: 10px; font-size: 11px"></div>
+ </div>
+</div>
+<div id="topUser" style="display: none; position: relative; z-index: 6; background: #0a0d2a; border-bottom: 1px solid #2a2f6e; padding: 7px 12px; display: none; justify-content: space-between; align-items: center">
+ <span id="topUserName" style="font-size: 11px; color: #ffd966"></span>
+ <span>
+  <button class="btn2" type="button" style="width: auto; margin: 0; padding: 4px 9px; font-size: 10px; display: inline-block" onclick="showTab('account')">👤 Account</button>
+  <button class="btn2" type="button" style="width: auto; margin: 0 0 0 5px; padding: 4px 9px; font-size: 10px; display: inline-block; border-color: #ff5252; color: #ff8a80" onclick="doLogout()">Logout</button>
+ </span>
+</div>
 <div id="toast" class="toast"></div>
 <script>
 const TG=(window.Telegram&&window.Telegram.WebApp)?window.Telegram.WebApp:null;
 const BOT="PlaynEarnbot";
 const RATE=100;
-const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QaOhVDEtVpYFsvdsOond8CJKyDwvkxZkjYdB0BHmY9R01SOx5pwytaxhXE3_zfIdbzwUr4iGi60fbQmoajJLhAp0dr0qNQEii-DhJDnTKAqVes3VAwE_lwLEsGWyi_-_bf6xeYBLRMcYh3agDEVJUYnYe4ATrWGiJFfgnvzTKvrDA_KetLLUfIuEWfvOZrcDIvT";
-const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QaOBLyXVbsjY_aW-ZIXf7a8HhbrWB0OtpaaByt8DIJZsJlg6MFs-EpITp_gxfm-ClX2K4INwL9DCOZCuKvc_DKHwa5lT3rU3fGMyDuv6mw0XOknT2CAUdM9B2bpmSuQ__NFFZthJPuJGZ1fBTiQ7ySz6TZTWFw3NuCxo7PHJ4IaXbQuFsD2zfVupZKjbslWQrpG";
-const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QaOvCsb0lNdGrUIepFZx15TXDZ-gMyHaDT-eQklgOWfi9eeKzC8ZUpfLPCD9zWqvN0pgN5N0soaxqtLitUnu1amf6HoDJ05z2hDyLGUeQM2hTWMVN_iZOv2kWjzsW-r3ADX2Kt1sFLPxXzCPsuIEuE_6oZdE3x8H4tMm8IPuN2Tqk3MCCd8_IpeJxExrqRPdrWKDduEYTu78F-S2WOoiGRBbQ%3D%3D";
+const API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QiaTk77BY4z4V_Ci25rOGpgtMOMWJ1oXkgPUetWfkNT4Jyz4TfulFxztfo31qRiT47vzN4MT-BmrrsaUYKPCvV7z15FKE5dQjDVGzH9gmspzBL5LQm3H37xxgjVg3lWL5Cvtb_KdbzwbNaMDBpk0eZX2jVoEhEPRylfamIt4RHzLTe9RcQTfttf55YUwE55a_SG";
+const ADMIN_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QiajJ1WnJV-ZtzxKc39cnc-tYl24SDE5Vr8n2Of9RKKT_6pngPHjqU4uYHJZLo3src4yYiryEu2u01vNAgjc4l5dU7FuKEP9311ysi5gDyHuHKjH7sla3N1sTXS36291iSzoc-x3CcfLEq19e1za1jhmg9x-qwDb8uCKmGp_K69rTcnSDkY0cmuUaBd8SR75pzM";
+const DEP_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QianWXZcq6xOYOss1YLg5ncHbdxTCnLpXvHpWCOK8yx4WIOdxBk4qjPzwOq1hsVm3HT_13eFU6rbG-gqVczuoco59YEK6SHL-8_AR6v4ynGZ3QQT15EpffQS--UYt8VsKaUt1v-5lPAoRQHWnHTv0t3G8AXdtgUbswN5PmV9CIApMP_DLN_57Fd12g957yr-E_KuEwLHwCzf34CxMGAaM7A5A%3D%3D";
+const ACC_API="https://api.telebotcreator.com/new-webhook?data=gAAAAABq4QiaH_Dfp0ce4s2arozmhdSKqsAjG_Bgrag3M3spKOgoopNhwyh36tTrp2Ry7GJ3fXn2pYtD8s3636NZGnZWaLV4_BMIe45iVG0wAGtHMItjWohRdToHhXGT3mZTOjQV1_2678UJthT0M5yK0WwKJa2VOL2oWUZeoBDQtT5ZKJ6-mP7lsy1a-2ERESzbqwThQw9r";
+let accToken="", accUser=null, accChecking=true;
 let isAdmin=false, isFullAdmin=false;
 let selBal=0;
 let _updBalInterval=null;
@@ -651,7 +699,46 @@ async function adminApi(obj){
  }catch(e){ return {ok:false,error:String(e).slice(0,80)}; }
 }
 window.adminRefresh=function(){
- adminLoadStats(); adminLoadDeposits(); adminLoadWithdraws(); adminLoadDepMethods(); adminLoadTeam();
+ adminLoadStats(); adminLoadAccounts(); adminLoadDeposits(); adminLoadWithdraws(); adminLoadDepMethods(); adminLoadTeam();
+};
+async function adminLoadAccounts(){
+ let j=await adminApi({action:'list_accounts'});
+ let el=document.getElementById('adminAccList'); if(!el) return;
+ if(!j||!j.ok){ el.textContent=(j&&j.error)||'no access'; return; }
+ let list=j.accounts||[];
+ if(!list.length){ el.innerHTML='<span style="color:#9aa3d1;font-size:11px">No signups yet</span>'; return; }
+ el.innerHTML='';
+ for(let i=0;i<list.length;i++){
+  let a=list[i];
+  let card=document.createElement('div');
+  card.style.cssText='padding:8px;border:1px solid #2a2f6e;border-radius:10px;margin-bottom:8px';
+  let blk=a.blocked?'<span style="color:#ff5252;font-size:10px"> 🚫 BLOCKED</span>':'';
+  card.innerHTML='<div style="font-size:11px"><b>'+a.first+' '+a.last+'</b>'+blk+'</div><div style="font-size:10px;color:#9aa3d1">@'+a.username+' • ID '+a.id+'</div><div style="font-size:11px;color:#ffd966">💰 '+a.coins+' coins</div>';
+  let b1=document.createElement('button'); b1.className='btn2'; b1.textContent=a.blocked?'✅ Unblock':'🚫 Block'; b1.style.cssText='padding:4px 8px;font-size:10px;width:auto;margin:6px 4px 0 0';
+  b1.onclick=function(){ adminAccBlock(a.id, !a.blocked) };
+  let b2=document.createElement('button'); b2.className='btn2'; b2.textContent='🔐 Reset password'; b2.style.cssText='padding:4px 8px;font-size:10px;width:auto;margin:6px 4px 0 0';
+  b2.onclick=function(){ adminAccResetPw(a.id) };
+  let b3=document.createElement('button'); b3.className='btn2'; b3.textContent='👤 Use for balance'; b3.style.cssText='padding:4px 8px;font-size:10px;width:auto;margin:6px 4px 0 0';
+  b3.onclick=function(){ let f=document.getElementById('adUserId'); if(f) f.value=a.id; adminFindUser(); };
+  card.appendChild(b1); card.appendChild(b2); card.appendChild(b3);
+  el.appendChild(card);
+ }
+}
+window.adminAccBlock=async function(tid,on){
+ let j=await adminApi({action:'account_block', target:String(tid), blocked:!!on});
+ toast(j&&j.ok?(on?'User blocked':'User unblocked'):((j&&j.error)||'failed'));
+ if(j&&j.ok) adminLoadAccounts();
+};
+window.adminAccResetPw=async function(tid){
+ let np=prompt('New password for user '+tid+' (4+ characters)');
+ if(!np) return;
+ let j=await adminApi({action:'account_reset_pw', target:String(tid), password:np});
+ toast(j&&j.ok?'Password reset':((j&&j.error)||'failed'));
+};
+window.adminAccDelete=async function(tid){
+ let j=await adminApi({action:'account_delete', target:String(tid)});
+ toast(j&&j.ok?'Profile deleted':((j&&j.error)||'failed'));
+ if(j&&j.ok) adminLoadAccounts();
 };
 async function adminLoadStats(){
  let j=await adminApi({action:'admin_stats'});
@@ -993,6 +1080,135 @@ window.userSubmitWithdraw=async function(){
  if(j&&j.ok){ if(msg) msg.textContent='✅ Withdraw '+amt+'c submitted. Balance now '+j.bal+'c'; toast('Withdraw submitted'); if(typeof j.bal!=='undefined'){ selBal=parseInt(j.bal)||selBal; updBal(); } }
  else { if(msg) msg.textContent=(j&&j.error)||'failed'; toast((j&&j.error)||'failed'); }
 };
+function accApi(obj){
+ let u2 = getUID(); if(!u2) u2 = loadUID();
+ if(!u2) return Promise.resolve({ ok:false, error:'no uid' });
+ let payload = Object.assign({}, obj, { user_id:u2, uid:u2 });
+ return fetch(withUIDParam(ACC_API), { method:'POST', headers:{ 'Content-Type':'application/json' }, body: JSON.stringify(payload) })
+  .then(function(r){ return r.json(); })
+  .catch(function(e){ return { ok:false, error:'network error' }; });
+}
+let gateMode = 'signup';
+function setAppVisible(v){
+ let h = document.querySelector('header'); if(h) h.style.display = v ? 'block' : 'none';
+ let tb = document.getElementById('tabs'); if(tb) tb.style.display = v ? 'flex' : 'none';
+ let mn = document.querySelector('main'); if(mn) mn.style.display = v ? 'block' : 'none';
+ let bn = document.querySelector('.bottomNav'); if(bn) bn.style.display = v ? 'flex' : 'none';
+ let tu = document.getElementById('topUser'); if(tu) tu.style.display = v ? 'flex' : 'none';
+ let g = document.getElementById('gate'); if(g) g.style.display = v ? 'none' : 'flex';
+}
+function gateField(id, ph, type){
+ return '<input id="'+id+'" placeholder="'+ph+'" type="'+(type||'text')+'" style="width: 100%; padding: 11px; border-radius: 10px; border: 1px solid #2a2f6e; background: #0a0d2a; color: #fff; font-size: 12px; margin-top: 8px"/>';
+}
+window.renderGate = function(mode){
+ gateMode = mode || gateMode;
+ let box = document.getElementById('gateForm'); if(!box) return;
+ let sw = document.getElementById('gateSwitch');
+ let msg = document.getElementById('gateMsg'); if(msg) msg.textContent = '';
+ if(gateMode === 'signup'){
+  box.innerHTML = gateField('gFirst','First name') + gateField('gLast','Last name') + gateField('gUser','Username') + gateField('gPass','Password','password') + '<button class="btn" type="button" onclick="doSignup()">Create Account</button>';
+  if(sw) sw.innerHTML = 'Already have an account? <b style="color: #ffd966; cursor: pointer" onclick="renderGate('login')">Log in</b>';
+ } else {
+  box.innerHTML = gateField('gUser','Username') + gateField('gPass','Password','password') + '<button class="btn" type="button" onclick="doLogin()">Log In</button>';
+  if(sw) sw.innerHTML = 'No account yet? <b style="color: #ffd966; cursor: pointer" onclick="renderGate('signup')">Sign up</b>';
+ }
+};
+function gateMsg(t){ let m = document.getElementById('gateMsg'); if(m) m.textContent = t || ''; }
+window.doSignup = function(){
+ let f = (document.getElementById('gFirst')||{}).value || '';
+ let l = (document.getElementById('gLast')||{}).value || '';
+ let uu = (document.getElementById('gUser')||{}).value || '';
+ let pp = (document.getElementById('gPass')||{}).value || '';
+ if(f.trim().length < 2) return gateMsg('Enter your first name');
+ if(l.trim().length < 2) return gateMsg('Enter your last name');
+ if(uu.trim().length < 3) return gateMsg('Username needs 3+ characters');
+ if(pp.length < 4) return gateMsg('Password needs 4+ characters');
+ gateMsg('Creating account…');
+ accApi({ action:'register', first:f, last:l, username:uu, password:pp }).then(function(j){
+  if(j && j.ok){
+   accToken = j.token || '';
+   accUser = j.user || null;
+   try{ localStorage.setItem('pe_token', accToken); }catch(e){}
+   toast('Welcome ' + (accUser ? accUser.first : '') + ' — account created');
+   enterApp();
+  } else {
+   gateMsg((j && j.error) || 'could not create account');
+  }
+ });
+};
+window.doLogin = function(){
+ let uu = (document.getElementById('gUser')||{}).value || '';
+ let pp = (document.getElementById('gPass')||{}).value || '';
+ if(!uu.trim()) return gateMsg('Enter your username');
+ if(!pp) return gateMsg('Enter your password');
+ gateMsg('Logging in…');
+ accApi({ action:'login', username:uu, password:pp }).then(function(j){
+  if(j && j.ok){
+   accToken = j.token || '';
+   accUser = j.user || null;
+   try{ localStorage.setItem('pe_token', accToken); }catch(e){}
+   toast('Welcome back ' + (accUser ? accUser.first : ''));
+   enterApp();
+  } else {
+   gateMsg((j && j.error) || 'login failed');
+  }
+ });
+};
+window.doLogout = function(){
+ accApi({ action:'logout', token:accToken }).then(function(){
+  accToken = ''; accUser = null;
+  try{ localStorage.removeItem('pe_token'); }catch(e){}
+  setAppVisible(false);
+  renderGate('login');
+  gateMsg('You have been logged out.');
+ });
+};
+function enterApp(){
+ setAppVisible(true);
+ let nm = document.getElementById('topUserName');
+ if(nm && accUser) nm.textContent = '👤 ' + (accUser.first || '') + ' ' + (accUser.last || '') + ' • @' + (accUser.username || '');
+ let af = document.getElementById('acFirst'); if(af && accUser) af.value = accUser.first || '';
+ let al = document.getElementById('acLast'); if(al && accUser) al.value = accUser.last || '';
+ let au = document.getElementById('acUser'); if(au && accUser) au.value = accUser.username || '';
+ let ln = document.getElementById('accLine');
+ if(ln && accUser) ln.innerHTML = '<b>' + (accUser.first||'') + ' ' + (accUser.last||'') + '</b><br>@' + (accUser.username||'') + '<br><span style="color: #9aa3d1; font-size: 11px">Telegram ID: ' + getUID() + '</span>';
+ startBalSync();
+}
+function checkSession(){
+ accApi({ action:'session', token: accToken }).then(function(j){
+  if(j && j.ok && j.logged_in){
+   accUser = j.user || null;
+   enterApp();
+  } else {
+   setAppVisible(false);
+   if(j && j.ok && j.registered){
+    renderGate('login');
+    gateMsg('Please log in to continue.');
+   } else {
+    renderGate('signup');
+   }
+  }
+ });
+}
+window.saveProfile = function(){
+ let f = (document.getElementById('acFirst')||{}).value || '';
+ let l = (document.getElementById('acLast')||{}).value || '';
+ let uu = (document.getElementById('acUser')||{}).value || '';
+ let pp = (document.getElementById('acPass')||{}).value || '';
+ let m = document.getElementById('acMsg');
+ if(m) m.textContent = 'Saving…';
+ accApi({ action:'update_profile', token:accToken, first:f, last:l, username:uu }).then(function(j){
+  if(j && j.ok){
+   accUser = j.user || accUser;
+   if(m) m.textContent = '✅ Profile saved';
+   let nm = document.getElementById('topUserName');
+   if(nm && accUser) nm.textContent = '👤 ' + (accUser.first||'') + ' ' + (accUser.last||'') + ' • @' + (accUser.username||'');
+   if(pp && pp.length >= 4){
+    accApi({ action:'change_pass', token:accToken, password:pp });
+   }
+  } else if(m){ m.textContent = (j && j.error) || 'save failed'; }
+ });
+};
 function bootLocalization(){
  try{ curCode=localStorage.getItem('pe_cur')||"USD"; }catch(e){}
  try{ langCode=localStorage.getItem('pe_lang')||"en"; }catch(e){}
@@ -1000,7 +1216,9 @@ function bootLocalization(){
 }
 function init(){
  bootLocalization();
- renderPlay('all'); startBalSync(); loadFree('all');
+ try{ accToken = localStorage.getItem('pe_token') || ''; }catch(e){ accToken = ''; }
+ renderPlay('all'); loadFree('all');
+ checkSession();
  try{ let b=document.getElementById('buildInfo'); if(b) b.textContent='v'+Date.now().toString().slice(-6)+' • '+new Date().toLocaleDateString(); }catch(e){}
  document.addEventListener('visibilitychange',()=>{ if(!document.hidden) syncBal(false); });
  window.addEventListener('focus',()=> syncBal(false));
