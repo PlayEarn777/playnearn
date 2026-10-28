@@ -119,6 +119,11 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 .ntag.left{ background: #1e3a8a; color: #93c5fd }
 .dl{ display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; border-bottom: 1px solid var(--bd) }
 .dl b{ color: var(--gold) }
+.gwin{ border-color: #00e676; color: #00e676 }
+.gloss{ border-color: #ff5252; color: #ff8a80 }
+.gnorm{ border-color: #98a2cd; color: #98a2cd }
+.bop.on{ background: linear-gradient(135deg, var(--gold), #ff8c00); color: #241500; border-color: transparent; font-weight: 800 }
+.okbtn{ background: linear-gradient(135deg, #00c853, #00e676); color: #04250f; border: 0; font-weight: 800 }
 .logrow{ font-size: 10px; color: var(--mut); border-top: 1px solid var(--bd); padding: 5px 0 }
 
 </style>
@@ -269,10 +274,11 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <h3>Global result</h3>
    <p class="hint">Overrides every game for every player.</p>
    <div class="row">
-    <button class="btn alt" id="adGN" type="button">Normal</button>
-    <button class="btn alt" id="adGW" type="button">All win</button>
-    <button class="btn alt" id="adGL" type="button">All lose</button>
+    <button class="btn alt bop on" data-gm="normal" type="button">Normal</button>
+    <button class="btn alt bop" data-gm="force_win" type="button">All win</button>
+    <button class="btn alt bop" data-gm="force_loss" type="button">All lose</button>
    </div>
+   <button class="btn okbtn" id="adGlobalOk" type="button">OK - apply global setting</button>
    <p class="hint" id="adGlobal" style="margin-top: 6px"></p>
   </div>
   <div class="box">
@@ -302,10 +308,12 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <p class="hint" id="adTargetInfo" style="margin-top: 6px"></p>
    <input id="adAmount" type="number" min="1" placeholder="Amount in coins"/>
    <div class="row">
-    <button class="btn alt" id="adAdd" type="button">Add</button>
-    <button class="btn alt" id="adRem" type="button">Remove</button>
-    <button class="btn alt" id="adSet" type="button">Set</button>
+    <button class="btn alt bop" data-op="add" type="button">Add</button>
+    <button class="btn alt bop" data-op="remove" type="button">Remove</button>
+    <button class="btn alt bop" data-op="set" type="button">Set to</button>
    </div>
+   <button class="btn okbtn" id="adBalOk" type="button">OK - confirm balance change</button>
+   <p class="hint" id="adBalNow" style="margin-top: 6px">Pick Add, Remove or Set to, then press OK.</p>
   </div>
   <div class="box">
    <h3>Selected user</h3>
@@ -313,11 +321,12 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <div class="row"><button class="btn alt" id="adDetail" type="button">Load full detail</button></div>
    <div id="adDetailBox"><p class="hint">No user selected.</p></div>
    <div class="row">
-    <button class="btn alt" id="adForceWin" type="button">Force WIN</button>
-    <button class="btn alt" id="adForceLoss" type="button">Force LOSS</button>
-    <button class="btn alt" id="adForceNorm" type="button">Normal</button>
+    <button class="btn alt bop" data-uf="force_win" type="button">Force WIN</button>
+    <button class="btn alt bop" data-uf="force_loss" type="button">Force LOSS</button>
+    <button class="btn alt bop" data-uf="normal" type="button">Normal</button>
    </div>
-   <p class="hint" id="adForceNow" style="margin-top: 6px"></p>
+   <button class="btn okbtn" id="adUfOk" type="button">OK - apply to this user</button>
+   <p class="hint" id="adForceNow" style="margin-top: 6px">Pick a mode, then press OK.</p>
    <label class="lb">Edit profile</label>
    <div class="row">
     <input id="adPfFirst" placeholder="First name" style="flex: 1"/>
@@ -388,11 +397,11 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4c1cS0yXW9XZxPyvwq1DDTk7-tNX_Y8bU4M0R8l-PPlfGjQB0hU-kHDK3g7khEkE-5FOo0orhVxJNspf17-28taRMELWkl7XzqnCtDYLb4Bttk8ITHzkduOBw9XtVR21LYQIq2eWguhR3x5VlBGmfAKNe0n1x5IGTc8aAfd-hSU6AlKAjbAPGWIDHqyKd542A1hH';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4dFzYlMwN9UFj0c5siV89mpd75WfafZmqHkMKN_HR6mDF0V1Owz0LIdOvTLAy3d2u4KgfjI1Zpjns8FVgwk1LAsLVUPJ_4oQktmGiDrr4iiAH1tnbkCMW8ArgK5mdkCsBvnaGRJJg391t-SFRD1drTtigDjbM_BZkufzgegWBFWaPcM2nG8cS27ggh-cxG2vZL31';
 var VER_EXPECTED=7;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
-var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'' };
+var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'', ctrlNow:{}, globalMode:'normal', pendMode:'', pendOp:'', pendUF:'' };
 var GAMES=[
  {id:1,name:'Coin Flip',em:'🪙',cost:10,mult:1.9,pick:'head',type:'coin',opts:[['head','HEAD'],['tail','TAIL']]},
  {id:2,name:'Dice Duel',em:'🎲',cost:10,mult:2,pick:'4',type:'dice',opts:[['1','1'],['2','2'],['3','3'],['4','4'],['5','5'],['6','6']]},
@@ -434,6 +443,11 @@ var LBL={
 };
 function T(k){ var d=LBL[state.lang]||LBL.en; if(d && d[k]) return d[k]; return LBL.en[k] || k; }
 function el(id){ return document.getElementById(id); }
+function markSel(sel, node){
+ var all=document.querySelectorAll(sel);
+ for(var i=0;i<all.length;i++){ all[i].classList.remove('on'); }
+ if(node) node.classList.add('on');
+}
 function txt(id,v){ var e=el(id); if(e) e.textContent=v; }
 function toast(m){ var t=el('toast'); if(!t) return; t.textContent=String(m); t.style.display='block'; setTimeout(function(){ t.style.display='none'; },2800); }
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -1000,33 +1014,70 @@ function adminRefresh(){
   setAdminUI();
   var w=el('adWho'); if(w) w.textContent= state.isFull ? 'You are the MAIN admin (full control).' : 'You are a sub admin (limited rights).';
   if(st) st.textContent='Users: '+j.users+' | Pending deposits: '+j.pending_deposits+' | Pending withdraws: '+j.pending_withdraws+' | Global: '+j.global_mode;
-  txt('adGlobal','Global now: '+j.global_mode);
+
   state.userForce=j.user_force||{};
   state.pcts=j.pcts||{};
+  state.ctrlNow=j.controls||{};
+  state.globalMode=j.global_mode||'normal';
+  state.pendMode=''; state.pendOp=''; state.pendUF='';
   state.unread=parseInt(j.unread||0)||0;
   updateBell();
-  txt('adGlobal','Global now: '+j.global_mode+' | inactive 7d+: '+((j.left_users===undefined)?'?':j.left_users));
+  txt('adGlobal','Applied now: '+j.global_mode+' | inactive 7d+: '+((j.left_users===undefined)?'?':j.left_users));
+  markSel('[data-gm]', document.querySelector('[data-gm="'+state.globalMode+'"]'));
   renderAdminGames(j.controls||{});
   renderPctNow();
   adminLoadUsers(); adminLoadDeps(); adminLoadWds(); adminLoadDepMethods(); adminLoadWdMethods(); adminLoadTeam(); adminLoadLeft(); loadNotifs(false);
  });
 }
+function gmName(gid){
+ var n='game '+gid;
+ GAMES.forEach(function(g){ if(g.id===parseInt(gid)) n=g.name; });
+ return n;
+}
 function renderAdminGames(ctrl){
  var box=el('adGames'); if(!box) return;
- box.innerHTML='';
+ var h='';
  GAMES.forEach(function(gm){
   var mode=ctrl[String(gm.id)]||'normal';
   var pc=state.pcts[String(gm.id)];
   if(pc===undefined) pc=45;
-  var row=document.createElement('div'); row.className='urow';
-  row.innerHTML='<div class="nm">'+gm.em+' '+esc(gm.name)+'</div><div class="meta">now: '+esc(mode)+' | win '+pc+'% / loss '+(100-pc)+'%</div>';
-  var r=document.createElement('div'); r.className='row';
-  [['force_win','WIN'],['force_loss','LOSS'],['normal','NORM']].forEach(function(p){
-   var b=document.createElement('button'); b.type='button'; b.className='btn alt'; b.textContent=p[1];
-   b.addEventListener('click',function(){ adminSetGame(gm.id,p[0]); });
-   r.appendChild(b);
-  });
-  row.appendChild(r); box.appendChild(row);
+  h=h+'<div class="urow" data-gid="'+gm.id+'">';
+  h=h+'<div class="nm">'+gm.em+' '+esc(gm.name)+'</div>';
+  h=h+'<div class="meta">mode: <b>'+esc(mode)+'</b> | win '+pc+'% / loss '+(100-pc)+'%</div>';
+  h=h+'<div class="row">';
+  h=h+'<button class="btn alt gwin" type="button">Force WIN</button>';
+  h=h+'<button class="btn alt gloss" type="button">Force LOSS</button>';
+  h=h+'<button class="btn alt gnorm" type="button">Normal</button>';
+  h=h+'</div>';
+  h=h+'<div class="row">';
+  h=h+'<input class="pin" type="number" min="0" max="100" value="'+pc+'" style="flex: 1 1 auto; margin-top: 0"/>';
+  h=h+'<button class="btn okbtn pok" type="button" style="flex: 0 0 74px; margin-top: 0">OK save</button>';
+  h=h+'</div>';
+  h=h+'</div>';
+ });
+ box.innerHTML=h;
+ var rows=box.querySelectorAll('.urow');
+ for(var i=0;i<rows.length;i++){
+  (function(rw){
+   var gid=parseInt(rw.getAttribute('data-gid'));
+   var pin=rw.querySelector('.pin');
+   rw.querySelector('.gwin').addEventListener('click',function(){ adminSetGame(gid,'force_win'); });
+   rw.querySelector('.gloss').addEventListener('click',function(){ adminSetGame(gid,'force_loss'); });
+   rw.querySelector('.gnorm').addEventListener('click',function(){ adminSetGame(gid,'normal'); });
+   rw.querySelector('.pok').addEventListener('click',function(){ adminPctOne(gid,(pin||{}).value); });
+  })(rows[i]);
+ }
+}
+function adminPctOne(gid,val){
+ var pct=parseInt(val);
+ if(isNaN(pct)||pct<0||pct>100) return toast('Enter a number from 0 to 100');
+ adminApiCall('admin_set_pct',{ gid:gid, pct:pct }).then(function(j){
+  if(j && j.ok){
+   state.pcts[String(gid)]=pct;
+   toast(gmName(gid)+': win '+pct+'% / loss '+(100-pct)+'% saved');
+   renderAdminGames(state.ctrlNow||{});
+   renderPctNow();
+  } else { toast((j&&j.error)||'failed'); }
  });
 }
 function adminSetGame(gid,mode){
@@ -1475,20 +1526,37 @@ function boot(){
  on('nClear',function(){ adminApiCall('admin_notifs',{ mark:true }).then(function(j){ if(j&&j.ok){ state.notifs=j.notifs||[]; state.unread=0; updateBell(); renderNotifs(); toast('All marked read'); } }); });
  on('adPctSave',adminPctSave);
  on('adDetail',adminDetail);
- on('adForceWin',function(){ adminForceUser('force_win'); });
- on('adForceLoss',function(){ adminForceUser('force_loss'); });
- on('adForceNorm',function(){ adminForceUser('normal'); });
+
  on('adPfSave',adminSaveProfile);
  on('adLeftBtn',adminLoadLeft);
  on('adRefresh',adminRefresh);
- on('adGN',function(){ adminSetGlobal('normal'); });
- on('adGW',function(){ adminSetGlobal('force_win'); });
- on('adGL',function(){ adminSetGlobal('force_loss'); });
+ var gbs=document.querySelectorAll('[data-gm]');
+ for(var gi=0;gi<gbs.length;gi++){
+  gbs[gi].addEventListener('click',function(){ state.pendMode=this.getAttribute('data-gm'); markSel('[data-gm]',this); txt('adBalNow','Global picked: '+this.textContent+' - press OK to apply.'); });
+ }
+ on('adGlobalOk',function(){
+  if(!state.pendMode) return toast('Pick Normal, All win or All lose first');
+  adminSetGlobal(state.pendMode);
+ });
+ var obs=document.querySelectorAll('[data-op]');
+ for(var oi=0;oi<obs.length;oi++){
+  obs[oi].addEventListener('click',function(){ state.pendOp=this.getAttribute('data-op'); markSel('[data-op]',this); txt('adBalNow','Operation picked: '+this.textContent+' - enter amount, then press OK.'); });
+ }
+ on('adBalOk',function(){
+  if(!state.pendOp) return toast('Pick Add, Remove or Set to first');
+  adminBalOp(state.pendOp);
+ });
+ var ufs=document.querySelectorAll('[data-uf]');
+ for(var ui=0;ui<ufs.length;ui++){
+  ufs[ui].addEventListener('click',function(){ state.pendUF=this.getAttribute('data-uf'); markSel('[data-uf]',this); txt('adForceNow','Picked: '+this.textContent+' - press OK to apply to this user.'); });
+ }
+ on('adUfOk',function(){
+  if(!state.pendUF) return toast('Pick Force WIN, Force LOSS or Normal first');
+  adminForceUser(state.pendUF);
+ });
  on('adUsersBtn',adminLoadUsers);
  on('adInfo',adminLookup);
- on('adAdd',function(){ adminBalOp('add'); });
- on('adRem',function(){ adminBalOp('remove'); });
- on('adSet',function(){ adminBalOp('set'); });
+
  on('adDepBtn',adminLoadDeps);
  on('adWdBtn',adminLoadWds);
  on('adDepSave',adminSaveDepMethods);
