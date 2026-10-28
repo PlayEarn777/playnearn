@@ -325,7 +325,7 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4afnlGXI9ycGCvoXu1ZJ7-B-ew4959KVU5ZyJNVymXs6WUC9frJjhHosFMBRuXECG4gA8XUBqGDxsj2JoRboKcpJdgrVMu2rKm5eUgHNa5HxCSe4W69SektBXZ0HUx2e0DhxKndan-xoEOaBDwncXLYApwaDYa4U1HAGY_yF18oXSpMPNXDdnGn06SQAG2p-Buzv';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4a3rtyX_4gdauxnZhTMdJHC442LgvM90JuubhhxIfD1T--B-umMnnPmmAaw1jjGe-AKivJTwzZBCKYpqvkZ36r4O1cx4CiZnjVGYajMEPZt9eC4uHaTHFWMrWIBXZMM2KZLfxpRr8elOit_WBEwhY4JNML6lTz7rF1rM5Bi84ie-cMZG-2AsM9gG1_XiD8-jWFwS';
 var VER_EXPECTED=7;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
@@ -417,7 +417,7 @@ function setAdminUI(){
  var w=el('adminStateLbl');
  if(w){
   if(state.isAdmin){ w.textContent='Server confirms you as admin. Tap the ADMIN tab above.'; w.style.color='#00e676'; }
-  else { w.textContent='Server says this ID is not an admin. Your ID: '+state.uid+'. Send /claim_admin to the bot if you are the owner.'; w.style.color='#ff8a80'; }
+  else { w.textContent='Server says NOT admin. App ID '+state.uid+' | server read ID '+(state.srvUid||'none')+' | server v'+state.ver+'. If the server ID is wrong or v is 0, the hosted file is stale.'; w.style.color='#ff8a80'; }
  }
 }
 function applyLang(){
