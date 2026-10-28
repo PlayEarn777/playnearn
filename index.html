@@ -206,6 +206,12 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <a class="btn alt" href="https://t.me/PlaynEarnbot?text=/claim_admin" style="text-decoration: none; display: block; text-align: center">Claim owner access</a>
   </div>
   <div class="box">
+   <h3>Connection test</h3>
+   <p class="hint">Calls the server directly and shows the raw reply. Send me a screenshot of this.</p>
+   <button class="btn alt" id="btnDiag" type="button">Run connection test</button>
+   <p class="vtxt" id="diagOut" style="margin-top: 7px">not run yet</p>
+  </div>
+  <div class="box">
    <button class="btn alt" id="btnLogout" type="button">Log out</button>
   </div>
  </section>
@@ -325,7 +331,7 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4bLz529niqEoC_LREk5VQTxaY67DWCh98nn3in7RAHucYSD-UozrtuiQozI25AwBrq0kfo-oLWBP9YrOaoWnNpVlSYKFa_IP_BELHzz3ZbBgnjT0xNuq6xIIE4bMnJH_NocaT91an5AiBiIyc2Ut3OOS9W7rrpeihUXa0OTz4BCyPelSDM7NJLA_zFKy5DNGtsL4';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4b2V5MMFUr83bOGzrDHTxrJdgnkFoN3uwbD6ha7HUSNzoLQomp088_v6TI0aUUUHV57ipSBMWx4JPemLiNC2tId51eCLH4TANjhruYLqiKAnYWSCvVX8p2rgrca_wJ0OmYQweh9j19sx4meQuIoYthFWme98RjF7BsnVIttBUNyp2O3yqNFWBQ71IaHNJLNPOkDt';
 var VER_EXPECTED=7;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
@@ -898,6 +904,21 @@ function adminApiCall(action, extra){
   return j;
  });
 }
+window.runDiag=function(){
+ var out=el('diagOut'); if(out) out.textContent='testing...';
+ var host='unknown';
+ try{ host=new URL(APP).hostname; }catch(e){ host='BAD URL: '+String(APP).slice(0,60); }
+ call('ping').then(function(j){
+  var s='endpoint: '+host+nl()+'app ID: '+state.uid+nl()+'reply: '+JSON.stringify(j)+nl()+'file v'+VER_EXPECTED+' | server v'+((j&&j.v)||0);
+  if(out) out.textContent=s;
+  if(j && j.ok){
+   state.ver=parseInt(j.v||0)||0;
+   state.srvUid=String(j.server_uid||'');
+   if(state.srvUid===String(state.uid)){ toast('Server sees your ID correctly'); }
+   updBal();
+  } else { toast('Server did not answer'); }
+ });
+};
 window.adminTry=function(){
  toast('Checking admin access...');
  adminApiCall('admin_home').then(function(j){
@@ -1261,6 +1282,7 @@ function boot(){
  on('wdGo',submitWithdraw);
  on('ovClose',hideOv);
  on('btnAdminTry',adminTry);
+ on('btnDiag',function(){ runDiag(); });
  on('adRefresh',adminRefresh);
  on('adGN',function(){ adminSetGlobal('normal'); });
  on('adGW',function(){ adminSetGlobal('force_win'); });
