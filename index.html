@@ -331,7 +331,7 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4b2V5MMFUr83bOGzrDHTxrJdgnkFoN3uwbD6ha7HUSNzoLQomp088_v6TI0aUUUHV57ipSBMWx4JPemLiNC2tId51eCLH4TANjhruYLqiKAnYWSCvVX8p2rgrca_wJ0OmYQweh9j19sx4meQuIoYthFWme98RjF7BsnVIttBUNyp2O3yqNFWBQ71IaHNJLNPOkDt';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4cVd3JScMDED5ThJzuV26ymYNg1YTmrXNEH-iPQBIP7RcS6Salays94bcnzQcMfVhkkXZjE62Ou1gdOkfvL_U-vuoO0YH4onUNBbPRq9Gz6kfcvCUAMwMq6M46qXZM-tMnIM3TQ8M2SiCe63SMJqCBae6yFHrUXJHzTugmO0XRDWUPNbmsLkrXYLhHLA18avOvG9';
 var VER_EXPECTED=7;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
@@ -400,7 +400,10 @@ function call(action, extra){
  var u=readTG();
  var p={ action:action, tg_id:(state.uid||getUID()||0), tg_username:(u&&u.username?String(u.username):''), tg_first:(u&&u.first_name?String(u.first_name):''), tg_last:(u&&u.last_name?String(u.last_name):''), token:state.token||'' };
  if(extra){ for(var k in extra){ p[k]=extra[k]; } }
- return fetch(APP,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(p) }).then(function(r){ return r.json(); }).catch(function(e){ return {ok:false,error:'network error - server unreachable'}; });
+ return fetch(APP,{ method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(p) }).then(function(r){ return r.json(); }).then(function(j){
+  if(j && j.result && typeof j.result==='object'){ return j.result; }
+  return j;
+ }).catch(function(e){ return {ok:false,error:'network error - server unreachable'}; });
 }
 function showTab(id){
  var secs=document.querySelectorAll('.sec');
