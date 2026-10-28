@@ -124,6 +124,8 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 .gnorm{ border-color: #98a2cd; color: #98a2cd }
 .bop.on{ background: linear-gradient(135deg, var(--gold), #ff8c00); color: #241500; border-color: transparent; font-weight: 800 }
 .okbtn{ background: linear-gradient(135deg, #00c853, #00e676); color: #04250f; border: 0; font-weight: 800 }
+.ubtns button{ flex: 1 1 30%; font-size: 10px; padding: 7px 4px }
+.uform select, .uform textarea, .uform input{ margin-top: 6px }
 .logrow{ font-size: 10px; color: var(--mut); border-top: 1px solid var(--bd); padding: 5px 0 }
 
 </style>
@@ -401,7 +403,7 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4eVdJbwdztSJ8PM-_ZXjWGQVbtDo1kM2-4wdN-qd_ru_86e6_6SDQFLTMXHHCT-Lhhf-6jlTmlbXgKlCVP-xwnhMqwGZCW0gpGRcwxDwzyV6B_SHk1nsRHZf4FbxE18DofZzvryU-aJf4PsF-oA2vQ7lKblx8fzBzsH-OcvWlcoEw1PuCe5eh8y-VANXs_4g2JBt';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4e03kSQzh0l4s7aNXful-d1_yFHZXclXYmA6hK2rxG0lluFdIbb-FE3Fivsl9NJzmyWshyxkLqgLQbwMt_z4YIeDt9Y206aQimDMeiGikdNSNa2VMthCJJR2X71XGRp9lbesz__XrQftsARbNLZoBRPV3-FXJG6_gW0g_sL6ammiX68aHmpLkn_dfiObQVqfQRZA';
 var VER_EXPECTED=7;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
@@ -1220,6 +1222,107 @@ function renderNotifs(){
   box.appendChild(row);
  });
 }
+function closeForms(){
+ var all=document.querySelectorAll('.uform');
+ for(var i=0;i<all.length;i++){ all[i].parentNode.removeChild(all[i]); }
+}
+function mkField(tag, ph, ty){
+ var n=document.createElement(tag);
+ if(ph) n.placeholder=ph;
+ if(ty) n.type=ty;
+ return n;
+}
+function mkOpt(v,t){
+ var o=document.createElement('option');
+ o.value=v; o.textContent=t;
+ return o;
+}
+function mkBtn(label, cls, fn){
+ var b=document.createElement('button');
+ b.type='button';
+ b.className='btn '+(cls||'alt');
+ b.textContent=label;
+ b.addEventListener('click',fn);
+ return b;
+}
+function userPanel(row, u, kind){
+ closeForms();
+ if(kind==='blk'){ adminBlock(u.id, !u.blocked); return; }
+ if(kind==='det'){
+  var t=el('adTarget'); if(t) t.value=u.id;
+  state.selUser=u.id;
+  adminLookup(); adminDetail();
+  showTab('sAdm');
+  return;
+ }
+ var f=document.createElement('div');
+ f.className='uform';
+ var cap=document.createElement('div');
+ cap.className='meta';
+ cap.style.cssText='color:#ffd966;font-size:10px;margin-top:6px';
+ f.appendChild(cap);
+ if(kind==='bal'){
+  cap.textContent='Balance for '+u.id+': currently '+u.coins+' coins';
+  var amt=mkField('input','Amount in coins','number');
+  amt.min='1';
+  var op=mkField('select');
+  op.appendChild(mkOpt('add','Add coins'));
+  op.appendChild(mkOpt('remove','Remove coins'));
+  op.appendChild(mkOpt('set','Set balance to'));
+  f.appendChild(amt); f.appendChild(op);
+  f.appendChild(mkBtn('OK - apply balance change','okbtn',function(){
+   var v=parseInt(amt.value||'0');
+   if(v<1) return toast('Enter an amount first');
+   adminApiCall('admin_balance',{ target:u.id, op:op.value, amount:v }).then(function(j){
+    if(j&&j.ok){ toast('Done: '+j.before+' to '+j.after+' coins'); adminLoadUsers(); loadBalance(false); }
+    else toast((j&&j.error)||'failed');
+   });
+  }));
+ }
+ else if(kind==='uf'){
+  cap.textContent='Result control for '+u.id+': currently '+(u.force||'normal');
+  var sel=mkField('select');
+  sel.appendChild(mkOpt('normal','Normal - follow global and percentage'));
+  sel.appendChild(mkOpt('force_win','Always WIN for this user'));
+  sel.appendChild(mkOpt('force_loss','Always LOSE for this user'));
+  sel.value=u.force||'normal';
+  f.appendChild(sel);
+  f.appendChild(mkBtn('OK - apply to this user','okbtn',function(){
+   adminApiCall('admin_user_force',{ target:u.id, mode:sel.value }).then(function(j){
+    if(j&&j.ok){ toast('This user now: '+sel.value); adminLoadUsers(); }
+    else toast((j&&j.error)||'failed');
+   });
+  }));
+ }
+ else if(kind==='msg'){
+  cap.textContent='Private message to '+u.id+' (arrives in their bot chat)';
+  var ta=mkField('textarea','Type your message here');
+  ta.rows=3;
+  f.appendChild(ta);
+  f.appendChild(mkBtn('OK - send message','okbtn',function(){
+   var v=String(ta.value||'').trim();
+   if(v.length<1) return toast('Type a message first');
+   adminApiCall('admin_send_msg',{ target:u.id, text:v }).then(function(j){
+    if(j&&j.ok){ toast('Message delivered to '+u.id); closeForms(); }
+    else toast((j&&j.error)||'failed');
+   });
+  }));
+ }
+ else if(kind==='pw'){
+  cap.textContent='Set a new password for '+u.id+' (they must log in again)';
+  var pw=mkField('input','New password, 4 or more characters','password');
+  f.appendChild(pw);
+  f.appendChild(mkBtn('OK - reset password','okbtn',function(){
+   var v=String(pw.value||'');
+   if(v.length<4) return toast('Password needs 4 or more characters');
+   adminApiCall('admin_reset_pw',{ target:u.id, password:v }).then(function(j){
+    if(j&&j.ok){ toast('Password reset for '+u.id); closeForms(); }
+    else toast((j&&j.error)||'failed');
+   });
+  }));
+ }
+ row.appendChild(f);
+}
 function adminLoadUsers(){
  var box=el('adUsers'); if(!box) return;
  box.innerHTML='<p class="hint">Loading...</p>';
@@ -1235,13 +1338,17 @@ function adminLoadUsers(){
    var row=document.createElement('div'); row.className='urow';
    var tag= u.registered ? '<span class="tag reg">registered</span>' : '<span class="tag">telegram</span>';
    if(u.blocked) tag=tag+' <span class="tag blk">blocked</span>';
-   row.innerHTML='<div class="nm">'+esc(u.name||'-')+' '+tag+'</div><div class="meta">ID '+esc(u.id)+(u.username?(' | @'+esc(u.username)):'')+(u.tg_username?(' | tg @'+esc(u.tg_username)):'')+'</div><div class="meta">'+u.coins+' coins</div>';
-   var r=document.createElement('div'); r.className='row';
-   var b1=document.createElement('button'); b1.type='button'; b1.className='btn alt'; b1.textContent='Use';
-   b1.addEventListener('click',function(){ var t=el('adTarget'); if(t) t.value=u.id; adminLookup(); });
-   var b2=document.createElement('button'); b2.type='button'; b2.className='btn alt'; b2.textContent= u.blocked ? 'Unblock' : 'Block';
-   b2.addEventListener('click',function(){ adminBlock(u.id, !u.blocked); });
-   r.appendChild(b1); r.appendChild(b2); row.appendChild(r);
+   var fm=String(u.force||'normal');
+   var fcol= fm==='force_win' ? '#00e676' : (fm==='force_loss' ? '#ff5252' : '#98a2cd');
+   row.innerHTML='<div class="nm">'+esc(u.name||'-')+' '+tag+'</div><div class="meta">ID '+esc(u.id)+(u.username?(' | @'+esc(u.username)):'')+(u.tg_username?(' | tg @'+esc(u.tg_username)):'')+'</div><div class="meta">'+u.coins+' coins | result: <b style="color:'+fcol+'">'+esc(fm)+'</b></div>';
+   var r=document.createElement('div'); r.className='row ubtns';
+   r.appendChild(mkBtn('💰 Balance','alt',function(){ userPanel(row,u,'bal'); }));
+   r.appendChild(mkBtn('🎯 Win/Loss','alt',function(){ userPanel(row,u,'uf'); }));
+   r.appendChild(mkBtn('✉️ Message','alt',function(){ userPanel(row,u,'msg'); }));
+   r.appendChild(mkBtn(u.blocked?'✅ Unblock':'🚫 Block','alt',function(){ userPanel(row,u,'blk'); }));
+   r.appendChild(mkBtn('🔑 Password','alt',function(){ userPanel(row,u,'pw'); }));
+   r.appendChild(mkBtn('📋 Full detail','alt',function(){ userPanel(row,u,'det'); }));
+   row.appendChild(r);
    box.appendChild(row);
   });
  });
