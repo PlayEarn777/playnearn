@@ -173,6 +173,42 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 @keyframes burstUp{ 0%{ transform: translateY(0) scale(.6); opacity: 1 } 100%{ transform: translateY(-90px) scale(1.5); opacity: 0 } }
 .popIn{ animation: popIn .35s cubic-bezier(.2,1.4,.4,1) }
 @keyframes popIn{ 0%{ transform: scale(.9); opacity: 0 } 100%{ transform: scale(1); opacity: 1 } }
+.hero{ position: relative; overflow: hidden; border-radius: 16px; padding: 14px; background: linear-gradient(135deg,#241046,#3d1a6b 40%,#7b1f5e 100%); border: 1px solid #5b2a8a; box-shadow: 0 8px 24px rgba(0,0,0,.45) }
+.heroGlow{ position: absolute; width: 200px; height: 200px; border-radius: 50%; background: radial-gradient(circle, rgba(255,180,0,.4), rgba(255,180,0,0) 70%); top: -80px; left: -50px; animation: pulseGlow 4s ease-in-out infinite }
+.heroTop{ display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; position: relative }
+.heroHi{ font-size: 10px; color: #cdb8f5; letter-spacing: .4px; text-transform: uppercase }
+.heroName{ font-size: 17px; font-weight: 800; color: #fff; margin-top: 2px; max-width: 55vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.heroBal{ font-size: 13px; font-weight: 800; color: #ffd700; background: rgba(0,0,0,.35); border: 1px solid rgba(255,215,0,.4); border-radius: 10px; padding: 5px 9px; white-space: nowrap }
+.heroRow{ display: flex; gap: 7px; margin-top: 12px; position: relative }
+.heroBtn{ flex: 1; padding: 9px 4px; border-radius: 10px; border: 1px solid rgba(255,255,255,.22); background: rgba(255,255,255,.1); color: #fff; font-size: 10.5px; font-weight: 700; transition: transform .15s ease, background .15s ease }
+.heroBtn:active{ transform: scale(.94); background: rgba(255,255,255,.24) }
+.bonusCard{ position: relative; overflow: hidden; border-color: #7b3fbf; background: linear-gradient(120deg,#1a0f38,#2d1458) }
+.bonusRing{ position: absolute; width: 130px; height: 130px; border-radius: 50%; border: 2px solid rgba(255,215,0,.35); right: -40px; bottom: -50px; animation: ringSpin 9s linear infinite }
+@keyframes ringSpin{ 0%{ transform: rotate(0) scale(1) } 50%{ transform: rotate(180deg) scale(1.1) } 100%{ transform: rotate(360deg) scale(1) } }
+.bonusInner{ display: flex; gap: 10px; align-items: center; position: relative }
+.bonusEm{ font-size: 30px; line-height: 1; animation: badgePop 2.4s ease-in-out infinite }
+.bonusBody{ flex: 1; min-width: 0; text-align: left }
+.bonusTitle{ font-size: 13px; font-weight: 800; color: #ffd700 }
+.bonusSub{ font-size: 10px; color: #cbb9ee; margin-top: 2px; line-height: 1.4 }
+.btn.claim{ width: auto; flex: 0 0 auto; padding: 8px 14px; font-size: 11px; background: linear-gradient(135deg,#ffd700,#ff8c00); color: #241500; font-weight: 800; border: 0; box-shadow: 0 0 14px rgba(255,180,0,.5); animation: claimPulse 2s ease-in-out infinite }
+@keyframes claimPulse{ 0%{ box-shadow: 0 0 8px rgba(255,180,0,.35) } 50%{ box-shadow: 0 0 20px rgba(255,180,0,.85) } 100%{ box-shadow: 0 0 8px rgba(255,180,0,.35) } }
+.btn.claim[disabled]{ animation: none; opacity: .55; box-shadow: none }
+.ecard{ position: relative; overflow: hidden; border: 1px solid var(--bd); border-radius: 13px; padding: 10px; margin-top: 9px; background: linear-gradient(135deg, rgba(124,58,237,.22), rgba(219,39,119,.14)); transition: transform .18s ease }
+.ecard:active{ transform: scale(.975) }
+.ecard .shine{ position: absolute; inset: 0; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.13) 45%, transparent 60%); animation: shineMove 4.5s ease-in-out infinite }
+@keyframes shineMove{ 0%{ transform: translateX(-120%) } 55%{ transform: translateX(120%) } 100%{ transform: translateX(120%) } }
+.ecardTop{ display: flex; align-items: center; gap: 8px; position: relative }
+.ecardEm{ font-size: 22px }
+.ecardTitle{ font-size: 12px; font-weight: 800; color: #fff; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.ecardBadge{ font-size: 8.5px; font-weight: 800; padding: 2px 7px; border-radius: 999px; background: linear-gradient(135deg,#ffd700,#ff7a00); color: #241500; white-space: nowrap; margin-left: auto }
+.ecardText{ font-size: 10.5px; color: #d6c9f2; line-height: 1.55; margin-top: 6px; position: relative }
+.miniVIP{ font-size: 11px; color: #cbb9ee; line-height: 1.6 }
+.miniVIP b{ color: var(--gold) }
+.miniBar{ height: 7px; background: rgba(0,0,0,.4); border-radius: 999px; overflow: hidden; margin-top: 6px }
+.miniBarFill{ height: 100%; width: 0%; background: linear-gradient(90deg,#00e676,#ffd700); border-radius: 999px; transition: width .8s ease }
+.evRow{ display: flex; gap: 6px; align-items: center; margin-top: 6px }
+.evRow input{ margin-top: 0 }
+.evLine{ font-size: 9.5px; color: var(--mut); margin-top: 8px; line-height: 1.5 }
 .ubtns button{ flex: 1 1 30%; font-size: 10px; padding: 7px 4px }
 .uform select, .uform textarea, .uform input{ margin-top: 6px }
 .logrow{ font-size: 10px; color: var(--mut); border-top: 1px solid var(--bd); padding: 5px 0 }
@@ -202,7 +238,8 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
  </div>
 </header>
 <div class="tabs" id="tabs">
- <button class="tab on" id="tPlay" type="button">Play</button>
+ <button class="tab on" id="tHome" type="button">Home</button>
+ <button class="tab" id="tPlay" type="button">Play</button>
  <button class="tab" id="tWallet" type="button">Wallet</button>
  <button class="tab" id="tDep" type="button">Deposit</button>
  <button class="tab" id="tWd" type="button">Withdraw</button>
@@ -214,7 +251,52 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 </div>
 </div>
 <main>
- <section class="sec on" id="sPlay">
+ <section class="sec on" id="sHome">
+  <div class="hero">
+   <div class="heroGlow"></div>
+   <div class="heroTop">
+    <div>
+     <div class="heroHi" id="homeHi">Welcome back</div>
+     <div class="heroName" id="homeName">Player</div>
+    </div>
+    <div class="heroBal" id="homeBal">--</div>
+   </div>
+   <div class="heroRow">
+    <button class="heroBtn" type="button" data-go="sDep">📥 Deposit</button>
+    <button class="heroBtn" type="button" data-go="sPlay">🎮 Play</button>
+    <button class="heroBtn" type="button" data-go="sRef">🏅 Invite</button>
+   </div>
+  </div>
+  <div class="box bonusCard" id="bonusCard">
+   <div class="bonusRing"></div>
+   <div class="bonusInner">
+    <div class="bonusEm" id="bonusEm">🎁</div>
+    <div class="bonusBody">
+     <div class="bonusTitle">Daily bonus</div>
+     <div class="bonusSub" id="bonusSub">Loading...</div>
+    </div>
+    <button class="btn claim" id="bonusClaim" type="button">Claim</button>
+   </div>
+  </div>
+  <div class="box">
+   <h3>Login rewards</h3>
+   <p class="hint">Open the app every day and claim your daily bonus to build a streak. Each claim also counts as a login.</p>
+   <div class="statGrid">
+    <div class="statC"><b id="lgTotal">0</b><span>Logins so far</span></div>
+    <div class="statC"><b id="lgBonus">+0</b><span>Login reward</span></div>
+   </div>
+  </div>
+  <div class="box">
+   <h3>Events and offers</h3>
+   <div id="homeEvents"><p class="hint">No events right now.</p></div>
+  </div>
+  <div class="box">
+   <h3>Your progress</h3>
+   <div class="miniVIP" id="homeVip">Loading...</div>
+   <button class="btn alt" type="button" data-go="sRef" style="margin-top:8px">Open Refer and VIP</button>
+  </div>
+ </section>
+ <section class="sec" id="sPlay">
   <div class="box">
    <h3 id="lblPick">Pick a game</h3>
    <p class="hint" id="lblPickHint">Choose your option, set your bet, then play.</p>
@@ -515,6 +597,31 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <div id="adLeft"></div>
   </div>
   <div class="box">
+   <h3>Home page - bonus</h3>
+   <p class="hint">The daily bonus is what each user can claim once every 24 hours from the Home page. The login reward is shown next to their login count.</p>
+   <label class="lb">Daily bonus amount (coins)</label>
+   <input id="adBonus" type="number" min="0" placeholder="e.g. 20"/>
+   <label class="lb">Login reward shown per claim (coins)</label>
+   <input id="adLoginBonus" type="number" min="0" placeholder="e.g. 5"/>
+   <button class="btn okbtn" id="adBonusSave" type="button">OK - save bonus</button>
+   <p class="hint" id="adBonusMsg" style="margin-top:6px"></p>
+  </div>
+  <div class="box">
+   <h3>Home page - events</h3>
+   <p class="hint">One event per line: Title | Description | emoji | badge | on/off</p>
+   <p class="hint">Example: Weekend bonus | Deposit $50 today and get 500 extra coins | 🎁 | HOT | on</p>
+   <textarea id="adEvents" rows="6" placeholder="Title | Description | emoji | badge | on"></textarea>
+   <button class="btn okbtn" id="adEventsSave" type="button">OK - save events</button>
+   <p class="hint" id="adEventsMsg" style="margin-top:6px"></p>
+  </div>
+  <div class="box">
+   <h3>Telegram channel feed</h3>
+   <p class="hint">Every activity is posted to this channel automatically: deposits, withdrawals, new members, game results, daily bonuses. Make the bot an admin of the channel first, then put the username here.</p>
+   <input id="adChannel" placeholder="@yourchannel"/>
+   <div class="row"><button class="btn alt" id="adChanToggle" type="button">Feed: on</button><button class="btn okbtn" id="adChanSave" type="button">OK - save channel</button></div>
+   <p class="hint" id="adChanMsg" style="margin-top:6px"></p>
+  </div>
+  <div class="box">
    <h3>Customer messages</h3>
    <p class="hint">Every conversation with your users. Tap a thread to read and reply - replies arrive in their bot chat, and they can write back.</p>
    <div class="row"><button class="btn alt" id="adThreadsBtn" type="button">Load messages</button></div>
@@ -576,7 +683,7 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4ifvmGlAAzlcc-5YShJXVM4a3ish_1SowbqJ15912LzKJsbT0faBcYvDV1ZAfaEIXjhSPVlUGkn8GWGK7LyrOn7Xkxzo1vnD1-wZaLYnWttxF8l5pHkr020wlNraq9SE_UPDUW6cPRfvK2akB8o-gk5vKe83EHFniSyD5e4xoHO56bVy1PJBAy1hx4yJJyLXFXub';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4jZ755qcl-SwFPybxh9q6VfkvpRQF8pwjBuSXYvntHo4EtVGSeSRG2JraomhgzCFyhAoTeWkY_fhHNlR4bT8kbck6lhDiSZ7aidt6OG0DnpuCvdNpeLu6pejgE3WOug-1N6Rxl1G6CAKBQm8uCZdt5GCV7MtTOhxS-czeMbHJOZkQzmWXEE2JgQPKuSt1CtReua3';
 var VER_EXPECTED=7;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
@@ -667,6 +774,7 @@ function showTab(id){
  if(id==='sWallet'){ loadBalance(true); }
  if(id==='sDep'){ loadDepMethods(); }
  if(id==='sWd'){ loadWdMethods(); }
+ if(id==='sHome'){ loadHome(); }
  if(id==='sRef'){ loadRef(); }
  if(id==='sAcc'){ loadSupport(); }
  if(id==='sAdm'){ adminRefresh(); }
@@ -692,6 +800,7 @@ function applyLang(){
  txt('btnLogout', T('logout'));
  txt('acSave', T('save'));
  txt('adRefresh', T('sync'));
+ txt('tHome', 'Home');
  txt('tPlay', T('play'));
  txt('tWallet', T('wallet'));
  txt('tDep', T('deposit'));
@@ -701,8 +810,8 @@ function applyLang(){
  txt('tAdm', T('admin'));
  txt('tRef', 'Refer & VIP');
  txt('tHow', 'How to Earn');
- var map={ sPlay:T('play'), sWallet:T('wallet'), sDep:T('deposit'), sWd:T('withdraw'), sAcc:T('account'), sAdm:T('admin'), sRef:'VIP', sHow:'Guide' };
- var icons={ sPlay:'🎮', sWallet:'💳', sDep:'📥', sWd:'📤', sAcc:'👤', sAdm:'👑', sRef:'🏅', sHow:'📖' };
+ var map={ sHome:'Home', sPlay:T('play'), sWallet:T('wallet'), sDep:T('deposit'), sWd:T('withdraw'), sAcc:T('account'), sAdm:T('admin'), sRef:'VIP', sHow:'Guide' };
+ var icons={ sHome:'🏠', sPlay:'🎮', sWallet:'💳', sDep:'📥', sWd:'📤', sAcc:'👤', sAdm:'👑', sRef:'🏅', sHow:'📖' };
  var mis=document.querySelectorAll('.mi');
  for(var i=0;i<mis.length;i++){
   var sec=mis[i].getAttribute('data-go');
@@ -1376,7 +1485,7 @@ function adminRefresh(){
   var us=el('adUfSel'); if(us && !state.selUser) us.value='normal';
   renderAdminGames(j.controls||{});
   renderPctNow();
-  adminLoadUsers(); adminLoadDeps(); adminLoadWds(); adminLoadDepMethods(); adminLoadWdMethods(); adminLoadTeam(); adminLoadLeft(); loadNotifs(false); loadThreads();
+  adminLoadUsers(); adminLoadDeps(); adminLoadWds(); adminLoadDepMethods(); adminLoadWdMethods(); adminLoadTeam(); adminLoadLeft(); loadNotifs(false); loadThreads(); adminHomeLoad();
  });
 }
 function gmName(gid){
@@ -1712,6 +1821,80 @@ function userPanel(row, u, kind, pre){
  }
  row.appendChild(f);
 }
+function renderEvents(ev){
+ var box=el('homeEvents'); if(!box) return;
+ box.innerHTML='';
+ if(!ev || !ev.length){ box.innerHTML='<p class="hint">No events right now. Check back soon.</p>'; return; }
+ ev.forEach(function(e,i){
+  var d=document.createElement('div');
+  d.className='ecard';
+  d.style.animationDelay=(i*0.07)+'s';
+  var sh=document.createElement('div'); sh.className='shine';
+  var top=document.createElement('div'); top.className='ecardTop';
+  var em=document.createElement('div'); em.className='ecardEm'; em.textContent=e.emoji||'🔥';
+  var ti=document.createElement('div'); ti.className='ecardTitle'; ti.textContent=e.title||'Event';
+  top.appendChild(em); top.appendChild(ti);
+  if(e.badge){ var bd=document.createElement('div'); bd.className='ecardBadge'; bd.textContent=e.badge; top.appendChild(bd); }
+  var tx=document.createElement('div'); tx.className='ecardText'; tx.textContent=e.text||'';
+  d.appendChild(sh); d.appendChild(top); d.appendChild(tx);
+  d.addEventListener('click',function(){ sfx('click'); d.classList.remove('popIn'); void d.offsetWidth; d.classList.add('popIn'); if(e.text) toast(e.title+': '+e.text); });
+  box.appendChild(d);
+ });
+}
+function loadHome(){
+ call('home_feed').then(function(j){
+  if(!j || !j.ok) return;
+  state.home=j;
+  var nm=j.first||state.first||state.tgFirst||'Player';
+  txt('homeName', nm);
+  txt('homeHi', j.registered ? 'Welcome back' : 'Welcome');
+  txt('homeBal', (state.balOk? state.coins : (j.coins||0))+' coins');
+  txt('lgTotal', j.login_total||0);
+  txt('lgBonus', '+'+((j.login_bonus!=null?j.login_bonus:5))+' / claim');
+  var sub=el('bonusSub');
+  var btn=el('bonusClaim');
+  if(sub) sub.textContent = j.bonus_ready ? ('Claim '+j.bonus_amount+' free coins now') : 'Already claimed today - come back tomorrow';
+  if(btn){
+   btn.disabled = !j.bonus_ready;
+   btn.textContent = j.bonus_ready ? 'Claim' : 'Done';
+  }
+  var be=el('bonusEm'); if(be) be.textContent = j.bonus_ready ? '🎁' : '✅';
+  renderEvents(j.events||[]);
+  var v=el('homeVip');
+  if(v){
+   var lv=parseInt(j.vip||0)||0;
+   var names=['No badge yet','Bronze','Silver','Gold','Diamond'];
+   var ems=['🏅','🥉','🥈','🥇','💎'];
+   var pctv=0;
+   try{
+    var rj=state.ref;
+    if(rj && rj.next_need){ pctv=Math.min(100, Math.round((rj.qualified*100)/rj.next_need)); }
+   }catch(e){}
+   v.innerHTML='<div>'+ems[lv]+' <b>'+names[lv]+'</b>'+(lv>0?' - earning '+((state.ref&&state.ref.comm_pct)||0)+'% commission':'')+'</div>'+(lv<4?'<div style="margin-top:4px;font-size:10px">Progress to next badge</div><div class="miniBar"><div class="miniBarFill" style="width:'+pctv+'%"></div></div>':'<div style="margin-top:4px;font-size:10px">Maximum level reached</div>');
+  }
+  refreshHi();
+ });
+}
+function refreshHi(){
+ if(state.balOk){ var hl=el('homeBal'); if(hl) hl.textContent=state.coins+' coins'; }
+}
+function claimBonus(){
+ var btn=el('bonusClaim');
+ if(btn && btn.disabled) return;
+ if(btn){ btn.disabled=true; btn.textContent='...'; }
+ call('claim_bonus').then(function(j){
+  if(j && j.ok){
+   toast('+'+j.amount+' coins claimed! Balance '+j.coins);
+   burst('🎉',16); sfx('win');
+   state.coins=parseInt(j.coins||0)||state.coins;
+   updBal(); refreshHi();
+   loadHome();
+  } else {
+   toast((j&&j.error)||'could not claim');
+   loadHome();
+  }
+ });
+}
 function burst(em,n){
  try{
   for(var i=0;i<(n||14);i++){
@@ -1831,6 +2014,63 @@ function joinRef(){
    if(e) e.value='';
    loadRef();
   } else if(m){ m.textContent=(j&&j.error)||'could not join'; }
+ });
+}
+function adminHomeLoad(){
+ adminApiCall('admin_home_get').then(function(j){
+  if(!j || !j.ok) return;
+  var ba=el('adBonus'); if(ba) ba.value=j.bonus_amount;
+  var lb=el('adLoginBonus'); if(lb) lb.value=j.login_bonus;
+  var ch=el('adChannel'); if(ch) ch.value=j.channel||'';
+  state.chanOn=!!j.channel_on;
+  var t=el('adChanToggle');
+  if(t){ t.textContent='Feed: '+(state.chanOn?'on':'off'); }
+  var ar=el('adEvents');
+  if(ar){
+   var lines=[];
+   (j.events||[]).forEach(function(e){
+    lines.push([e.title||'', e.text||'', e.emoji||'🔥', e.badge||'', (e.on===false?'off':'on')].join(' | '));
+   });
+   ar.value=lines.join(String.fromCharCode(10));
+  }
+ });
+}
+function adminBonusSave(){
+ var m=el('adBonusMsg');
+ var ba=parseInt((el('adBonus')||{}).value||'0');
+ var lb=parseInt((el('adLoginBonus')||{}).value||'0');
+ if(isNaN(ba)||ba<0){ if(m) m.textContent='Enter a valid daily bonus'; return; }
+ if(isNaN(lb)||lb<0){ if(m) m.textContent='Enter a valid login reward'; return; }
+ if(m) m.textContent='Saving...';
+ adminApiCall('admin_home_save',{ what:'bonus', bonus_amount:ba, login_bonus:lb }).then(function(j){
+  if(j && j.ok){ if(m) m.textContent='Saved. Daily bonus '+j.bonus_amount+' coins.'; toast('Bonus saved'); sfx('coinin'); loadHome(); }
+  else if(m){ m.textContent=(j&&j.error)||'failed'; }
+ });
+}
+function adminEventsSave(){
+ var m=el('adEventsMsg');
+ var raw=String((el('adEvents')||{}).value||'');
+ if(m) m.textContent='Saving...';
+ adminApiCall('admin_home_save',{ what:'event', events:raw }).then(function(j){
+  if(j && j.ok){ if(m) m.textContent='Saved '+j.count+' event(s).'; toast('Events saved'); sfx('coinin'); loadHome(); }
+  else if(m){ m.textContent=(j&&j.error)||'failed'; }
+ });
+}
+function adminChanToggle(){
+ state.chanOn=!state.chanOn;
+ var t=el('adChanToggle');
+ if(t) t.textContent='Feed: '+(state.chanOn?'on':'off');
+ sfx('click');
+}
+function adminChanSave(){
+ var m=el('adChanMsg');
+ var ch=String((el('adChannel')||{}).value||'').trim();
+ if(m) m.textContent='Saving...';
+ adminApiCall('admin_home_save',{ what:'channel', channel:ch, channel_on:!!state.chanOn }).then(function(j){
+  if(j && j.ok){
+   if(m) m.textContent = j.channel ? ('Saved. Posts will go to '+j.channel+(j.channel_on?'':' (feed off)')) : 'Channel cleared - feed off.';
+   toast('Channel saved'); sfx('coinin');
+  } else if(m){ m.textContent=(j&&j.error)||'failed'; }
  });
 }
 function msgRow(m){
@@ -2275,7 +2515,7 @@ function boot(){
  try{ state.token=localStorage.getItem('pe_token')||''; }catch(e){ state.token=''; }
  try{ state.cur=localStorage.getItem('pe_cur')||'USD'; }catch(e2){}
  try{ state.lang=localStorage.getItem('pe_lang')||'en'; }catch(e3){}
- bindTab('tPlay','sPlay'); bindTab('tWallet','sWallet'); bindTab('tDep','sDep');
+ bindTab('tHome','sHome'); bindTab('tPlay','sPlay'); bindTab('tWallet','sWallet'); bindTab('tDep','sDep');
  bindTab('tWd','sWd'); bindTab('tAcc','sAcc'); bindTab('tSet','sSet'); bindTab('tAdm','sAdm');
  bindTab('tRef','sRef'); bindTab('tHow','sHow');
  var mis=document.querySelectorAll('.mi');
@@ -2309,6 +2549,15 @@ function boot(){
 
  on('adPfSave',adminSaveProfile);
  on('adLeftBtn',adminLoadLeft);
+ on('bonusClaim',claimBonus);
+ on('adBonusSave',adminBonusSave);
+ on('adEventsSave',adminEventsSave);
+ on('adChanSave',adminChanSave);
+ on('adChanToggle',adminChanToggle);
+ var dgs=document.querySelectorAll('[data-go]');
+ for(var gi=0; gi<dgs.length; gi++){
+  dgs[gi].addEventListener('click',function(){ var g=this.getAttribute('data-go'); if(g){ sfx('click'); showTab(g); } });
+ }
  on('refCopy',copyRef);
  on('refCodeBtn',copyCode);
  on('refShare',shareRef);
