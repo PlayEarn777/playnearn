@@ -10,14 +10,16 @@
 *{ box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif }
 :root{ --bg:#070a1c; --card:#12162f; --card2:#1a1f45; --bd:#2a3068; --tx:#fff; --mut:#98a2cd; --gold:#ffcc33; --grn:#00e676; --red:#ff5252; --pur:#8b5cf6 }
 body{ background: var(--bg); color: var(--tx); min-height: 100vh; padding-bottom: 66px }
+.topwrap{ position: sticky; top: 0; z-index: 60 }
 header{ background: linear-gradient(135deg, #ffb300, #ff6d00 55%, #6a3cff); padding: 10px 12px }
-.hrow{ display: flex; justify-content: space-between; align-items: center; gap: 8px }
-.logo{ font-weight: 800; font-size: 15px; letter-spacing: .5px }
-.who{ background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.25); border-radius: 10px; padding: 3px 8px; font-size: 10px; white-space: nowrap; max-width: 46%; overflow: hidden; text-overflow: ellipsis }
+.hrow{ display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 6px }
+.logo{ font-weight: 800; font-size: 15px; letter-spacing: .5px; flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.who{ background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.25); border-radius: 10px; padding: 3px 8px; font-size: 10px; max-width: 45%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 0 1 auto; min-width: 0 }
+.hright{ display: flex; gap: 6px; align-items: center; flex: 0 0 auto }
 .balbar{ margin-top: 8px; background: rgba(0,0,0,.25); border: 1px solid rgba(255,255,255,.22); border-radius: 12px; padding: 8px 10px; display: flex; justify-content: space-between; align-items: center; gap: 8px }
 .balbar b{ font-size: 17px }
 .tiny{ font-size: 10px; color: #ffe9a8 }
-.tabs{ position: sticky; top: 0; z-index: 9; background: #0a0e26; border-bottom: 1px solid var(--bd); display: flex; gap: 6px; padding: 8px; overflow-x: auto }
+.tabs{ position: relative; background: #0a0e26; border-bottom: 1px solid var(--bd); display: flex; gap: 6px; padding: 8px; overflow-x: auto }
 .tabs::-webkit-scrollbar{ display: none }
 .tab{ flex: 0 0 auto; background: var(--card); border: 1px solid var(--bd); color: #fff; padding: 7px 12px; border-radius: 999px; font-size: 12px; font-weight: 600 }
 .tab.on{ background: linear-gradient(135deg, var(--gold), #ff7a00); color: #241500; border-color: transparent }
@@ -117,6 +119,12 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 .ntag.withdraw{ background: #7c2d12; color: #fdba74 }
 .ntag.user{ background: #4c1d95; color: #c4b5fd }
 .ntag.left{ background: #1e3a8a; color: #93c5fd }
+.ntag.game{ background: #3f3f1a; color: #fde68a }
+.ntag.message{ background: #164e63; color: #67e8f9 }
+.ntag.verify{ background: #4c1d95; color: #d8b4fe }
+.paydet{ background: #080c22; border: 1px solid var(--bd); border-radius: 9px; padding: 8px; margin-top: 6px; font-size: 11px; line-height: 1.6; word-break: break-word }
+.paydet b{ color: var(--gold) }
+.copybtn{ width: auto; padding: 5px 10px; font-size: 10px; margin-top: 6px; flex: 0 0 auto }
 .dl{ display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; border-bottom: 1px solid var(--bd) }
 .dl b{ color: var(--gold) }
 .gwin{ border-color: #00e676; color: #00e676 }
@@ -132,10 +140,11 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 </head>
 <body>
 
+<div class="topwrap">
 <header>
  <div class="hrow">
   <div class="logo">PLAY &amp; EARN</div>
-  <div style="display: flex; gap: 6px; align-items: center">
+  <div class="hright">
    <div class="who" id="who">--</div>
    <button class="bell" id="bellBtn" type="button" style="display: none">🔔<span class="bbadge" id="bellBadge">0</span></button>
   </div>
@@ -159,6 +168,7 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
  <button class="tab" id="tAcc" type="button">Account</button>
  <button class="tab" id="tSet" type="button">Settings</button>
  <button class="tab adm" id="tAdm" type="button" style="display: none">ADMIN</button>
+</div>
 </div>
 <main>
  <section class="sec on" id="sPlay">
@@ -185,8 +195,11 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <h3>Deposit</h3>
    <p class="hint">Choose a method, pay, then attach your payment screenshot. The admin reviews it and credits your coins.</p>
    <div id="depMethods" style="margin-top: 9px"></div>
+   <div class="box" id="depPayBox" style="display: none; margin-top: 8px; border-color: var(--gold)"></div>
    <label class="lb">Amount in USD</label>
    <input id="depAmt" type="number" min="1" placeholder="e.g. 50"/>
+   <label class="lb">Payment ID / transaction reference</label>
+   <input id="depRef" placeholder="e.g. UTR, TXN or wallet reference number"/>
    <label class="lb">Payment screenshot</label>
    <input id="depFile" type="file" accept="image/*"/>
    <button class="btn" id="depGo" type="button">Submit deposit</button>
@@ -246,6 +259,11 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <h3>Language</h3>
    <p class="hint">Changes the menu, tabs and buttons.</p>
    <select id="langSel"></select>
+  </div>
+  <div class="box">
+   <h3>Game sounds</h3>
+   <p class="hint">Sound effects for each game, wins and losses.</p>
+   <button class="btn alt" id="btnMute" type="button">Sound: on</button>
   </div>
   <div class="box">
    <h3>Cache</h3>
@@ -359,7 +377,7 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
   </div>
   <div class="box">
    <h3>Deposit methods</h3>
-   <p class="hint">One per line: Name | payment details shown to users</p>
+   <p class="hint">One per line: Name | details. Separate detail fields with ; or |. Bank example: Bank Transfer | Bank: HDFC; Account name: PlayEarn; Account number: 1234567890; IFSC: HDFC0001. TRC20 example: USDT TRC20 | Network: TRC20; Address: TXYZ123abc. For Stars add a line containing the word Stars - it then pays straight from the user's own Telegram wallet, no address needed.</p>
    <textarea id="adDepMethods" rows="5"></textarea>
    <button class="btn" id="adDepSave" type="button">Save deposit methods</button>
   </div>
@@ -403,11 +421,11 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4e03kSQzh0l4s7aNXful-d1_yFHZXclXYmA6hK2rxG0lluFdIbb-FE3Fivsl9NJzmyWshyxkLqgLQbwMt_z4YIeDt9Y206aQimDMeiGikdNSNa2VMthCJJR2X71XGRp9lbesz__XrQftsARbNLZoBRPV3-FXJG6_gW0g_sL6ammiX68aHmpLkn_dfiObQVqfQRZA';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4gS_KZtI1pmBbd2zB1pQv0Ve87f5Sn3YIMxGbavH6qg4hpnXFiUDIAVzO29pB11EcYREvlZyB8oID01pRs1Fn-3FnUM_KGjtUtXFXPksghAjcsa3hGwRdLW7ohkj0h7i0HwJKgbm8_zeNBP-d0pjnqqPpZLTlXqYGty1LVOx8PiiNpKp_mJjFTBUGRGOoA5ND3T2';
 var VER_EXPECTED=7;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
-var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'', ctrlNow:{}, globalMode:'normal', pendMode:'', pendOp:'', pendUF:'' };
+var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'', ctrlNow:{}, globalMode:'normal', pendMode:'', pendOp:'', pendUF:'', selDep:null, starRate:5, seenNotif:'' };
 var GAMES=[
  {id:1,name:'Coin Flip',em:'🪙',cost:10,mult:1.9,pick:'head',type:'coin',opts:[['head','HEAD'],['tail','TAIL']]},
  {id:2,name:'Dice Duel',em:'🎲',cost:10,mult:2,pick:'4',type:'dice',opts:[['1','1'],['2','2'],['3','3'],['4','4'],['5','5'],['6','6']]},
@@ -456,6 +474,7 @@ function markSel(sel, node){
 }
 function txt(id,v){ var e=el(id); if(e) e.textContent=v; }
 function toast(m){ var t=el('toast'); if(!t) return; t.textContent=String(m); t.style.display='block'; setTimeout(function(){ t.style.display='none'; },2800); }
+function clickSfx(){ sfx('click'); }
 function esc(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function nl(){ return String.fromCharCode(10); }
 function readTG(){ try{ if(TG && TG.initDataUnsafe && TG.initDataUnsafe.user && TG.initDataUnsafe.user.id){ return TG.initDataUnsafe.user; } }catch(e){} return null; }
@@ -668,11 +687,48 @@ function renderGames(){
   g.appendChild(c);
  });
 }
+var AC=null, MUTED=false;
+try{ MUTED=(localStorage.getItem('pe_mute')==='1'); }catch(e){ MUTED=false; }
+function ac(){ if(AC) return AC; try{ var C=window.AudioContext||window.webkitAudioContext; if(C) AC=new C(); }catch(e){ AC=null; } return AC; }
+function tone(freq, dur, type, vol, delay){
+ if(MUTED) return;
+ var a=ac(); if(!a) return;
+ var t0=a.currentTime+(delay||0);
+ var o=a.createOscillator(), g=a.createGain();
+ o.type=type||'sine'; o.frequency.setValueAtTime(freq, t0);
+ g.gain.setValueAtTime(0.0001, t0);
+ g.gain.exponentialRampToValueAtTime(vol||0.08, t0+0.012);
+ g.gain.exponentialRampToValueAtTime(0.0001, t0+dur);
+ o.connect(g); g.connect(a.destination);
+ o.start(t0); o.stop(t0+dur+0.03);
+}
+function sfx(name){
+ if(MUTED) return;
+ if(name==='click'){ tone(660,0.05,'square',0.05,0); }
+ else if(name==='bet'){ tone(520,0.06,'triangle',0.06,0); tone(780,0.06,'triangle',0.05,0.05); }
+ else if(name==='coin'){ for(var i=0;i<9;i++){ tone(700+(i*70),0.05,'square',0.04,i*0.07); } }
+ else if(name==='dice'){ for(var d=0;d<8;d++){ tone(240+((d*97)%420),0.05,'square',0.05,d*0.07); } }
+ else if(name==='wheel'){ for(var w=0;w<14;w++){ tone(300+(w*38),0.04,'sawtooth',0.035,w*0.06); } }
+ else if(name==='crash'){ for(var c=0;c<16;c++){ tone(220+(c*58),0.06,'sine',0.05,c*0.06); } }
+ else if(name==='plinko'){ for(var p=0;p<11;p++){ tone(880-(p*46),0.04,'triangle',0.05,p*0.06); } }
+ else if(name==='mine'){ for(var m=0;m<7;m++){ tone(420+(m*60),0.05,'square',0.045,m*0.07); } }
+ else if(name==='keno'){ for(var k=0;k<9;k++){ tone(520+(k*54),0.05,'sine',0.05,k*0.06); } }
+ else if(name==='slot'){ for(var s=0;s<10;s++){ tone(360+((s*131)%500),0.05,'square',0.045,s*0.06); } }
+ else if(name==='win'){ [523,659,784,1047,1319].forEach(function(f,i){ tone(f,0.16,'triangle',0.09,i*0.1); }); }
+ else if(name==='lose'){ [330,262,196].forEach(function(f,i){ tone(f,0.2,'sawtooth',0.07,i*0.13); }); }
+ else if(name==='coinin'){ [880,1175,1568].forEach(function(f,i){ tone(f,0.1,'sine',0.08,i*0.07); }); }
+ else if(name==='notify'){ tone(1046,0.09,'sine',0.07,0); tone(1318,0.11,'sine',0.06,0.09); }
+}
+function stageSoundFor(type){
+ var m={ coin:'coin', dice:'dice', wheel:'wheel', crash:'crash', plinko:'plinko', mine:'mine', keno:'keno', slot:'slot' };
+ sfx(m[type]||'click');
+}
 function stopOv(){ if(ovTimer){ clearInterval(ovTimer); ovTimer=null; } ovTimers.forEach(function(t){ clearInterval(t); }); ovTimers=[]; }
 function hideOv(){ stopOv(); var ov=el('ov'); if(ov) ov.classList.remove('on'); }
 function stage(html){ var s=el('ovStage'); if(s) s.innerHTML=html; }
 function showOv(gm){
  stopOv();
+ stageSoundFor(gm.type);
  var ov=el('ov'); if(ov) ov.classList.add('on');
  var t=el('ovTitle'); if(t){ t.textContent=gm.name; t.className='res'; }
  txt('ovSub','Bet '+(stakes[gm.id]||gm.cost)+'c placed');
@@ -709,6 +765,8 @@ function showOv(gm){
 }
 function finishOv(gm,res){
  stopOv();
+ sfx(res.win?'win':'lose');
+ if(res.win) setTimeout(function(){ sfx('coinin'); },520);
  var f=el('ovFill'); if(f) f.style.width='100%';
  txt('ovPct','100%');
  var win=!!res.win;
@@ -739,6 +797,7 @@ function playGame(gid){
  var stake=stakes[gid]||gm.cost;
  if(!state.balOk){ toast('Loading balance first...'); loadBalance(false).then(function(){ playGame(gid); }); return; }
  if(state.coins<stake){ toast('No balance for this bet - you have '+state.coins+'c, need '+stake+'c. Deposit first.'); return; }
+ sfx('bet');
  showOv(gm);
  ovSeq=ovSeq+1;
  var mySeq=ovSeq;
@@ -884,6 +943,115 @@ function radioRow(name,val,big,small,checked){
  row.appendChild(r); row.appendChild(d);
  return row;
 }
+function isStars(m){
+ var s=String((m&&m.id)||'')+' '+String((m&&m.name)||'');
+ return s.toLowerCase().indexOf('star')>=0;
+}
+function payPairs(details){
+ var out=[];
+ String(details||'').split(/[;
+|]/).forEach(function(seg){
+  var s=String(seg||'').trim();
+  if(!s) return;
+  var i=s.indexOf(':');
+  if(i>0 && i<28){ out.push([s.slice(0,i).trim(), s.slice(i+1).trim()]); }
+  else { out.push(['', s]); }
+ });
+ return out;
+}
+function renderPayBox(m){
+ var box=el('depPayBox'); if(!box) return;
+ box.innerHTML='';
+ if(!m){ box.style.display='none'; return; }
+ box.style.display='block';
+ if(isStars(m)){
+  box.innerHTML='<h3>⭐ Telegram Stars</h3><p class="hint">No address needed. Choose an amount and Telegram pays it from your own Stars wallet.</p><div id="starsBox"><p class="hint">Loading Stars options...</p></div>';
+  loadStars();
+  return;
+ }
+ var h='<h3>Send the payment to</h3>';
+ var ps=payPairs(m.details);
+ if(!ps.length){ h=h+'<div class="paydet">The admin has not written payment details for this method yet.</div>'; }
+ ps.forEach(function(p){
+  if(p[0]){ h=h+'<div class="paydet"><b>'+esc(p[0])+'</b><br>'+esc(p[1])+'</div>'; }
+  else { h=h+'<div class="paydet">'+esc(p[1])+'</div>'; }
+ });
+ box.innerHTML=h;
+ var all=box.querySelectorAll('.paydet');
+ for(var i=0;i<all.length;i++){
+  var b=document.createElement('button');
+  b.type='button'; b.className='btn alt copybtn'; b.textContent='📋 Copy';
+  (function(node,btn){ btn.addEventListener('click',function(){ copyText(node.textContent.replace('Copy','').trim()); }); })(all[i],b);
+  all[i].parentNode.insertBefore(b, all[i].nextSibling);
+ }
+ var tip=document.createElement('p');
+ tip.className='hint';
+ tip.style.marginTop='8px';
+ tip.textContent='After paying, type the payment ID / transaction reference and attach your screenshot below.';
+ box.appendChild(tip);
+}
+function copyText(t){
+ try{
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(t); toast('Copied'); return; }
+ }catch(e){}
+ try{
+  var ta=document.createElement('textarea');
+  ta.value=t; document.body.appendChild(ta); ta.select();
+  document.execCommand('copy'); document.body.removeChild(ta);
+  toast('Copied');
+ }catch(e2){ toast('Long press to copy'); }
+}
+function loadStars(){
+ var sb=el('starsBox'); if(!sb) return;
+ call('stars_info').then(function(j){
+  if(!j || !j.ok){ sb.innerHTML='<p class="hint miss">Stars not available right now.</p>'; return; }
+  state.starRate=parseInt(j.rate_star||5)||5;
+  var h='<div class="chips chips4">';
+  (j.packages||[]).forEach(function(p){
+   h=h+'<button class="chip spk" type="button" data-s="'+p.stars+'">'+p.stars+' ⭐<br><span style="font-size:9px">'+p.coins+'c</span></button>';
+  });
+  h=h+'</div>';
+  h=h+'<input id="starCustom" type="number" min="50" placeholder="or type Stars amount (min 50)"/>';
+  h=h+'<button class="btn" id="starGo" type="button">Pay with Telegram Stars</button>';
+  h=h+'<p class="hint">Rate: 1 Star = '+state.starRate+' coins. Paid through your own Telegram wallet - no address needed.</p>';
+  sb.innerHTML=h;
+  var sps=sb.querySelectorAll('.spk');
+  for(var i=0;i<sps.length;i++){
+   sps[i].addEventListener('click',function(){
+    var c=el('starCustom'); if(c) c.value=this.getAttribute('data-s');
+    var o=sb.querySelectorAll('.spk');
+    for(var k=0;k<o.length;k++){ o[k].classList.remove('on'); }
+    this.classList.add('on');
+    sfx('click');
+   });
+  }
+  var go=el('starGo');
+  if(go) go.addEventListener('click',buyStars);
+ });
+}
+function buyStars(){
+ var c=el('starCustom');
+ var s=parseInt((c&&c.value)||'0');
+ if(!s||s<50){ toast('Minimum is 50 Stars'); return; }
+ call('stars_buy',{ stars:s }).then(function(j){
+  if(!j || !j.ok){ toast((j&&j.error)||'could not start payment'); return; }
+  var opened=false;
+  try{
+   if(window.Telegram && Telegram.WebApp && Telegram.WebApp.openInvoice){
+    Telegram.WebApp.openInvoice(j.link, function(res){
+     if(res && res.status==='paid'){ toast('⭐ Paid! Coins credited.'); setTimeout(function(){ loadBalance(true); },1200); }
+     else { toast('Payment '+((res&&res.status)||'cancelled')); }
+    });
+    opened=true;
+   }
+  }catch(e){ opened=false; }
+  if(!opened){
+   try{ window.open(j.link,'_blank'); opened=true; }catch(e2){ opened=false; }
+  }
+  if(!opened){ toast('Telegram did not open the payment'); return; }
+  sfx('coinin');
+ });
+}
 function loadDepMethods(){
  var box=el('depMethods'); if(!box) return;
  box.innerHTML='<p class="hint">Loading methods...</p>';
@@ -891,7 +1059,14 @@ function loadDepMethods(){
   state.depMethods=(j&&j.ok&&j.methods)?j.methods:[];
   box.innerHTML='';
   if(!state.depMethods.length){ box.innerHTML='<p class="hint miss">No methods set. Ask the admin to add deposit methods.</p>'; return; }
-  state.depMethods.forEach(function(m,i){ box.appendChild(radioRow('depm', m.id, m.name, m.details||'', i===0)); });
+  state.depMethods.forEach(function(m,i){
+   var sub=isStars(m) ? ('1 Star = '+(state.starRate||5)+' coins - paid from your Telegram wallet') : String(m.details||'').replace(/;/g,' • ');
+   var row=radioRow('depm', m.id, m.name, sub, i===0);
+   var r=row.querySelector('input');
+   r.addEventListener('change',function(){ state.selDep=m; renderPayBox(m); sfx('click'); });
+   box.appendChild(row);
+   if(i===0){ state.selDep=m; renderPayBox(m); }
+  });
  });
 }
 function fileToData(file,maxW,cb){
@@ -914,22 +1089,26 @@ function fileToData(file,maxW,cb){
 }
 function submitDeposit(){
  var msg=el('depMsg');
- var amt=parseInt((el('depAmt')||{}).value||'0');
  var sel=document.querySelector('input[name=depm]:checked');
+ if(!sel){ toast('Choose a deposit method'); return; }
+ if(isStars(state.selDep||{})){ toast('For Stars use the Pay with Telegram Stars button above'); return; }
+ var amt=parseInt((el('depAmt')||{}).value||'0');
+ var ref=String((el('depRef')||{}).value||'').trim();
  var f=el('depFile');
  var file=(f&&f.files&&f.files[0])?f.files[0]:null;
- if(!sel){ toast('Choose a deposit method'); return; }
  if(!amt||amt<1){ toast('Enter the amount in USD'); return; }
+ if(!ref){ toast('Type the payment ID or transaction reference'); return; }
  if(!file){ toast('Attach your payment screenshot'); return; }
  if(msg) msg.textContent='Uploading screenshot...';
  fileToData(file,720,function(data){
   if(!data){ if(msg) msg.textContent='Could not read that image'; return; }
-  call('deposit_submit',{ method:sel.value, amount:amt, proof:data }).then(function(j){
+  call('deposit_submit',{ method:sel.value, amount:amt, proof:data, payref:ref }).then(function(j){
    if(j && j.ok){
     if(msg) msg.textContent='Submitted. '+j.coins+' coins are pending admin approval.';
-    toast('Deposit submitted');
+    toast('Deposit submitted'); sfx('coinin');
     var a=el('depAmt'); if(a) a.value='';
     var ff=el('depFile'); if(ff) ff.value='';
+    var rr=el('depRef'); if(rr) rr.value='';
    } else if(msg){ msg.textContent=(j&&j.error)||'failed'; }
   });
  });
@@ -1211,6 +1390,27 @@ function loadNotifs(mark){
   if(j&&j.ok){ state.notifs=j.notifs||[]; renderNotifs(); }
  });
 }
+function pollNotifs(){
+ adminApiCall('admin_notifs',{ mark:false }).then(function(j){
+  if(!j || !j.ok) return;
+  var list=j.notifs||[];
+  state.notifs=list;
+  var un=0;
+  for(var i=0;i<list.length;i++){ if(!list[i].read) un=un+1; }
+  state.unread=un;
+  updateBell();
+  var top=list.length ? String(list[0].id||'') : '';
+  if(top && top!==state.seenNotif){
+   if(state.seenNotif){
+    sfx('notify');
+    toast('🔔 New activity: '+(list[0].text||'').slice(0,60));
+   }
+   state.seenNotif=top;
+  }
+  var sec=el('sNotif');
+  if(sec && sec.classList.contains('on')) renderNotifs();
+ });
+}
 function renderNotifs(){
  var box=el('notifList'); if(!box) return;
  var list=state.notifs||[];
@@ -1389,21 +1589,63 @@ function adminLoadDeps(){
   if(!state.deps.length){ var p=document.createElement('p'); p.className='hint'; p.textContent='No pending deposits.'; box.appendChild(p); return; }
   state.deps.forEach(function(d){
    var row=document.createElement('div'); row.className='urow';
-   row.innerHTML='<div class="nm">'+esc(d.name||'-')+'</div><div class="meta">ID '+esc(d.user)+(d.tg_username?(' | @'+esc(d.tg_username)):'')+'</div><div class="meta">$'+d.amount+' = '+d.coins+' coins | '+esc(d.method)+'</div><div class="meta">'+((d.proof&&d.proof!=='none')?'screenshot saved':'no screenshot')+'</div>';
-   var r=document.createElement('div'); r.className='row';
-   if(d.proof && d.proof!=='none'){
-    var pv=document.createElement('button'); pv.type='button'; pv.className='btn alt'; pv.textContent='View';
-    pv.addEventListener('click',function(){ adminViewProof(d.id); });
-    r.appendChild(pv);
-   }
-   var ok=document.createElement('button'); ok.type='button'; ok.className='btn alt'; ok.textContent='Approve';
-   ok.addEventListener('click',function(){ adminDepAct(d.id,'approve'); });
-   var no=document.createElement('button'); no.type='button'; no.className='btn alt'; no.textContent='Reject';
-   no.addEventListener('click',function(){ adminDepAct(d.id,'reject'); });
-   r.appendChild(ok); r.appendChild(no); row.appendChild(r);
+   var vtag=d.verified?' <span class="tag reg">verified</span>':' <span class="tag">not verified</span>';
+   row.innerHTML='<div class="nm">'+esc(d.name||'-')+vtag+'</div><div class="meta">ID '+esc(d.user)+(d.tg_username?(' | @'+esc(d.tg_username)):'')+'</div><div class="meta">$'+d.amount+' = '+d.coins+' coins | '+esc(d.method)+'</div><div class="meta">'+((d.proof&&d.proof!=='none')?'📎 screenshot saved':'⚠ no screenshot')+(d.payref?(' | pay ID '+esc(d.payref)):'')+'</div>';
+   var r=document.createElement('div'); r.className='row ubtns';
+   if(d.proof && d.proof!=='none'){ r.appendChild(mkBtn('📎 View','alt',function(){ adminViewProof(d.id); })); }
+   r.appendChild(mkBtn(d.verified?'↩️ Unverify':'✅ Verify','alt',function(){ adminVerify('deposit', d.id, !d.verified); }));
+   r.appendChild(mkBtn('📤 Send proof','alt',function(){ adminSendProof('deposit', d.id); }));
+   r.appendChild(mkBtn('✔ Confirm deposit','okbtn',function(){ adminDepAct(d.id,'approve'); }));
+   r.appendChild(mkBtn('✖ Reject','alt',function(){ adminDepAct(d.id,'reject'); }));
+   row.appendChild(r);
    box.appendChild(row);
   });
  });
+}
+function adminVerify(kind, rid, on){
+ adminApiCall('admin_verify',{ kind:kind, rid:String(rid), verified: !!on }).then(function(j){
+  if(j && j.ok){
+   toast(on?'Verified':'Unverified');
+   sfx('click');
+   if(kind==='deposit') adminLoadDeps(); else adminLoadWds();
+  } else { toast((j&&j.error)||'failed'); }
+ });
+}
+function adminSendProof(kind, rid){
+ var old=el('proofSend'); if(old) old.remove();
+ var m=document.createElement('div'); m.className='mod'; m.id='proofSend';
+ var b=document.createElement('div'); b.className='m2';
+ b.style.textAlign='left';
+ var t=document.createElement('div');
+ t.className='meta';
+ t.style.cssText='color:#ffd966;font-size:11px;margin-bottom:6px';
+ t.textContent='Send payment proof to the user for this '+kind+' ('+rid+')';
+ var note=document.createElement('input');
+ note.placeholder='Optional note, e.g. Paid via bank, ref 4482';
+ var file=document.createElement('input');
+ file.type='file'; file.accept='image/*';
+ b.appendChild(t); b.appendChild(note); b.appendChild(file);
+ var send=mkBtn('OK - send to user','okbtn',function(){
+  var f=file.files && file.files[0];
+  var txtv=String(note.value||'').trim();
+  if(!f && !txtv){ toast('Attach a screenshot or type a note'); return; }
+  if(!f){ doSend(''); return; }
+  toast('Compressing image...');
+  fileToData(f,900,function(data){ if(!data){ toast('Could not read that image'); return; } doSend(data); });
+  function doSend(data){
+   send.disabled=true; send.textContent='Sending...';
+   adminApiCall('admin_send_proof',{ kind:kind, rid:String(rid), image:data, note:txtv }).then(function(j){
+    send.disabled=false; send.textContent='OK - send to user';
+    if(j && j.ok){ toast('Sent to user '+j.target); sfx('coinin'); m.remove(); }
+    else { toast((j&&j.error)||'failed'); }
+   });
+  }
+ });
+ var x=mkBtn('Cancel','alt',function(){ m.remove(); });
+ b.appendChild(send); b.appendChild(x);
+ m.appendChild(b);
+ m.addEventListener('click',function(e){ if(e.target===m) m.remove(); });
+ document.body.appendChild(m);
 }
 function adminDepAct(did,op){
  adminApiCall('admin_dep_action',{ did:did, op:op }).then(function(j){
@@ -1435,13 +1677,14 @@ function adminLoadWds(){
   if(!state.wds.length){ var p=document.createElement('p'); p.className='hint'; p.textContent='No pending withdraws.'; box.appendChild(p); return; }
   state.wds.forEach(function(w){
    var row=document.createElement('div'); row.className='urow';
-   row.innerHTML='<div class="nm">'+w.coins+' coins</div><div class="meta">ID '+esc(w.user)+(w.username?(' | @'+esc(w.username)):'')+'</div><div class="meta">'+esc(w.method)+'</div><div class="meta">'+esc(w.details)+'</div>';
-   var r=document.createElement('div'); r.className='row';
-   var ok=document.createElement('button'); ok.type='button'; ok.className='btn alt'; ok.textContent='Paid';
-   ok.addEventListener('click',function(){ adminWdAct(w.id,'approve'); });
-   var no=document.createElement('button'); no.type='button'; no.className='btn alt'; no.textContent='Reject + refund';
-   no.addEventListener('click',function(){ adminWdAct(w.id,'reject'); });
-   r.appendChild(ok); r.appendChild(no); row.appendChild(r);
+   var vtag2=w.verified?' <span class="tag reg">verified</span>':' <span class="tag">not verified</span>';
+   row.innerHTML='<div class="nm">'+w.coins+' coins'+vtag2+'</div><div class="meta">ID '+esc(w.user)+(w.username?(' | @'+esc(w.username)):'')+'</div><div class="meta">'+esc(w.method)+'</div><div class="meta">'+esc(w.details)+'</div>';
+   var r=document.createElement('div'); r.className='row ubtns';
+   r.appendChild(mkBtn(w.verified?'↩️ Unverify':'✅ Verify','alt',function(){ adminVerify('withdraw', w.id, !w.verified); }));
+   r.appendChild(mkBtn('📤 Send proof','alt',function(){ adminSendProof('withdraw', w.id); }));
+   r.appendChild(mkBtn('✔ Confirm paid','okbtn',function(){ adminWdAct(w.id,'approve'); }));
+   r.appendChild(mkBtn('✖ Reject + refund','alt',function(){ adminWdAct(w.id,'reject'); }));
+   row.appendChild(r);
    box.appendChild(row);
   });
  });
@@ -1632,6 +1875,16 @@ function boot(){
  renderGames(); renderLog(); buildSelects(); applyLang(); loadFx(); updBal();
  on('btnSync',function(){ loadBalance(true); });
  on('btnPurge',purge);
+ var mb=el('btnMute');
+ if(mb){
+  mb.textContent= MUTED ? 'Sound: off' : 'Sound: on';
+  mb.addEventListener('click',function(){
+   MUTED=!MUTED;
+   try{ localStorage.setItem('pe_mute', MUTED?'1':'0'); }catch(e){}
+   mb.textContent= MUTED ? 'Sound: off' : 'Sound: on';
+   if(!MUTED) sfx('coinin');
+  });
+ }
  on('btnLogout',doLogout);
  on('acSave',saveProfile);
  on('depGo',submitDeposit);
@@ -1703,6 +1956,7 @@ function boot(){
   }
  });
  setInterval(function(){ if(!state.loggedIn) return; loadBalance(false); }, 15000);
+ setInterval(function(){ if(!state.isAdmin) return; pollNotifs(); }, 20000);
 }
 window.addEventListener('error',function(e){ try{ toast('Script error: '+e.message); }catch(x){} });
 if(document.readyState==='loading'){ document.addEventListener('DOMContentLoaded',boot); } else { boot(); }
