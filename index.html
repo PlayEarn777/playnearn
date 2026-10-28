@@ -108,6 +108,17 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 .mod .m2{ background: #0d1230; border: 1px solid var(--pur); border-radius: 12px; padding: 10px; max-width: 94vw; max-height: 90vh; overflow: auto; text-align: center }
 .mod img{ max-width: 100%; border-radius: 8px; display: block; margin-top: 8px }
 .vtxt{ font-size: 10px; color: var(--mut); margin-top: 6px; line-height: 1.5; word-break: break-word }
+.bell{ position: relative; background: rgba(0,0,0,.22); border: 1px solid rgba(255,255,255,.25); border-radius: 10px; padding: 3px 9px; font-size: 14px }
+.bbadge{ position: absolute; top: -5px; right: -5px; background: var(--red); color: #fff; border-radius: 999px; font-size: 9px; font-weight: 800; min-width: 16px; height: 16px; line-height: 16px; text-align: center; padding: 0 3px; display: none }
+.nrow{ border-bottom: 1px solid var(--bd); padding: 7px 0; font-size: 11px }
+.nrow .t{ color: var(--mut); font-size: 9px }
+.ntag{ font-size: 9px; padding: 1px 6px; border-radius: 999px; margin-right: 5px }
+.ntag.deposit{ background: #14532d; color: #86efac }
+.ntag.withdraw{ background: #7c2d12; color: #fdba74 }
+.ntag.user{ background: #4c1d95; color: #c4b5fd }
+.ntag.left{ background: #1e3a8a; color: #93c5fd }
+.dl{ display: flex; justify-content: space-between; font-size: 11px; padding: 4px 0; border-bottom: 1px solid var(--bd) }
+.dl b{ color: var(--gold) }
 .logrow{ font-size: 10px; color: var(--mut); border-top: 1px solid var(--bd); padding: 5px 0 }
 
 </style>
@@ -117,7 +128,10 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <header>
  <div class="hrow">
   <div class="logo">PLAY &amp; EARN</div>
-  <div class="who" id="who">--</div>
+  <div style="display: flex; gap: 6px; align-items: center">
+   <div class="who" id="who">--</div>
+   <button class="bell" id="bellBtn" type="button" style="display: none">🔔<span class="bbadge" id="bellBadge">0</span></button>
+  </div>
  </div>
  <div class="balbar">
   <div>
@@ -236,6 +250,14 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <p class="vtxt" id="aboutBox">--</p>
   </div>
  </section>
+ <section class="sec" id="sNotif">
+  <div class="box">
+   <h3>Notifications</h3>
+   <p class="hint">New signups, deposits, withdraws and players who stopped coming back.</p>
+   <div class="row"><button class="btn alt" id="nClear" type="button">Mark all read</button></div>
+   <div id="notifList"><p class="hint">Nothing yet.</p></div>
+  </div>
+ </section>
  <section class="sec" id="sAdm">
   <div class="box" style="border-color: var(--pur)">
    <h3>ADMIN PANEL</h3>
@@ -264,6 +286,16 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <div id="adUsers"></div>
   </div>
   <div class="box">
+   <h3>Win / loss percentage</h3>
+   <p class="hint">Sets how often each game pays out when nothing is forced. Loss is the remainder. Use 0 for global.</p>
+   <div class="row">
+    <input id="adPctGame" type="number" min="0" max="100" placeholder="game id (0 = all)" style="flex: 1"/>
+    <input id="adPctVal" type="number" min="0" max="100" placeholder="win %" style="flex: 1"/>
+   </div>
+   <div class="row"><button class="btn alt" id="adPctSave" type="button">Save percentage</button></div>
+   <p class="hint" id="adPctNow" style="margin-top: 6px"></p>
+  </div>
+  <div class="box">
    <h3>Balance control</h3>
    <input id="adTarget" placeholder="Telegram user ID"/>
    <div class="row"><button class="btn alt" id="adInfo" type="button">Look up</button></div>
@@ -274,6 +306,31 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
     <button class="btn alt" id="adRem" type="button">Remove</button>
     <button class="btn alt" id="adSet" type="button">Set</button>
    </div>
+  </div>
+  <div class="box">
+   <h3>Selected user</h3>
+   <p class="hint">Full detail for the ID typed in Balance control.</p>
+   <div class="row"><button class="btn alt" id="adDetail" type="button">Load full detail</button></div>
+   <div id="adDetailBox"><p class="hint">No user selected.</p></div>
+   <div class="row">
+    <button class="btn alt" id="adForceWin" type="button">Force WIN</button>
+    <button class="btn alt" id="adForceLoss" type="button">Force LOSS</button>
+    <button class="btn alt" id="adForceNorm" type="button">Normal</button>
+   </div>
+   <p class="hint" id="adForceNow" style="margin-top: 6px"></p>
+   <label class="lb">Edit profile</label>
+   <div class="row">
+    <input id="adPfFirst" placeholder="First name" style="flex: 1"/>
+    <input id="adPfLast" placeholder="Last name" style="flex: 1"/>
+   </div>
+   <input id="adPfUser" placeholder="Username"/>
+   <div class="row"><button class="btn alt" id="adPfSave" type="button">Save profile</button></div>
+  </div>
+  <div class="box">
+   <h3>Inactive players</h3>
+   <p class="hint">Users who have not opened the app recently.</p>
+   <div class="row"><button class="btn alt" id="adLeftBtn" type="button">Load inactive</button></div>
+   <div id="adLeft"></div>
   </div>
   <div class="box">
    <h3>Deposits</h3>
@@ -331,11 +388,11 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4cVd3JScMDED5ThJzuV26ymYNg1YTmrXNEH-iPQBIP7RcS6Salays94bcnzQcMfVhkkXZjE62Ou1gdOkfvL_U-vuoO0YH4onUNBbPRq9Gz6kfcvCUAMwMq6M46qXZM-tMnIM3TQ8M2SiCe63SMJqCBae6yFHrUXJHzTugmO0XRDWUPNbmsLkrXYLhHLA18avOvG9';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4c1cS0yXW9XZxPyvwq1DDTk7-tNX_Y8bU4M0R8l-PPlfGjQB0hU-kHDK3g7khEkE-5FOo0orhVxJNspf17-28taRMELWkl7XzqnCtDYLb4Bttk8ITHzkduOBw9XtVR21LYQIq2eWguhR3x5VlBGmfAKNe0n1x5IGTc8aAfd-hSU6AlKAjbAPGWIDHqyKd542A1hH';
 var VER_EXPECTED=7;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
-var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[] };
+var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'' };
 var GAMES=[
  {id:1,name:'Coin Flip',em:'🪙',cost:10,mult:1.9,pick:'head',type:'coin',opts:[['head','HEAD'],['tail','TAIL']]},
  {id:2,name:'Dice Duel',em:'🎲',cost:10,mult:2,pick:'4',type:'dice',opts:[['1','1'],['2','2'],['3','3'],['4','4'],['5','5'],['6','6']]},
@@ -423,6 +480,8 @@ function setAdminUI(){
  var on=!!state.isAdmin;
  var t=el('tAdm'); if(t) t.style.display= on ? 'block' : 'none';
  var m=el('miAdm'); if(m) m.style.display= on ? 'flex' : 'none';
+ var bb=el('bellBtn'); if(bb) bb.style.display= on ? 'block' : 'none';
+ updateBell();
  var w=el('adminStateLbl');
  if(w){
   if(state.isAdmin){ w.textContent='Server confirms you as admin. Tap the ADMIN tab above.'; w.style.color='#00e676'; }
@@ -942,8 +1001,14 @@ function adminRefresh(){
   var w=el('adWho'); if(w) w.textContent= state.isFull ? 'You are the MAIN admin (full control).' : 'You are a sub admin (limited rights).';
   if(st) st.textContent='Users: '+j.users+' | Pending deposits: '+j.pending_deposits+' | Pending withdraws: '+j.pending_withdraws+' | Global: '+j.global_mode;
   txt('adGlobal','Global now: '+j.global_mode);
+  state.userForce=j.user_force||{};
+  state.pcts=j.pcts||{};
+  state.unread=parseInt(j.unread||0)||0;
+  updateBell();
+  txt('adGlobal','Global now: '+j.global_mode+' | inactive 7d+: '+((j.left_users===undefined)?'?':j.left_users));
   renderAdminGames(j.controls||{});
-  adminLoadUsers(); adminLoadDeps(); adminLoadWds(); adminLoadDepMethods(); adminLoadWdMethods(); adminLoadTeam();
+  renderPctNow();
+  adminLoadUsers(); adminLoadDeps(); adminLoadWds(); adminLoadDepMethods(); adminLoadWdMethods(); adminLoadTeam(); adminLoadLeft(); loadNotifs(false);
  });
 }
 function renderAdminGames(ctrl){
@@ -951,8 +1016,10 @@ function renderAdminGames(ctrl){
  box.innerHTML='';
  GAMES.forEach(function(gm){
   var mode=ctrl[String(gm.id)]||'normal';
+  var pc=state.pcts[String(gm.id)];
+  if(pc===undefined) pc=45;
   var row=document.createElement('div'); row.className='urow';
-  row.innerHTML='<div class="nm">'+gm.em+' '+esc(gm.name)+'</div><div class="meta">now: '+esc(mode)+'</div>';
+  row.innerHTML='<div class="nm">'+gm.em+' '+esc(gm.name)+'</div><div class="meta">now: '+esc(mode)+' | win '+pc+'% / loss '+(100-pc)+'%</div>';
   var r=document.createElement('div'); r.className='row';
   [['force_win','WIN'],['force_loss','LOSS'],['normal','NORM']].forEach(function(p){
    var b=document.createElement('button'); b.type='button'; b.className='btn alt'; b.textContent=p[1];
@@ -972,6 +1039,124 @@ function adminSetGlobal(mode){
  adminApiCall('admin_set_global',{ mode:mode }).then(function(j){
   toast(j&&j.ok ? ('global set to '+mode) : ((j&&j.error)||'failed'));
   if(j&&j.ok) adminRefresh();
+ });
+}
+function updateBell(){
+ var b=el('bellBadge'); if(!b) return;
+ var n=state.unread||0;
+ if(n>0){ b.textContent= n>99?'99+':String(n); b.style.display='block'; }
+ else { b.style.display='none'; }
+}
+function fmtAgo(t){
+ var d=(Date.now()/1000)-(parseInt(t||0)||0);
+ if(d<60) return 'just now';
+ if(d<3600) return Math.floor(d/60)+' min ago';
+ if(d<86400) return Math.floor(d/3600)+' h ago';
+ return Math.floor(d/86400)+' d ago';
+}
+function renderPctNow(){
+ var box=el('adPctNow'); if(!box) return;
+ var parts=[];
+ GAMES.forEach(function(gm){
+  var p=state.pcts[String(gm.id)];
+  if(p===undefined) p=45;
+  parts.push(gm.em+' '+gm.name+' '+p+'%');
+ });
+ box.textContent='Win % now: '+parts.join(' | ');
+}
+function adminPctSave(){
+ var g=el('adPctGame'), v=el('adPctVal');
+ var gid=parseInt((g&&g.value!=='')?g.value:'0')||0;
+ var pct=parseInt((v&&v.value!=='')?v.value:'-1');
+ if(isNaN(pct)||pct<0||pct>100) return toast('Enter a win percentage from 0 to 100');
+ adminApiCall('admin_set_pct',{ gid:gid, pct:pct }).then(function(j){
+  if(j&&j.ok){ toast('Win '+j.pct+'% / loss '+(100-j.pct)+'%'); adminRefresh(); }
+  else toast((j&&j.error)||'failed');
+ });
+}
+function adminDetail(){
+ var t=el('adTarget'); var id=t?t.value:'';
+ if(!id) return toast('Enter a user ID first');
+ state.selUser=id;
+ var box=el('adDetailBox'); if(box) box.innerHTML='<p class="hint">Loading...</p>';
+ adminApiCall('admin_user_detail',{ target:id }).then(function(j){
+  if(!j||!j.ok){ if(box) box.innerHTML='<p class="hint miss">'+esc((j&&j.error)||'failed')+'</p>'; return; }
+  if(box){
+   var h='';
+   h=h+'<div class="dl"><span>Name</span><b>'+esc(j.name)+'</b></div>';
+   h=h+'<div class="dl"><span>Username</span><b>'+esc(j.username||'-')+'</b></div>';
+   h=h+'<div class="dl"><span>Telegram</span><b>'+esc(j.tg_username?('@'+j.tg_username):'-')+'</b></div>';
+   h=h+'<div class="dl"><span>ID</span><b>'+esc(j.id)+'</b></div>';
+   h=h+'<div class="dl"><span>Balance</span><b>'+j.coins+' coins</b></div>';
+   h=h+'<div class="dl"><span>Games played</span><b>'+j.play+'</b></div>';
+   h=h+'<div class="dl"><span>Wins / losses</span><b>'+j.wins+' / '+j.losses+'</b></div>';
+   h=h+'<div class="dl"><span>Total wagered</span><b>'+j.wager+'c</b></div>';
+   h=h+'<div class="dl"><span>Total paid out</span><b>'+j.won+'c</b></div>';
+   h=h+'<div class="dl"><span>House profit</span><b>'+(-j.net)+'c</b></div>';
+   h=h+'<div class="dl"><span>Deposits</span><b>'+j.dep_count+' ('+j.dep_sum+'c)</b></div>';
+   h=h+'<div class="dl"><span>Withdraws</span><b>'+j.wd_count+' ('+j.wd_sum+'c)</b></div>';
+   h=h+'<div class="dl"><span>Joined</span><b>'+esc(j.created)+'</b></div>';
+   h=h+'<div class="dl"><span>Last seen</span><b>'+esc(j.seen)+'</b></div>';
+   h=h+'<div class="dl"><span>Status</span><b>'+(j.blocked?'BLOCKED':'active')+(j.registered?' | registered':' | telegram only')+'</b></div>';
+   box.innerHTML=h;
+  }
+  var nm=String(j.name||'').trim().split(' ');
+  var pf=el('adPfFirst'), pl=el('adPfLast'), pu=el('adPfUser');
+  if(pf) pf.value=nm[0]||'';
+  if(pl) pl.value=nm.slice(1).join(' ')||'';
+  if(pu) pu.value=j.username||'';
+  var fn=el('adForceNow');
+  if(fn){ fn.textContent='This user result control: '+(state.userForce[id]||'normal'); }
+ });
+}
+function adminForceUser(mode){
+ var t=el('adTarget'); var id=t?t.value:'';
+ if(!id) return toast('Enter a user ID first');
+ adminApiCall('admin_user_force',{ target:id, mode:mode }).then(function(j){
+  if(j&&j.ok){ state.userForce[id]=mode; toast('User set to '+mode); adminDetail(); }
+  else toast((j&&j.error)||'failed');
+ });
+}
+function adminSaveProfile(){
+ var t=el('adTarget'); var id=t?t.value:'';
+ if(!id) return toast('Enter a user ID first');
+ adminApiCall('admin_set_profile',{ target:id, first:(el('adPfFirst')||{}).value||'', last:(el('adPfLast')||{}).value||'', username:(el('adPfUser')||{}).value||'' }).then(function(j){
+  if(j&&j.ok){ toast('Profile saved'); adminDetail(); adminLoadUsers(); }
+  else toast((j&&j.error)||'failed');
+ });
+}
+function adminLoadLeft(){
+ var box=el('adLeft'); if(!box) return;
+ box.innerHTML='<p class="hint">Loading...</p>';
+ adminApiCall('admin_left_users',{ days:7 }).then(function(j){
+  if(!j||!j.ok){ box.innerHTML='<p class="hint miss">'+esc((j&&j.error)||'failed')+'</p>'; return; }
+  var list=j.left||[];
+  box.innerHTML='';
+  if(!list.length){ box.innerHTML='<p class="hint">Everyone has been active in the last '+j.days+' days.</p>'; return; }
+  list.forEach(function(u){
+   var row=document.createElement('div'); row.className='urow';
+   row.innerHTML='<div class="nm">'+esc(u.name)+'</div><div class="meta">ID '+esc(u.id)+' | '+u.coins+' coins | last seen '+esc(u.seen)+' ('+u.days+'d)</div>';
+   var r=document.createElement('div'); r.className='row';
+   var b=document.createElement('button'); b.type='button'; b.className='btn alt'; b.textContent='Open';
+   b.addEventListener('click',function(){ var tt=el('adTarget'); if(tt) tt.value=u.id; adminDetail(); });
+   r.appendChild(b); row.appendChild(r); box.appendChild(row);
+  });
+ });
+}
+function loadNotifs(mark){
+ adminApiCall('admin_notifs',{ mark: !!mark }).then(function(j){
+  if(j&&j.ok){ state.notifs=j.notifs||[]; renderNotifs(); }
+ });
+}
+function renderNotifs(){
+ var box=el('notifList'); if(!box) return;
+ var list=state.notifs||[];
+ box.innerHTML='';
+ if(!list.length){ box.innerHTML='<p class="hint">Nothing yet.</p>'; return; }
+ list.forEach(function(n){
+  var row=document.createElement('div'); row.className='nrow';
+  row.innerHTML='<span class="ntag '+esc(n.kind)+'">'+esc(n.kind)+'</span>'+esc(n.text)+'<div class="t">'+esc(fmtAgo(n.t))+(n.read?'':' | new')+'</div>';
+  box.appendChild(row);
  });
 }
 function adminLoadUsers(){
@@ -1286,6 +1471,15 @@ function boot(){
  on('ovClose',hideOv);
  on('btnAdminTry',adminTry);
  on('btnDiag',function(){ runDiag(); });
+ on('bellBtn',function(){ showTab('sNotif'); loadNotifs(true); });
+ on('nClear',function(){ adminApiCall('admin_notifs',{ mark:true }).then(function(j){ if(j&&j.ok){ state.notifs=j.notifs||[]; state.unread=0; updateBell(); renderNotifs(); toast('All marked read'); } }); });
+ on('adPctSave',adminPctSave);
+ on('adDetail',adminDetail);
+ on('adForceWin',function(){ adminForceUser('force_win'); });
+ on('adForceLoss',function(){ adminForceUser('force_loss'); });
+ on('adForceNorm',function(){ adminForceUser('normal'); });
+ on('adPfSave',adminSaveProfile);
+ on('adLeftBtn',adminLoadLeft);
  on('adRefresh',adminRefresh);
  on('adGN',function(){ adminSetGlobal('normal'); });
  on('adGW',function(){ adminSetGlobal('force_win'); });
