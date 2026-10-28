@@ -273,11 +273,12 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
   <div class="box">
    <h3>Global result</h3>
    <p class="hint">Overrides every game for every player.</p>
-   <div class="row">
-    <button class="btn alt bop on" data-gm="normal" type="button">Normal</button>
-    <button class="btn alt bop" data-gm="force_win" type="button">All win</button>
-    <button class="btn alt bop" data-gm="force_loss" type="button">All lose</button>
-   </div>
+   <label class="lb">Global setting</label>
+   <select id="adGmSel">
+    <option value="normal">Normal</option>
+    <option value="force_win">Everyone WINS</option>
+    <option value="force_loss">Everyone LOSES</option>
+   </select>
    <button class="btn okbtn" id="adGlobalOk" type="button">OK - apply global setting</button>
    <p class="hint" id="adGlobal" style="margin-top: 6px"></p>
   </div>
@@ -307,26 +308,29 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <div class="row"><button class="btn alt" id="adInfo" type="button">Look up</button></div>
    <p class="hint" id="adTargetInfo" style="margin-top: 6px"></p>
    <input id="adAmount" type="number" min="1" placeholder="Amount in coins"/>
-   <div class="row">
-    <button class="btn alt bop" data-op="add" type="button">Add</button>
-    <button class="btn alt bop" data-op="remove" type="button">Remove</button>
-    <button class="btn alt bop" data-op="set" type="button">Set to</button>
-   </div>
+   <label class="lb">Operation</label>
+   <select id="adOpSel">
+    <option value="add">Add coins to this user</option>
+    <option value="remove">Remove coins from this user</option>
+    <option value="set">Set balance to this amount</option>
+   </select>
    <button class="btn okbtn" id="adBalOk" type="button">OK - confirm balance change</button>
-   <p class="hint" id="adBalNow" style="margin-top: 6px">Pick Add, Remove or Set to, then press OK.</p>
+   <p class="hint" id="adBalNow" style="margin-top: 6px">Enter ID and amount, choose the operation, then press OK.</p>
   </div>
   <div class="box">
    <h3>Selected user</h3>
    <p class="hint">Full detail for the ID typed in Balance control.</p>
    <div class="row"><button class="btn alt" id="adDetail" type="button">Load full detail</button></div>
    <div id="adDetailBox"><p class="hint">No user selected.</p></div>
-   <div class="row">
-    <button class="btn alt bop" data-uf="force_win" type="button">Force WIN</button>
-    <button class="btn alt bop" data-uf="force_loss" type="button">Force LOSS</button>
-    <button class="btn alt bop" data-uf="normal" type="button">Normal</button>
-   </div>
+   <label class="lb">This user's result control</label>
+   <select id="adUfSel">
+    <option value="normal">Normal - follow global and percentage</option>
+    <option value="force_win">Always WIN (overrides everything)</option>
+    <option value="force_loss">Always LOSE (overrides everything)</option>
+   </select>
    <button class="btn okbtn" id="adUfOk" type="button">OK - apply to this user</button>
-   <p class="hint" id="adForceNow" style="margin-top: 6px">Pick a mode, then press OK.</p>
+   <div class="row"><button class="btn alt" id="adUfClearAll" type="button">Clear ALL user overrides</button></div>
+   <p class="hint" id="adForceNow" style="margin-top: 6px"></p>
    <label class="lb">Edit profile</label>
    <div class="row">
     <input id="adPfFirst" placeholder="First name" style="flex: 1"/>
@@ -397,7 +401,7 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4dFzYlMwN9UFj0c5siV89mpd75WfafZmqHkMKN_HR6mDF0V1Owz0LIdOvTLAy3d2u4KgfjI1Zpjns8FVgwk1LAsLVUPJ_4oQktmGiDrr4iiAH1tnbkCMW8ArgK5mdkCsBvnaGRJJg391t-SFRD1drTtigDjbM_BZkufzgegWBFWaPcM2nG8cS27ggh-cxG2vZL31';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4eVdJbwdztSJ8PM-_ZXjWGQVbtDo1kM2-4wdN-qd_ru_86e6_6SDQFLTMXHHCT-Lhhf-6jlTmlbXgKlCVP-xwnhMqwGZCW0gpGRcwxDwzyV6B_SHk1nsRHZf4FbxE18DofZzvryU-aJf4PsF-oA2vQ7lKblx8fzBzsH-OcvWlcoEw1PuCe5eh8y-VANXs_4g2JBt';
 var VER_EXPECTED=7;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
@@ -1023,7 +1027,8 @@ function adminRefresh(){
   state.unread=parseInt(j.unread||0)||0;
   updateBell();
   txt('adGlobal','Applied now: '+j.global_mode+' | inactive 7d+: '+((j.left_users===undefined)?'?':j.left_users));
-  markSel('[data-gm]', document.querySelector('[data-gm="'+state.globalMode+'"]'));
+  var gs=el('adGmSel'); if(gs) gs.value=state.globalMode;
+  var us=el('adUfSel'); if(us && !state.selUser) us.value='normal';
   renderAdminGames(j.controls||{});
   renderPctNow();
   adminLoadUsers(); adminLoadDeps(); adminLoadWds(); adminLoadDepMethods(); adminLoadWdMethods(); adminLoadTeam(); adminLoadLeft(); loadNotifs(false);
@@ -1157,7 +1162,12 @@ function adminDetail(){
   if(pl) pl.value=nm.slice(1).join(' ')||'';
   if(pu) pu.value=j.username||'';
   var fn=el('adForceNow');
-  if(fn){ fn.textContent='This user result control: '+(state.userForce[id]||'normal'); }
+  var cur=state.userForce[id]||'normal';
+  var us=el('adUfSel'); if(us) us.value=cur;
+  if(fn){
+   fn.textContent='This user is currently: '+cur+' | global: '+state.globalMode+' | win% for this player: '+(state.pcts['0']===undefined?'45':state.pcts['0'])+'%. The user setting wins over everything else.';
+   fn.style.color= (cur==='normal') ? '#98a2cd' : '#ffd966';
+  }
  });
 }
 function adminForceUser(mode){
@@ -1530,29 +1540,24 @@ function boot(){
  on('adPfSave',adminSaveProfile);
  on('adLeftBtn',adminLoadLeft);
  on('adRefresh',adminRefresh);
- var gbs=document.querySelectorAll('[data-gm]');
- for(var gi=0;gi<gbs.length;gi++){
-  gbs[gi].addEventListener('click',function(){ state.pendMode=this.getAttribute('data-gm'); markSel('[data-gm]',this); txt('adBalNow','Global picked: '+this.textContent+' - press OK to apply.'); });
- }
  on('adGlobalOk',function(){
-  if(!state.pendMode) return toast('Pick Normal, All win or All lose first');
-  adminSetGlobal(state.pendMode);
+  var s=el('adGmSel');
+  adminSetGlobal(s?s.value:'normal');
  });
- var obs=document.querySelectorAll('[data-op]');
- for(var oi=0;oi<obs.length;oi++){
-  obs[oi].addEventListener('click',function(){ state.pendOp=this.getAttribute('data-op'); markSel('[data-op]',this); txt('adBalNow','Operation picked: '+this.textContent+' - enter amount, then press OK.'); });
- }
  on('adBalOk',function(){
-  if(!state.pendOp) return toast('Pick Add, Remove or Set to first');
-  adminBalOp(state.pendOp);
+  var s=el('adOpSel');
+  adminBalOp(s?s.value:'add');
  });
- var ufs=document.querySelectorAll('[data-uf]');
- for(var ui=0;ui<ufs.length;ui++){
-  ufs[ui].addEventListener('click',function(){ state.pendUF=this.getAttribute('data-uf'); markSel('[data-uf]',this); txt('adForceNow','Picked: '+this.textContent+' - press OK to apply to this user.'); });
- }
  on('adUfOk',function(){
-  if(!state.pendUF) return toast('Pick Force WIN, Force LOSS or Normal first');
-  adminForceUser(state.pendUF);
+  var s=el('adUfSel');
+  adminForceUser(s?s.value:'normal');
+ });
+ on('adUfClearAll',function(){
+  if(!confirm('Clear result overrides for ALL users? Everyone goes back to normal.')) return;
+  adminApiCall('admin_clear_user_force',{}).then(function(j){
+   toast(j&&j.ok ? ('Cleared '+(j.cleared||0)+' override(s)') : ((j&&j.error)||'failed'));
+   if(j&&j.ok) adminRefresh();
+  });
  });
  on('adUsersBtn',adminLoadUsers);
  on('adInfo',adminLookup);
