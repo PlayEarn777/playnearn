@@ -421,7 +421,7 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4gS_KZtI1pmBbd2zB1pQv0Ve87f5Sn3YIMxGbavH6qg4hpnXFiUDIAVzO29pB11EcYREvlZyB8oID01pRs1Fn-3FnUM_KGjtUtXFXPksghAjcsa3hGwRdLW7ohkj0h7i0HwJKgbm8_zeNBP-d0pjnqqPpZLTlXqYGty1LVOx8PiiNpKp_mJjFTBUGRGOoA5ND3T2';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4g1MhMjcYl_OFWEqfXFG8bvNhlVG3bqUbCBRT20_oCNtqP5L0avg5rW1NyrDOoNDzA7XbAhllkpeiSnOLA85FbMyA621nefuc__usMOI763uql_tJgb5DbMghRSGkl2Ew1PJ2Cktcbip06-_rJAjO8zFvUmGtkZZmJjS0aTNUo02yvIi86cHHEnsXbk9y5dwsVCH';
 var VER_EXPECTED=7;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
@@ -949,8 +949,13 @@ function isStars(m){
 }
 function payPairs(details){
  var out=[];
- String(details||'').split(/[;
-|]/).forEach(function(seg){
+ var BRK=String.fromCharCode(10);
+ var work=String(details||'').split(BRK).join(';');
+ var chunks=[];
+ work.split(';').forEach(function(a){
+  a.split('|').forEach(function(b){ chunks.push(b); });
+ });
+ chunks.forEach(function(seg){
   var s=String(seg||'').trim();
   if(!s) return;
   var i=s.indexOf(':');
