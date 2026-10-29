@@ -146,6 +146,8 @@ input:focus, select:focus, textarea:focus{ outline: none; border-color: var(--go
 .glink b{ color: var(--gold); font-size: 11px; cursor: pointer; text-decoration: underline }
 #boxAdmin, #boxDiag{ display: none !important }
 body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
+.hout{ background: rgba(255,82,82,.14); border: 1px solid #7f1d1d; color: #ff9d9d; font-size: 10px; font-weight: 800; padding: 5px 9px; border-radius: 999px; margin-left: 4px; white-space: nowrap; transition: transform .15s ease, background .15s ease }
+.hout:active{ transform: scale(.94); background: rgba(255,82,82,.3) }
 .agCard{ position: relative; overflow: hidden; border-radius: 14px; padding: 12px; background: linear-gradient(135deg,#08243a,#0b3d5c 45%,#0a5c56); border: 1px solid rgba(0,229,255,.4) }
 .agGlow{ position: absolute; width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,255,.35), rgba(0,229,255,0) 70%); top: -60px; right: -50px; animation: pulseGlow 3.8s ease-in-out infinite }
 .agTop{ display: flex; align-items: center; gap: 9px; position: relative }
@@ -276,6 +278,7 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
   <div class="hright">
    <div class="who" id="who">--</div>
    <button class="bell" id="bellBtn" type="button" style="display: none">🔔<span class="bbadge" id="bellBadge">0</span></button>
+   <button class="hout" id="btnLogoutHdr" type="button">🚪 Log out</button>
   </div>
  </div>
  <div class="balbar">
@@ -814,9 +817,9 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq45OzDIyeYUzQ58kmGjc8On1Pyl4pjC1nEGVRHlzhVuN_lODYAs52EnH6JX7gBvXSJe2sJG7ZphwSVkxDUHtaAASXX5Sy7ONEUWLbac1xxJ12SppnnuPjO_5f7aYvkrckrAkPB-f9eH7iIrQJreJnVOWdNjbp9zAPMEAo9NF4TW8rzYJ_sYIoxnwWpa4nSCwLm9Cn';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq45eoePx-eOxND51uGryDbh4gva5IduV4m8E2WiA9QDAUqrkm3UFKRbWrGF58g-x--Guy2l7wp156pcaqnEpY58NEUZwjFFu7VOOy2-3qYgj7oSr3O92lln4usgDvBenQQ7zLb0HHpMB108g_Yd4xnCWkuvlMs7PVMWETNPvdCyl49ExpjVPIu5UwH4VhdmT51RQY';
 var VER_EXPECTED=7;
-var BUILD=20;
+var BUILD=21;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
 var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'', ctrlNow:{}, globalMode:'normal', pendMode:'', pendOp:'', pendUF:'', selDep:null, starRate:5, seenNotif:'', teamEq:0, teamSub:0 };
@@ -939,6 +942,7 @@ function applyLang(){
  if(!loLbl || loLbl==='logout'){ loLbl='Log out'; }
  txt('btnLogoutTop', '🚪 ' + loLbl);
  txt('btnLogoutSet', '🚪 ' + loLbl);
+ txt('btnLogoutHdr', '🚪 ' + loLbl);
  txt('btnSwitchAcc', '🔁 Change account');
  txt('btnSwitchSet', '🔁 Change account');
  txt('acSave', T('save'));
@@ -3175,6 +3179,7 @@ function boot(){
   });
  }
  on('btnLogoutTop',doLogout);
+ on('btnLogoutHdr',function(){ if(confirm('Log out of this account?')){ doLogout(); } });
  on('btnLogoutSet',function(){ if(confirm('Log out of this account?')){ doLogout(); } });
  on('btnSwitchSet',function(){ if(confirm('Log out and log in with a different account?')){ doLogout(); } });
  on('btnSwitchAcc',function(){ if(confirm('Log out and log in with a different account?')){ doLogout(); } });
