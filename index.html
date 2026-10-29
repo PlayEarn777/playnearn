@@ -146,6 +146,18 @@ input:focus, select:focus, textarea:focus{ outline: none; border-color: var(--go
 .glink b{ color: var(--gold); font-size: 11px; cursor: pointer; text-decoration: underline }
 #boxAdmin, #boxDiag{ display: none !important }
 body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
+.agCard{ position: relative; overflow: hidden; border-radius: 14px; padding: 12px; background: linear-gradient(135deg,#08243a,#0b3d5c 45%,#0a5c56); border: 1px solid rgba(0,229,255,.4) }
+.agGlow{ position: absolute; width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,255,.35), rgba(0,229,255,0) 70%); top: -60px; right: -50px; animation: pulseGlow 3.8s ease-in-out infinite }
+.agTop{ display: flex; align-items: center; gap: 9px; position: relative }
+.agAvi{ width: 38px; height: 38px; flex: 0 0 38px; border-radius: 50%; background: linear-gradient(135deg,#00e5ff,#651fff); display: flex; align-items: center; justify-content: center; font-size: 19px; box-shadow: 0 0 14px rgba(0,229,255,.5) }
+.agNm{ font-size: 13px; font-weight: 800; color: #fff }
+.agRole{ font-size: 9px; color: #7ee7ff; text-transform: uppercase; letter-spacing: .7px; font-weight: 800; margin-top: 2px }
+.agTick{ font-size: 12px; color: #00e5ff; margin-left: auto; animation: badgePop 2.8s ease-in-out infinite }
+.agStep{ display: flex; gap: 8px; align-items: flex-start; margin-top: 9px; position: relative }
+.agNum{ width: 20px; height: 20px; flex: 0 0 20px; border-radius: 50%; background: rgba(0,229,255,.2); border: 1px solid rgba(0,229,255,.55); color: #7ee7ff; font-size: 10px; font-weight: 800; display: flex; align-items: center; justify-content: center }
+.agStep p{ font-size: 10.5px; color: #cfe9f7; line-height: 1.55; margin: 0 }
+.agWarn{ font-size: 9.5px; color: #ffd166; background: rgba(255,209,102,.1); border: 1px solid rgba(255,209,102,.3); border-radius: 9px; padding: 7px; margin-top: 9px; position: relative; line-height: 1.5 }
+.agNone{ font-size: 11px; color: #ffd166; line-height: 1.6 }
 .mod{ position: fixed; inset: 0; background: rgba(0,0,0,.9); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 12px }
 .mod .m2{ background: #0d1230; border: 1px solid var(--pur); border-radius: 12px; padding: 10px; max-width: 94vw; max-height: 90vh; overflow: auto; text-align: center }
 .mod img{ max-width: 100%; border-radius: 8px; display: block; margin-top: 8px }
@@ -361,6 +373,7 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
    <p class="hint">Choose a method, pay, then attach your payment screenshot. The admin reviews it and credits your coins.</p>
    <div id="depMethods" style="margin-top: 9px"></div>
    <div class="box" id="depPayBox" style="display: none; margin-top: 8px; border-color: var(--gold)"></div>
+   <div id="depManual">
    <label class="lb">Amount in USD</label>
    <input id="depAmt" type="number" min="1" placeholder="e.g. 50"/>
    <label class="lb">Payment ID / transaction reference</label>
@@ -368,6 +381,7 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
    <label class="lb">Payment screenshot</label>
    <input id="depFile" type="file" accept="image/*"/>
    <button class="btn" id="depGo" type="button">Submit deposit</button>
+   </div>
    <p class="hint" id="depMsg" style="margin-top: 7px"></p>
   </div>
  </section>
@@ -729,6 +743,23 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
    <button class="btn" id="adDepSave" type="button">Save deposit methods</button>
   </div>
   <div class="box">
+   <h3>Bank deposit agent</h3>
+   <p class="hint">When a user picks the bank method, they are shown this verified agent and a button that opens a chat with them. The agent confirms the payment and you approve the deposit as usual.</p>
+   <label class="lb">Agent Telegram username (without @)</label>
+   <input id="adAgUser" placeholder="e.g. Playnearnagent"/>
+   <label class="lb">Name shown to users</label>
+   <input id="adAgName" placeholder="e.g. Verified Bank Agent"/>
+   <label class="lb">Agent Telegram ID (optional, admin alerts go here)</label>
+   <input id="adAgId" placeholder="e.g. 8367826696" inputmode="numeric"/>
+   <label class="lb">Warning note shown under the steps (optional)</label>
+   <textarea id="adAgNote" rows="2" placeholder="Only pay the account this agent gives you inside Telegram."></textarea>
+   <div class="row">
+    <button class="btn alt" id="adAgToggle" type="button">Agent: on</button>
+    <button class="btn okbtn" id="adAgSave" type="button">OK - save agent</button>
+   </div>
+   <p class="hint" id="adAgMsg" style="margin-top:6px"></p>
+  </div>
+  <div class="box">
    <h3>Withdraw methods</h3>
    <p class="hint">One per line: Name | field 1 | field 2 ...</p>
    <textarea id="adWdMethods" rows="4"></textarea>
@@ -783,7 +814,7 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq41raqZT2QmZYTDzS7eJcUuVhtTGpt-xR45dZzEOZfHy-mNDr6xdY4bh5QB5Xog8zq1L0TxF4QptGu53IdBq3NUKrhRR9dmRJCiOlyxXitCwxAB1mgKs8ZW7kLgv8OXlBlGWBEEsV5nn4JB81amP72DZtLwlB173WvFyHj2wOESdC-z7jqdTaz6caSikLv7bZBG5i';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq45JguVsitW-12ye7zw9b0MQbBSOpSVqTw_SznlM_tr10dOLns-v-wuXQVothkQwOza0NrZLrkqeAhrc5m9qWGnmgjqBgFsJOQ-d7QlEwIVvfToMO_8O9OEgpLpO6r-e-WEg--ZeblZsTNegqFtlfoWEfS9hzTMM_QxOlBvXkC8OWd6ZZvLLvv3E0BmBk8Kpo40sx';
 var VER_EXPECTED=7;
 var BUILD=19;
 var TG=null;
@@ -1460,6 +1491,53 @@ function isStars(m){
  var s=String((m&&m.id)||'')+' '+String((m&&m.name)||'');
  return s.toLowerCase().indexOf('star')>=0;
 }
+function isBankMethod(m){
+ var s=(String((m&&m.id)||'')+' '+String((m&&m.name)||'')).toLowerCase();
+ if(s.indexOf('bank')>=0) return true;
+ if(s.indexOf('deposit agent')>=0) return true;
+ return false;
+}
+function agStep(num,txt){
+ return '<div class="agStep"><div class="agNum">'+num+'</div><p>'+txt+'</p></div>';
+}
+function loadBankAgent(){
+ var box=el('agBox'); if(!box) return;
+ call('bank_agent_info').then(function(j){
+  if(!j || !j.ok){ box.innerHTML='<p class="hint miss">Could not reach the agent list. Try again.</p>'; return; }
+  if(j.enabled===false || !j.username){
+   box.innerHTML='<div class="agNone">A verified agent is being assigned right now. Please check back shortly, or contact support from the Account tab.</div>';
+   return;
+  }
+  var un=String(j.username).replace(/^@/,'');
+  var nm=j.name||'Verified Agent';
+  var h='<div class="agCard"><div class="agGlow"></div><div class="agTop">';
+  h=h+'<div class="agAvi">🏦</div><div><div class="agNm">'+esc(nm)+'</div><div class="agRole">Verified bank agent</div></div>';
+  h=h+'<div class="agTick">✔</div></div>';
+  h=h+agStep('1','Tap <b>Chat with agent</b> below. Tell them the amount you want to deposit and your country.');
+  h=h+agStep('2','The agent gives you the correct bank account for your country. Pay the exact amount they confirm.');
+  h=h+agStep('3','Send the payment screenshot to the agent in that chat.');
+  h=h+agStep('4','The agent confirms the payment and your coins are added to your balance automatically.');
+  if(j.note){ h=h+'<div class="agWarn">'+esc(j.note)+'</div>'; }
+  else { h=h+'<div class="agWarn">Only pay the account given to you by this agent inside Telegram. Never pay anyone who messages you first.</div>'; }
+  h=h+'</div>';
+  box.innerHTML=h;
+  var b=mkBtn('💬 Chat with agent','',function(){
+   sfx('click');
+   var url='https://t.me/'+encodeURIComponent(un);
+   try{
+    if(window.Telegram && Telegram.WebApp && Telegram.WebApp.openTelegramLink){ Telegram.WebApp.openTelegramLink(url); return; }
+   }catch(e){}
+   try{ window.open(url,'_blank'); }catch(e2){ copyText('@'+un); }
+  });
+  box.appendChild(b);
+  var hd=document.createElement('p');
+  hd.className='hint';
+  hd.style.marginTop='7px';
+  hd.style.textAlign='center';
+  hd.textContent='Agent handle: @'+un;
+  box.appendChild(hd);
+ });
+}
 function payPairs(details){
  var out=[];
  var BRK=String.fromCharCode(10);
@@ -1482,11 +1560,20 @@ function renderPayBox(m){
  box.innerHTML='';
  if(!m){ box.style.display='none'; return; }
  box.style.display='block';
+ var man=el('depManual');
  if(isStars(m)){
+  if(man) man.style.display='none';
   box.innerHTML='<h3>⭐ Telegram Stars</h3><p class="hint">No address needed. Choose an amount and Telegram pays it from your own Stars wallet.</p><div id="starsBox"><p class="hint">Loading Stars options...</p></div>';
   loadStars();
   return;
  }
+ if(isBankMethod(m)){
+  if(man) man.style.display='none';
+  box.innerHTML='<h3>🏦 Bank deposit</h3><p class="hint">Bank transfers are handled by our verified agent, so any country and any bank works.</p><div id="agBox"><p class="hint">Loading agent...</p></div>';
+  loadBankAgent();
+  return;
+ }
+ if(man) man.style.display='block';
  var h='<h3>Send the payment to</h3>';
  var ps=payPairs(m.details);
  if(!ps.length){ h=h+'<div class="paydet">The admin has not written payment details for this method yet.</div>'; }
@@ -1730,7 +1817,7 @@ function adminRefresh(){
   var us=el('adUfSel'); if(us && !state.selUser) us.value='normal';
   renderAdminGames(j.controls||{});
   renderPctNow();
-  adminLoadUsers(); adminLoadDeps(); adminLoadWds(); adminLoadDepMethods(); adminLoadWdMethods(); adminLoadTeam(); adminLoadLeft(); loadNotifs(false); loadThreads(); adminHomeLoad();
+  adminLoadUsers(); adminLoadDeps(); adminLoadWds(); adminLoadDepMethods(); adminLoadWdMethods(); adminLoadTeam(); adminLoadLeft(); loadNotifs(false); loadThreads(); adminHomeLoad(); adminAgLoad();
  });
 }
 function gmName(gid){
@@ -2797,6 +2884,38 @@ function adminLoadDepMethods(){
   t.value=lines.join(nl());
  });
 }
+var agOn=true;
+function adminAgLoad(){
+ adminApiCall('admin_bank_agent_get').then(function(j){
+  if(!j || !j.ok) return;
+  var u=el('adAgUser'); if(u) u.value=j.username||'';
+  var n=el('adAgName'); if(n) n.value=j.name||'';
+  var i=el('adAgId'); if(i) i.value=j.agent_id||'';
+  var t=el('adAgNote'); if(t) t.value=j.note||'';
+  agOn=(j.enabled!==false);
+  var b=el('adAgToggle'); if(b) b.textContent='Agent: '+(agOn?'on':'off');
+ });
+}
+function adminAgToggle(){
+ agOn=!agOn;
+ var b=el('adAgToggle'); if(b) b.textContent='Agent: '+(agOn?'on':'off');
+ sfx('click');
+}
+function adminAgSave(){
+ var m=el('adAgMsg');
+ var un=String((el('adAgUser')||{}).value||'').replace(/^@/,'').trim();
+ var nm=String((el('adAgName')||{}).value||'').trim();
+ var aid=String((el('adAgId')||{}).value||'').trim();
+ var nt=String((el('adAgNote')||{}).value||'').trim();
+ if(un.indexOf(' ')>0){ if(m) m.textContent='Username cannot contain spaces'; return; }
+ if(m) m.textContent='Saving...';
+ adminApiCall('admin_bank_agent_save',{ username:un, name:nm, agent_id:aid, note:nt, enabled:!!agOn }).then(function(j){
+  if(j && j.ok){
+   if(m) m.textContent= un ? ('Saved. Users will see @'+j.username+' on the bank deposit screen.') : 'Saved with no agent - users will see a short notice instead.';
+   toast('Bank agent saved'); sfx('coinin');
+  } else if(m){ m.textContent=(j&&j.error)||'failed'; }
+ });
+}
 function adminSaveDepMethods(){
  var t=el('adDepMethods'); if(!t) return;
  var rows=parsePipeLines(t.value);
@@ -3085,6 +3204,8 @@ function boot(){
  on('adDepBtn',adminLoadDeps);
  on('adWdBtn',adminLoadWds);
  on('adDepSave',adminSaveDepMethods);
+ on('adAgToggle',adminAgToggle);
+ on('adAgSave',adminAgSave);
  on('adWdSave',adminSaveWdMethods);
  on('planEq',function(){ pickPlan('equal'); });
  on('planSub',function(){ pickPlan('sub'); });
