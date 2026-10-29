@@ -148,6 +148,11 @@ input:focus, select:focus, textarea:focus{ outline: none; border-color: var(--go
 body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
 .hout{ background: rgba(255,82,82,.14); border: 1px solid #7f1d1d; color: #ff9d9d; font-size: 10px; font-weight: 800; padding: 5px 9px; border-radius: 999px; margin-left: 4px; white-space: nowrap; transition: transform .15s ease, background .15s ease }
 .hout:active{ transform: scale(.94); background: rgba(255,82,82,.3) }
+.pctRow{ display: flex; align-items: center; gap: 6px; padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,.06) }
+.pctNm{ flex: 1 1 auto; font-size: 11px; font-weight: 700; color: #fff; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap }
+.pctIn{ width: 56px; flex: 0 0 56px; margin-top: 0; padding: 6px; font-size: 11px; text-align: center }
+.pctLoss{ flex: 0 0 auto; font-size: 9.5px; color: #ff9d9d; min-width: 54px }
+.pctSave{ width: auto; flex: 0 0 80px; margin-top: 0; padding: 7px 4px; font-size: 10px }
 .agCard{ position: relative; overflow: hidden; border-radius: 14px; padding: 12px; background: linear-gradient(135deg,#08243a,#0b3d5c 45%,#0a5c56); border: 1px solid rgba(0,229,255,.4) }
 .agGlow{ position: absolute; width: 150px; height: 150px; border-radius: 50%; background: radial-gradient(circle, rgba(0,229,255,.35), rgba(0,229,255,0) 70%); top: -60px; right: -50px; animation: pulseGlow 3.8s ease-in-out infinite }
 .agTop{ display: flex; align-items: center; gap: 9px; position: relative }
@@ -621,8 +626,9 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
     <input id="adPctGame" type="number" min="0" max="100" placeholder="game id (0 = all)" style="flex: 1"/>
     <input id="adPctVal" type="number" min="0" max="100" placeholder="win %" style="flex: 1"/>
    </div>
-   <div class="row"><button class="btn alt" id="adPctSave" type="button">Save percentage</button></div>
-   <p class="hint" id="adPctNow" style="margin-top: 6px"></p>
+   <div class="row"><button class="btn okbtn" id="adPctSave" type="button">OK - save these two fields</button></div>
+   <div class="lb" style="margin-top: 10px">Each game individually - set the win %, then press its own OK</div>
+   <div id="adPctNow"></div>
   </div>
   <div class="box">
    <h3>Balance control</h3>
@@ -817,9 +823,9 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq45eoePx-eOxND51uGryDbh4gva5IduV4m8E2WiA9QDAUqrkm3UFKRbWrGF58g-x--Guy2l7wp156pcaqnEpY58NEUZwjFFu7VOOy2-3qYgj7oSr3O92lln4usgDvBenQQ7zLb0HHpMB108g_Yd4xnCWkuvlMs7PVMWETNPvdCyl49ExpjVPIu5UwH4VhdmT51RQY';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq46FMSH_gmmfFzVS9pL5DBx8PcOqd50s-q8JJzRXDWJ1zIFD0Nd7_-3GER8vY8MPh7aBp-l_5YeOpP-HGr17LpqAx8eqYWpT65ix3ry7yyBMt0T8bOutp6eFsY_8bPZ40J8vYZDDAZvkmtU1rgC1OC4_6SFLLxoCAB0SAADSgnLfGG-5_zr-jFkxd3YMr2Y54eBlX';
 var VER_EXPECTED=7;
-var BUILD=21;
+var BUILD=22;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
 var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'', ctrlNow:{}, globalMode:'normal', pendMode:'', pendOp:'', pendUF:'', selDep:null, starRate:5, seenNotif:'', teamEq:0, teamSub:0 };
@@ -1939,13 +1945,53 @@ function fmtAgo(t){
 }
 function renderPctNow(){
  var box=el('adPctNow'); if(!box) return;
- var parts=[];
+ box.innerHTML='';
  GAMES.forEach(function(gm){
   var p=state.pcts[String(gm.id)];
   if(p===undefined) p=45;
-  parts.push(gm.em+' '+gm.name+' '+p+'%');
+  var row=document.createElement('div');
+  row.className='pctRow';
+  var nm=document.createElement('div');
+  nm.className='pctNm';
+  nm.textContent=gm.em+' '+gm.name;
+  var inp=document.createElement('input');
+  inp.type='number'; inp.min='0'; inp.max='100'; inp.value=p;
+  inp.className='pctIn';
+  inp.id='pct_'+gm.id;
+  var loss=document.createElement('div');
+  loss.className='pctLoss';
+  loss.id='loss_'+gm.id;
+  loss.textContent='loss '+(100-p)+'%';
+  var ok=document.createElement('button');
+  ok.type='button';
+  ok.className='btn okbtn pctSave';
+  ok.textContent='OK - save';
+  ok.addEventListener('click',function(){
+   var v=parseInt(inp.value);
+   if(isNaN(v)||v<0||v>100){ toast('Enter 0 to 100 for '+gm.name); return; }
+   ok.disabled=true;
+   var old=ok.textContent;
+   ok.textContent='Saving...';
+   adminApiCall('admin_set_pct',{ gid:gm.id, pct:v }).then(function(j){
+    ok.disabled=false;
+    ok.textContent=old;
+    if(j && j.ok){
+     state.pcts[String(gm.id)]=v;
+     loss.textContent='loss '+(100-v)+'%';
+     toast(gm.name+': win '+v+'% / loss '+(100-v)+'% saved');
+     sfx('coinin');
+     renderAdminGames(state.ctrlNow||{});
+    } else { toast((j&&j.error)||'failed'); }
+   });
+  });
+  inp.addEventListener('input',function(){
+   var v=parseInt(inp.value);
+   if(isNaN(v)||v<0||v>100){ loss.textContent='--'; return; }
+   loss.textContent='loss '+(100-v)+'%';
+  });
+  row.appendChild(nm); row.appendChild(inp); row.appendChild(loss); row.appendChild(ok);
+  box.appendChild(row);
  });
- box.textContent='Win % now: '+parts.join(' | ');
 }
 function adminPctSave(){
  var g=el('adPctGame'), v=el('adPctVal');
