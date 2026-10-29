@@ -486,6 +486,11 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
    <h3>My account</h3>
    <p class="hint" id="accLine">--</p>
    <p class="vtxt" id="accIds">--</p>
+   <div class="row">
+    <button class="btn alt" id="btnLogoutTop" type="button">🚪 Log out</button>
+    <button class="btn alt" id="btnSwitchAcc" type="button">🔁 Change account</button>
+   </div>
+   <p class="hint" style="margin-top: 7px">Logging out returns you to the login screen. Your account stays linked to this Telegram ID.</p>
   </div>
   <div class="box">
    <h3>Edit profile</h3>
@@ -522,10 +527,7 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
    <button class="btn alt" id="btnDiag" type="button">Run connection test</button>
    <p class="vtxt" id="diagOut" style="margin-top: 7px">not run yet</p>
   </div>
-  <div class="box">
-   <button class="btn alt" id="btnLogout" type="button">Log out</button>
-  </div>
- </section>
+  </section>
  <section class="sec" id="sSet">
   <div class="box">
    <h3>Currency</h3>
@@ -546,6 +548,12 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
    <h3>Cache</h3>
    <p class="hint">Reloads the app from the server to pick up a new version.</p>
    <button class="btn alt" id="btnPurge" type="button">Clear cache and reload</button>
+  </div>
+  <div class="box">
+   <h3>Account</h3>
+   <p class="hint">Log out to return to the login screen. Your account and coins stay safe and stay linked to this Telegram.</p>
+   <button class="btn alt" id="btnLogoutSet" type="button">🚪 Log out</button>
+   <button class="btn alt" id="btnSwitchSet" type="button" style="margin-top:6px">🔁 Change account</button>
   </div>
   <div class="box">
    <h3>Version</h3>
@@ -775,9 +783,9 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4xxXZSwt2wMUaKKmJA69hxjFAffxE0SxSzzqvZZ9GX4T6sdmfTfaAVjnJGp2xhU8qyWZJ4zd6_UmTEPd7zmJTDJqxWnBzx0Zm9Uj2w5Y3kel0cUl3e5BBZzsXivFTgz44tvTC8QP2_TCITbpchL33vevr8LKUGaTkxsmGKKfbcIOGLYPHYFgAvjsVJjUm-hE6uZs';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq41raqZT2QmZYTDzS7eJcUuVhtTGpt-xR45dZzEOZfHy-mNDr6xdY4bh5QB5Xog8zq1L0TxF4QptGu53IdBq3NUKrhRR9dmRJCiOlyxXitCwxAB1mgKs8ZW7kLgv8OXlBlGWBEEsV5nn4JB81amP72DZtLwlB173WvFyHj2wOESdC-z7jqdTaz6caSikLv7bZBG5i';
 var VER_EXPECTED=7;
-var BUILD=18;
+var BUILD=19;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
 var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'', ctrlNow:{}, globalMode:'normal', pendMode:'', pendOp:'', pendUF:'', selDep:null, starRate:5, seenNotif:'', teamEq:0, teamSub:0 };
@@ -896,7 +904,12 @@ function applyLang(){
  txt('lblPick', T('pick'));
  txt('lblPickHint', T('pickhint'));
  txt('btnSync', T('refresh'));
- txt('btnLogout', T('logout'));
+ var loLbl = T('logout');
+ if(!loLbl || loLbl==='logout'){ loLbl='Log out'; }
+ txt('btnLogoutTop', '🚪 ' + loLbl);
+ txt('btnLogoutSet', '🚪 ' + loLbl);
+ txt('btnSwitchAcc', '🔁 Change account');
+ txt('btnSwitchSet', '🔁 Change account');
  txt('acSave', T('save'));
  txt('adRefresh', T('sync'));
  txt('tHome', 'Home');
@@ -1402,9 +1415,19 @@ function doLogin(){
 }
 function doLogout(){
  call('logout').then(function(){
-  state.token=''; state.loggedIn=false;
+  state.token=''; state.loggedIn=false; state.registered=false;
+  state.isAdmin=false; state.isFull=false; state.balOk=false;
+  state.coins=0; state.first=''; state.last=''; state.username='';
   try{ localStorage.removeItem('pe_token'); }catch(e){}
-  showGate(true); gateMode('login'); gateMsg('You have been logged out.');
+  try{ document.body.classList.remove('isadm'); }catch(eb){}
+  try{
+   var g1=el('boxAdmin'); if(g1) g1.style.display='none';
+   var g2=el('boxDiag'); if(g2) g2.style.display='none';
+  }catch(eb2){}
+  setAdminUI(); updBal();
+  showGate(true); gateMode('login');
+  gateMsg('You have been logged out. Log in with any account.');
+  toast('Logged out');
  });
 }
 function saveProfile(){
@@ -2995,7 +3018,10 @@ function boot(){
    if(!MUTED) sfx('coinin');
   });
  }
- on('btnLogout',doLogout);
+ on('btnLogoutTop',doLogout);
+ on('btnLogoutSet',function(){ if(confirm('Log out of this account?')){ doLogout(); } });
+ on('btnSwitchSet',function(){ if(confirm('Log out and log in with a different account?')){ doLogout(); } });
+ on('btnSwitchAcc',function(){ if(confirm('Log out and log in with a different account?')){ doLogout(); } });
  on('acSave',saveProfile);
  on('depGo',submitDeposit);
  on('wdGo',submitWithdraw);
