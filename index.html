@@ -814,9 +814,9 @@ body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq45JguVsitW-12ye7zw9b0MQbBSOpSVqTw_SznlM_tr10dOLns-v-wuXQVothkQwOza0NrZLrkqeAhrc5m9qWGnmgjqBgFsJOQ-d7QlEwIVvfToMO_8O9OEgpLpO6r-e-WEg--ZeblZsTNegqFtlfoWEfS9hzTMM_QxOlBvXkC8OWd6ZZvLLvv3E0BmBk8Kpo40sx';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq45OzDIyeYUzQ58kmGjc8On1Pyl4pjC1nEGVRHlzhVuN_lODYAs52EnH6JX7gBvXSJe2sJG7ZphwSVkxDUHtaAASXX5Sy7ONEUWLbac1xxJ12SppnnuPjO_5f7aYvkrckrAkPB-f9eH7iIrQJreJnVOWdNjbp9zAPMEAo9NF4TW8rzYJ_sYIoxnwWpa4nSCwLm9Cn';
 var VER_EXPECTED=7;
-var BUILD=19;
+var BUILD=20;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
 var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'', ctrlNow:{}, globalMode:'normal', pendMode:'', pendOp:'', pendUF:'', selDep:null, starRate:5, seenNotif:'', teamEq:0, teamSub:0 };
@@ -1536,7 +1536,44 @@ function loadBankAgent(){
   hd.style.textAlign='center';
   hd.textContent='Agent handle: @'+un;
   box.appendChild(hd);
+  var ld=document.createElement('label'); ld.className='lb'; ld.textContent='Amount you paid in USD';
+  var ai=document.createElement('input'); ai.type='number'; ai.min='1'; ai.id='agAmt'; ai.placeholder='e.g. 50';
+  var lr=document.createElement('label'); lr.className='lb'; lr.textContent='Reference / UTR number (optional)';
+  var ar=document.createElement('input'); ar.id='agRef'; ar.placeholder='bank reference if you have one';
+  var lp=document.createElement('label'); lp.className='lb'; lp.textContent='Payment screenshot';
+  var ap=document.createElement('input'); ap.type='file'; ap.accept='image/*'; ap.id='agFile';
+  box.appendChild(ld); box.appendChild(ai); box.appendChild(lr); box.appendChild(ar); box.appendChild(lp); box.appendChild(ap);
+  var sb=mkBtn('✅ I have paid - send for confirmation','gloss',function(){ submitBankRequest(); });
+  box.appendChild(sb);
+  var nm2=document.createElement('p');
+  nm2.className='hint';
+  nm2.style.marginTop='7px';
+  nm2.textContent='The agent is notified straight away. Once they confirm the money arrived, your coins are added automatically.';
+  box.appendChild(nm2);
+  var mm=document.createElement('p');
+  mm.className='hint'; mm.id='agMsg'; mm.style.marginTop='6px';
+  box.appendChild(mm);
  });
+}
+function submitBankRequest(){
+ var m=el('agMsg');
+ var amt=parseInt((el('agAmt')||{}).value||'0');
+ if(isNaN(amt)||amt<1){ if(m) m.textContent='Enter the amount you paid, for example 50'; return; }
+ var ref=String((el('agRef')||{}).value||'').trim();
+ var f=el('agFile');
+ var file=(f&&f.files&&f.files[0])?f.files[0]:null;
+ if(m) m.textContent='Sending to the agent...';
+ function go(dataUrl){
+  call('bank_request',{ amount:amt, payref:ref, proof:dataUrl||'' }).then(function(j){
+   if(j && j.ok){
+    if(m) m.textContent='Sent. '+j.coins+' coins will be added as soon as the agent confirms. Reference '+j.did;
+    toast('Sent to the agent');
+    burst('🏦',10); sfx('coinin');
+   } else if(m){ m.textContent=(j&&j.error)||'could not send'; }
+  });
+ }
+ if(file){ fileToData(file,900,function(d){ go(d); }); }
+ else { go(''); }
 }
 function payPairs(details){
  var out=[];
