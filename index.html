@@ -117,6 +117,35 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 .tag{ font-size: 9px; padding: 1px 5px; border-radius: 999px; border: 1px solid var(--bd); color: var(--mut) }
 .tag.reg{ color: var(--grn); border-color: #1b5e20 }
 .tag.blk{ color: var(--red); border-color: #7f1d1d }
+input:focus, select:focus, textarea:focus{ outline: none; border-color: var(--gold); box-shadow: 0 0 0 1px rgba(255,204,51,.35), 0 0 12px rgba(255,204,51,.22) }
+.planPick{ display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-top: 10px }
+.planCard{ position: relative; overflow: hidden; text-align: left; background: linear-gradient(180deg, var(--card2), var(--card)); border: 1.5px solid var(--bd); border-radius: 12px; padding: 9px 9px 8px; color: #fff; transition: transform .16s ease, border-color .16s ease, box-shadow .16s ease }
+.planCard .pk{ position: absolute; top: 8px; right: 8px; width: 13px; height: 13px; border-radius: 50%; border: 1.5px solid var(--bd); background: #080c22; transition: all .18s ease }
+.planCard .pt{ font-size: 11.5px; font-weight: 800 }
+.planCard .pd{ font-size: 9.5px; color: var(--mut); line-height: 1.45; margin-top: 3px; padding-right: 16px }
+.planCard .ps{ font-size: 9px; color: #ffcf5e; margin-top: 5px; font-weight: 800; letter-spacing: .3px }
+.planCard.on{ border-color: var(--gold); background: linear-gradient(180deg, rgba(255,204,51,.16), rgba(255,122,0,.08)); box-shadow: 0 0 16px rgba(255,204,51,.28); transform: translateY(-1px) }
+.planCard.on .pk{ background: radial-gradient(circle, #ffd700 38%, #ff8c00 100%); border-color: #ffd700; box-shadow: 0 0 9px rgba(255,204,51,.8) }
+.planCard:active{ transform: scale(.97) }
+.planCard.full{ opacity: .5 }
+.planCard.full.on{ opacity: 1 }
+.permBtn{ width: auto; flex: 0 1 auto; padding: 6px 9px; font-size: 10px; border-radius: 999px; min-width: 0 }
+.permBtn.on{ background: rgba(0,230,118,.16); border-color: #00e676; color: #6bffab }
+.permBtn.off{ background: rgba(255,82,82,.12); border-color: #7f1d1d; color: #ff9d9d }
+.roleRow{ display: flex; align-items: center; gap: 6px }
+.roleEm{ font-size: 15px }
+.gtabs{ display: grid; grid-template-columns: repeat(3,1fr); gap: 5px; margin: 12px 0 4px; background: #080c22; border: 1px solid var(--bd); border-radius: 11px; padding: 4px }
+.gtab{ background: transparent; border: 0; color: var(--mut); font-size: 11px; font-weight: 700; padding: 8px 2px; border-radius: 8px; transition: all .18s ease }
+.gtab.on{ background: linear-gradient(135deg, var(--gold), #ff7a00); color: #241500; box-shadow: 0 0 12px rgba(255,204,51,.35) }
+.accCard{ background: linear-gradient(135deg, rgba(0,229,255,.12), rgba(101,31,255,.14)); border: 1px solid rgba(0,229,255,.35); border-radius: 13px; padding: 11px; margin-top: 4px; text-align: center }
+.accTop{ font-size: 9px; text-transform: uppercase; letter-spacing: .7px; color: #7ee7ff; font-weight: 800 }
+.accName{ font-size: 15px; font-weight: 800; color: #fff; margin-top: 5px }
+.accUser{ font-size: 12px; color: var(--gold); font-weight: 800; margin-top: 2px; word-break: break-all }
+.accMeta{ font-size: 10px; color: #b9c6ee; margin-top: 6px; line-height: 1.5 }
+.glink{ text-align: center; margin-top: 9px }
+.glink b{ color: var(--gold); font-size: 11px; cursor: pointer; text-decoration: underline }
+#boxAdmin, #boxDiag{ display: none !important }
+body.isadm #boxAdmin, body.isadm #boxDiag{ display: block !important }
 .mod{ position: fixed; inset: 0; background: rgba(0,0,0,.9); z-index: 300; display: flex; align-items: center; justify-content: center; padding: 12px }
 .mod .m2{ background: #0d1230; border: 1px solid var(--pur); border-radius: 12px; padding: 10px; max-width: 94vw; max-height: 90vh; overflow: auto; text-align: center }
 .mod img{ max-width: 100%; border-radius: 8px; display: block; margin-top: 8px }
@@ -476,12 +505,18 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <p class="hint" id="supMsg" style="margin-top: 6px"></p>
   </div>
   <div class="box">
+   <h3>Customer support</h3>
+   <p class="hint">Questions about deposits, withdrawals, games or your account? Our support team answers you directly on Telegram.</p>
+   <a class="btn" href="https://t.me/Playnearnsupport" target="_blank" style="text-decoration: none; display: block; text-align: center">💬 Chat with support</a>
+   <p class="hint" style="margin-top: 7px; text-align: center">Support handle: <b>@Playnearnsupport</b></p>
+  </div>
+  <div class="box" id="boxAdmin" style="display: none">
    <h3>Admin access</h3>
    <p class="vtxt" id="adminStateLbl">--</p>
    <button class="btn alt" id="btnAdminTry" type="button">Open admin panel</button>
    <a class="btn alt" href="https://t.me/PlaynEarnbot?text=/claim_admin" style="text-decoration: none; display: block; text-align: center">Claim owner access</a>
   </div>
-  <div class="box">
+  <div class="box" id="boxDiag" style="display: none">
    <h3>Connection test</h3>
    <p class="hint">Calls the server directly and shows the raw reply. Send me a screenshot of this.</p>
    <button class="btn alt" id="btnDiag" type="button">Run connection test</button>
@@ -630,7 +665,9 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
    <p class="hint">Every activity is posted to this channel automatically: deposits, withdrawals, new members, game results, daily bonuses. Make the bot an admin of the channel first, then put the username here.</p>
    <input id="adChannel" placeholder="@yourchannel"/>
    <div class="row"><button class="btn alt" id="adChanToggle" type="button">Feed: on</button><button class="btn okbtn" id="adChanSave" type="button">OK - save channel</button></div>
+   <div class="row"><button class="btn alt" id="adChanTest" type="button">🔔 Send test post</button><button class="btn alt" id="adChanLog" type="button">📋 Delivery log</button></div>
    <p class="hint" id="adChanMsg" style="margin-top:6px"></p>
+   <p class="hint" id="adChanLogBox" style="margin-top:6px"></p>
   </div>
   <div class="box">
    <h3>Broadcast to all users</h3>
@@ -692,11 +729,25 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
   <div class="box">
    <h3>Admin team</h3>
    <p class="hint" id="adTeamInfo">--</p>
-   <input id="adTeamId" placeholder="Telegram ID"/>
-   <div class="row">
-    <button class="btn alt" id="adTeamEq" type="button">Add equal (2)</button>
-    <button class="btn alt" id="adTeamSub" type="button">Add sub (10)</button>
+   <label class="lb">Step 1 - choose the role to give</label>
+   <div class="planPick">
+    <button class="planCard on" id="planEq" type="button">
+     <span class="pk"></span>
+     <div class="pt">👑 Equal admin</div>
+     <div class="pd">Sees everything you see: users, deposits, withdraws, games and settings.</div>
+     <div class="ps" id="slotEq">0 of 2 used</div>
+    </button>
+    <button class="planCard" id="planSub" type="button">
+     <span class="pk"></span>
+     <div class="pt">🛡 Sub admin</div>
+     <div class="pd">Limited access. You switch on each permission after adding them.</div>
+     <div class="ps" id="slotSub">0 of 10 used</div>
+    </button>
    </div>
+   <label class="lb">Step 2 - their Telegram ID</label>
+   <input id="adTeamId" placeholder="e.g. 8367826696" inputmode="numeric"/>
+   <button class="btn okbtn" id="adTeamAdd" type="button">OK - add as Equal admin</button>
+   <p class="hint" id="adTeamMsg" style="margin-top: 6px"></p>
    <div id="adTeamList"></div>
   </div>
  </section>
@@ -716,6 +767,7 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
   <div class="logo" style="margin-top: 3px">PLAY &amp; EARN</div>
   <p class="hint" id="gateSub">Create your account to start playing.</p>
  </div>
+ <div class="gtabs" id="gateTabs"></div>
  <div id="gateForm"></div>
  <p class="gmsg" id="gateMsg"></p>
  <div class="gsw" id="gateSwitch"></div>
@@ -723,11 +775,12 @@ label.lb{ display: block; font-size: 10px; color: var(--mut); margin-top: 8px }
 <div id="toast"></div>
 <script>
 
-var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4kMpt0w3-DOO9P6bgS8ty7HSj0FZpbA4r-UGqHvRHVH7iq-cH91YjpYYlEmLter9MeKS04cUBalbP0x8xyAq7VlyD9lSigUgvoEKJQ1Vgwky4xXABQENQspaqVhVOLfK0dhKj9GFrlQhe2c4-m58hLzrHG0-B7G0-HwyFscdujycHd8-4rfznRah27qQU1-Huhhd';
+var APP='https://api.telebotcreator.com/new-webhook?data=gAAAAABq4xxXZSwt2wMUaKKmJA69hxjFAffxE0SxSzzqvZZ9GX4T6sdmfTfaAVjnJGp2xhU8qyWZJ4zd6_UmTEPd7zmJTDJqxWnBzx0Zm9Uj2w5Y3kel0cUl3e5BBZzsXivFTgz44tvTC8QP2_TCITbpchL33vevr8LKUGaTkxsmGKKfbcIOGLYPHYFgAvjsVJjUm-hE6uZs';
 var VER_EXPECTED=7;
+var BUILD=18;
 var TG=null;
 try{ if(window.Telegram && window.Telegram.WebApp){ TG=window.Telegram.WebApp; TG.ready(); TG.expand(); } }catch(e){ TG=null; }
-var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'', ctrlNow:{}, globalMode:'normal', pendMode:'', pendOp:'', pendUF:'', selDep:null, starRate:5, seenNotif:'' };
+var state={ uid:0, tgUser:'', tgFirst:'', token:'', coins:0, rate:100, isAdmin:false, isFull:false, registered:false, loggedIn:false, balOk:false, srvUid:'', ver:0, cur:'USD', lang:'en', fx:0, first:'', last:'', username:'', depMethods:[], wdMethods:[], deps:[], wds:[], users:[], userForce:{}, pcts:{}, notifs:[], unread:0, selUser:'', ctrlNow:{}, globalMode:'normal', pendMode:'', pendOp:'', pendUF:'', selDep:null, starRate:5, seenNotif:'', teamEq:0, teamSub:0 };
 var GAMES=[
  {id:1,name:'Coin Flip',em:'🪙',cost:10,mult:1.9,pick:'head',type:'coin',opts:[['head','HEAD'],['tail','TAIL']]},
  {id:2,name:'Dice Duel',em:'🎲',cost:10,mult:2,pick:'4',type:'dice',opts:[['1','1'],['2','2'],['3','3'],['4','4'],['5','5'],['6','6']]},
@@ -740,7 +793,7 @@ var GAMES=[
  {id:13,name:'Keno',em:'🔢',cost:10,mult:5,pick:'7',type:'keno',opts:[['1','1'],['3','3'],['7','7'],['11','11'],['15','15'],['20','20']]},
  {id:25,name:'Sic Bo',em:'🎎',cost:15,mult:3,pick:'4',type:'dice',opts:[['1','1'],['2','2'],['3','3'],['4','4'],['5','5'],['6','6']]}
 ];
-var picks={}, stakes={}, ovTimer=null, ovTimers=[], ovSeq=0, ovEndAt=0;
+var picks={}, stakes={}, ovTimer=null, ovTimers=[], ovSeq=0, ovEndAt=0, gateCur='login';
 var CURR=[['USD','$','US'],['EUR','€','EU'],['GBP','£','GB'],['INR','Rs','IN'],['NPR','Rs','NP'],['PKR','Rs','PK'],['BDT','Tk','BD'],['LKR','Rs','LK'],['CNY','Y','CN'],['JPY','Y','JP'],['KRW','W','KR'],['RUB','RUB','RU'],['UAH','Hryv','UA'],['TRY','TL','TR'],['SAR','SAR','SA'],['AED','AED','AE'],['QAR','QR','QA'],['KWD','KD','KW'],['BHD','BD','BH'],['OMR','RO','OM'],['JOD','JD','JO'],['ILS','NIS','IL'],['EGP','EGP','EG'],['MAD','MAD','MA'],['DZD','DZD','DZ'],['TND','TND','TN'],['LYD','LYD','LY'],['ZAR','R','ZA'],['NGN','N','NG'],['GHS','GHS','GH'],['KES','KES','KE'],['TZS','TZS','TZ'],['UGX','UGX','UG'],['ETB','Birr','ET'],['SOS','SoSh','SO'],['RWF','RF','RW'],['ZMW','K','ZM'],['MZN','MT','MZ'],['AOA','Kz','AO'],['BWP','P','BW'],['NAD','N','NA'],['MUR','MRu','MU'],['MGA','Mg','MG'],['CDF','FC','CD'],['SDG','SDG','SD'],['AUD','A$','AU'],['NZD','NZ$','NZ'],['CAD','C$','CA'],['MXN','MXN','MX'],['BRL','R$','BR'],['ARS','AR$','AR'],['CLP','CLP','CL'],['COP','COP','CO'],['PEN','S/','PE'],['UYU','$U','UY'],['PYG','Gs','PY'],['BOB','Bs','BO'],['VES','BsV','VE'],['GTQ','Q','GT'],['CRC','C','CR'],['PAB','B/.','PA'],['DOP','RD$','DO'],['JMD','J$','JM'],['TTD','TT$','TT'],['BBD','Bds$','BB'],['BSD','B$','BS'],['HTG','HTG','HT'],['HNL','L','HN'],['NIO','C$','NI'],['BZD','BZ$','BZ'],['SEK','kr','SE'],['NOK','kr','NO'],['DKK','kr','DK'],['ISK','ikr','IS'],['CHF','CHF','CH'],['PLN','zl','PL'],['CZK','Kc','CZ'],['HUF','Ft','HU'],['RON','lei','RO'],['BGN','lev','BG'],['RSD','din','RS'],['BAM','KM','BA'],['MKD','den','MK'],['ALL','Lek','AL'],['MDL','L','MD'],['BYN','BYN','BY'],['GEL','GEL','GE'],['AMD','dram','AM'],['AZN','man','AZ'],['KZT','Kzt','KZ'],['UZS','sum','UZ'],['KGS','som','KG'],['TJS','TJS','TJ'],['TMT','TMT','TM'],['MNT','MNT','MN'],['AFN','Afs','AF'],['IRR','Rial','IR'],['IQD','IQD','IQ'],['SYP','SYP','SY'],['LBP','LL','LB'],['YER','YR','YE'],['SGD','S$','SG'],['MYR','RM','MY'],['IDR','Rp','ID'],['THB','THB','TH'],['VND','dong','VN'],['PHP','PHP','PH'],['TWD','NT$','TW'],['HKD','HK$','HK'],['MOP','MOP','MO'],['BND','B$','BN'],['KHR','Riel','KH'],['LAK','KN','LA'],['MMK','Kyat','MM'],['FJD','FJ$','FJ'],['PGK','K','PG'],['WST','T','WS'],['TOP','T$','TO'],['VUV','VT','VU'],['SBD','SI$','SB'],['XPF','XPF','PF'],['LRD','L$','LR'],['SLL','SLL','SL'],['GMD','D','GM'],['GNF','GNF','GN'],['MRO','UM','MR'],['DJF','DJF','DJ'],['CFX','XAF','CM'],['RAB','DH','MA'],['KYD','KY$','KY'],['CUP','$MN','CU'],['DOP2','RD$','DO'],['TJS2','TJS','TJ']];
 var LANGS=[['en','English'],['hi','Hindi'],['ne','Nepali'],['ur','Urdu'],['bn','Bengali'],['ar','Arabic'],['es','Spanish'],['fr','French'],['de','German'],['ru','Russian'],['zh','Chinese'],['tr','Turkish'],['pt','Portuguese'],['id','Indonesian'],['ja','Japanese'],['ko','Korean'],['fa','Persian'],['uk','Ukrainian'],['pl','Polish'],['vi','Vietnamese'],['th','Thai'],['it','Italian'],['nl','Dutch'],['sv','Swedish'],['no','Norwegian'],['da','Danish'],['fi','Finnish'],['el','Greek'],['he','Hebrew'],['ro','Romanian'],['hu','Hungarian'],['cs','Czech'],['sk','Slovak'],['bg','Bulgarian'],['sr','Serbian'],['hr','Croatian'],['sl','Slovenian'],['ms','Malay'],['tl','Filipino'],['my','Burmese'],['km','Khmer'],['lo','Lao'],['si','Sinhala'],['ta','Tamil'],['te','Telugu'],['kn','Kannada'],['ml','Malayalam'],['gu','Gujarati'],['mr','Marathi'],['pa','Punjabi'],['or','Odia'],['as','Assamese'],['sd','Sindhi'],['ps','Pashto'],['ku','Kurdish'],['az','Azerbaijani'],['ka','Georgian'],['hy','Armenian'],['uz','Uzbek'],['kk','Kazakh'],['ky','Kyrgyz'],['tg','Tajik'],['tk','Turkmen'],['mn','Mongolian'],['et','Estonian'],['lv','Latvian'],['lt','Lithuanian'],['be','Belarusian'],['sq','Albanian'],['mk','Macedonian'],['bs','Bosnian'],['mt','Maltese'],['is','Icelandic'],['ga','Irish'],['ca','Catalan'],['ht','Haitian'],['af','Afrikaans'],['am','Amharic'],['so','Somali'],['sw','Swahili'],['ha','Hausa'],['yo','Yoruba'],['ig','Igbo'],['zu','Zulu'],['ti','Tigrinya'],['rw','Kinyarwanda'],['lg','Luganda'],['sn','Shona'],['ny','Chichewa'],['bem','Bemba'],['lob','Lobiri'],['tem','Temne'],['kre','Krio'],['men','Mende'],['pny','Punjabi2']];
 var LBL={
@@ -825,6 +878,12 @@ function setAdminUI(){
  var t=el('tAdm'); if(t) t.style.display= on ? 'block' : 'none';
  var m=el('miAdm'); if(m) m.style.display= on ? 'flex' : 'none';
  var bb=el('bellBtn'); if(bb) bb.style.display= on ? 'block' : 'none';
+ try{
+  if(on){ document.body.classList.add('isadm'); }
+  else { document.body.classList.remove('isadm'); }
+ }catch(eb){}
+ var bxa=el('boxAdmin'); if(bxa) bxa.style.display= on ? 'block' : 'none';
+ var bxd=el('boxDiag'); if(bxd) bxd.style.display= on ? 'block' : 'none';
  updateBell();
  var w=el('adminStateLbl');
  if(w){
@@ -868,7 +927,7 @@ function updBal(){
  txt('bal', ok ? (state.coins+' coins') : '--');
  txt('balusd', ok ? ('~ $'+usd.toFixed(2)+(loc?(' ~ '+sym+loc.toFixed(2)):'')) : '');
  txt('rateinfo', '1$ = '+(state.rate||100)+'c');
- txt('verinfo', 'v'+state.ver);
+ txt('verinfo', 'build '+BUILD);
  txt('wbal', ok ? (state.coins+' coins') : 'not loaded');
  var ws=el('wsub');
  if(ws){
@@ -878,7 +937,7 @@ function updBal(){
  var ab=el('aboutBox');
  if(ab){
   var okver = state.ver===VER_EXPECTED;
-  ab.innerHTML='app expects v'+VER_EXPECTED+' | server replied v'+state.ver+'<br>telegram ID '+esc(state.uid)+' | server saw '+esc(state.srvUid||'?')+'<br>'+(okver ? '<span class="win">up to date</span>' : '<span class="miss">STALE - old file or server unreachable</span>');
+  ab.innerHTML='file build '+BUILD+' | app expects v'+VER_EXPECTED+' | server replied v'+state.ver+'<br>telegram ID '+esc(state.uid)+' | server saw '+esc(state.srvUid||'?')+'<br>'+(okver ? '<span class="win">up to date</span>' : '<span class="miss">STALE - old file or server unreachable</span>');
  }
  var who=el('who');
  var nm=state.first || state.tgFirst || 'Player';
@@ -1104,6 +1163,10 @@ function finishOv(gm,res){
  state.balOk=true;
  updBal();
  addLog(gm,res);
+ if(res.pid){
+  var fpid=String(res.pid);
+  setTimeout(function(){ call('chan_flush',{ pid:fpid }); }, 5000);
+ }
  setTimeout(hideOv, 2600);
 }
 function playGame(gid){
@@ -1143,34 +1206,143 @@ function mkInput(id,ph,type){
  if(type) i.type=type;
  return i;
 }
+function gateTabs(mode){
+ var t=el('gateTabs'); if(!t) return;
+ t.innerHTML='';
+ var defs=[['login','🔑 Log in'],['signup','✨ Sign up'],['recover','🆘 My account']];
+ for(var i=0;i<defs.length;i++){
+  var b=document.createElement('button');
+  b.type='button';
+  b.className='gtab'+(mode===defs[i][0]?' on':'');
+  b.textContent=defs[i][1];
+  (function(k){ b.addEventListener('click',function(){ gateMode(k); gateMsg(''); sfx('click'); }); })(defs[i][0]);
+  t.appendChild(b);
+ }
+}
+function gateSwitchLine(mode){
+ var sw=el('gateSwitch'); if(!sw) return;
+ sw.innerHTML='';
+ var s=document.createElement('span');
+ var l=document.createElement('b');
+ var nxt='login';
+ if(mode==='signup'){ s.textContent='Already have an account? '; l.textContent='Log in'; nxt='login'; }
+ else if(mode==='recover'){ s.textContent='Remembered it? '; l.textContent='Log in'; nxt='login'; }
+ else { s.textContent='No account yet? '; l.textContent='Sign up'; nxt='signup'; }
+ l.style.cursor='pointer';
+ l.addEventListener('click',function(){ gateMode(nxt); gateMsg(''); });
+ sw.appendChild(s); sw.appendChild(l);
+}
 function gateMode(mode){
+ gateCur=mode||'login';
  var f=el('gateForm'); if(!f) return;
- var sw=el('gateSwitch');
  f.innerHTML='';
- if(sw) sw.innerHTML='';
- txt('gateSub', mode==='signup' ? 'Create your account to start playing.' : 'Log in to continue.');
- if(mode==='signup'){
+ gateTabs(gateCur);
+ if(gateCur==='signup'){
+  txt('gateSub','Create a new account to start playing.');
   f.appendChild(mkInput('gFirst','First name'));
   f.appendChild(mkInput('gLast','Last name'));
   f.appendChild(mkInput('gUser','Username'));
   f.appendChild(mkInput('gPass','Password','password'));
   var b=document.createElement('button'); b.type='button'; b.className='btn'; b.textContent='Create account';
   b.addEventListener('click',doSignup); f.appendChild(b);
- } else {
+  var hint=document.createElement('p');
+  hint.className='hint';
+  hint.style.marginTop='8px';
+  hint.textContent='Your account is locked to this Telegram ID. If you forget the password later, use My account to set a new one.';
+  f.appendChild(hint);
+ }
+ else if(gateCur==='recover'){
+  txt('gateSub','Find the account linked to this Telegram and set a new password.');
+  showRecover();
+ }
+ else {
+  txt('gateSub','Log in to continue.');
   f.appendChild(mkInput('gUser','Username'));
   f.appendChild(mkInput('gPass','Password','password'));
   var b2=document.createElement('button'); b2.type='button'; b2.className='btn'; b2.textContent='Log in';
   b2.addEventListener('click',doLogin); f.appendChild(b2);
+  var fr=document.createElement('div');
+  fr.className='glink';
+  var fb=document.createElement('b');
+  fb.textContent='Forgot username or password?';
+  fb.addEventListener('click',function(){ gateMode('recover'); gateMsg(''); sfx('click'); });
+  fr.appendChild(fb);
+  f.appendChild(fr);
  }
- if(sw){
-  var s=document.createElement('span');
-  s.textContent= mode==='signup' ? 'Already have an account? ' : 'No account yet? ';
-  var l=document.createElement('b');
-  l.textContent= mode==='signup' ? 'Log in' : 'Sign up';
-  l.style.cursor='pointer';
-  l.addEventListener('click',function(){ gateMode(mode==='signup' ? 'login' : 'signup'); gateMsg(''); });
-  sw.appendChild(s); sw.appendChild(l);
- }
+ gateSwitchLine(gateCur);
+}
+function showRecover(){
+ var f=el('gateForm'); if(!f) return;
+ var box=document.createElement('div');
+ box.className='accCard';
+ box.innerHTML='<div class="accTop">This Telegram account</div><div class="accName">Checking...</div>';
+ f.appendChild(box);
+ call('acc_recover').then(function(j){
+  if(!j || !j.ok){
+   box.innerHTML='<div class="accTop">This Telegram account</div><div class="accName">Server not reachable</div>';
+   var rt=document.createElement('button'); rt.type='button'; rt.className='btn alt'; rt.textContent='Try again';
+   rt.addEventListener('click',function(){ gateMode('recover'); });
+   f.appendChild(rt);
+   return;
+  }
+  if(!j.registered){
+   box.innerHTML='<div class="accTop">This Telegram account</div><div class="accName">No profile yet</div><div class="accMeta">There is nothing to recover here. Create an account and it stays linked to this Telegram ID.</div>';
+   var nb=mkBtn('Create my account now','',function(){ gateMode('signup'); gateMsg(''); });
+   f.appendChild(nb);
+   return;
+  }
+  var nm=String(j.first||'')+' '+String(j.last||'');
+  if(!nm.trim()) nm='Player';
+  var badge=j.vip>0 ? (' · VIP level '+j.vip) : '';
+  box.innerHTML='<div class="accTop">This Telegram account</div><div class="accName">'+esc(nm)+'</div><div class="accUser">@'+esc(j.username)+'</div><div class="accMeta">'+j.coins+' coins'+badge+'<br>Telegram ID '+esc(state.uid)+'<br>Member since '+esc(fmtAgo(j.created))+(j.blocked?'<br><b style="color:#ff8a80">Account blocked - contact the admin</b>':'')+'</div>';
+  if(j.logged_in){
+   var rb=mkBtn('Continue to the app','',function(){
+    state.loggedIn=true; state.registered=true;
+    showGate(false); applySessionUI();
+   });
+   f.appendChild(rb);
+   var ok=document.createElement('p');
+   ok.className='hint';
+   ok.style.marginTop='7px';
+   ok.textContent='You are still signed in on this device, so you can simply continue.';
+   f.appendChild(ok);
+   return;
+  }
+  var l1=document.createElement('label'); l1.className='lb'; l1.textContent='Confirm your username';
+  var u=mkInput('rUser','type it exactly: '+j.username);
+  var l2=document.createElement('label'); l2.className='lb'; l2.textContent='New password (4 or more characters)';
+  var p=mkInput('rPass','choose a new password','password');
+  f.appendChild(l1); f.appendChild(u); f.appendChild(l2); f.appendChild(p);
+  var go=mkBtn('OK - reset password and log in','',function(){ doResetPw(); });
+  f.appendChild(go);
+  var rules=document.createElement('p');
+  rules.className='hint';
+  rules.style.marginTop='8px';
+  rules.textContent='Rules: only this Telegram ID can reset this account, the username must match exactly, and you have '+j.resets_left+' reset'+(j.resets_left===1?'':'s')+' left today.';
+  f.appendChild(rules);
+ });
+}
+function doResetPw(){
+ var u=(el('rUser')||{}).value||'';
+ var p=(el('rPass')||{}).value||'';
+ if(!String(u).trim()) return gateMsg('Type your username to confirm it is you');
+ if(p.length<4) return gateMsg('New password needs 4 or more characters');
+ gateMsg('Resetting...');
+ call('acc_reset',{ username:u, password:p }).then(function(j){
+  if(j && j.ok){
+   state.token=j.token||'';
+   try{ localStorage.setItem('pe_token', state.token); }catch(e){}
+   state.registered=true; state.loggedIn=true;
+   if(j.user){ state.first=j.user.first; state.last=j.user.last; state.username=j.user.username; }
+   state.coins=parseInt(j.coins||0)||0;
+   state.rate=parseInt(j.rate||100)||100;
+   state.isAdmin=!!j.is_admin; state.isFull=!!j.is_full;
+   state.srvUid=String(j.server_uid||'');
+   state.ver=parseInt(j.v||0)||0; state.balOk=true;
+   gateMsg(''); showGate(false); applySessionUI();
+   toast('Password changed - you are in'); burst('🔓',12); sfx('coinin');
+  } else { gateMsg((j&&j.error)||'could not reset'); }
+ });
 }
 function showGate(on){
  var g=el('gate'); if(g) g.classList.toggle('on', !!on);
@@ -2106,6 +2278,40 @@ function adminEventsSave(){
   else if(m){ m.textContent=(j&&j.error)||'failed'; }
  });
 }
+function adminChanTest(){
+ var m=el('adChanMsg');
+ if(m) m.textContent='Sending a test post to the channel...';
+ adminApiCall('chan_test').then(function(j){
+  if(j && j.ok){
+   if(m) m.textContent='Test post sent to '+j.channel+'. Check the channel now.';
+   toast('Test post sent'); sfx('coinin');
+  } else if(m){
+   m.textContent='NOT delivered: '+((j&&j.error)||'unknown')+(j&&j.channel?(' (channel '+j.channel+')'):'');
+  }
+ });
+}
+function adminChanLog(){
+ var m=el('adChanMsg');
+ var box=el('adChanLogBox');
+ if(m) m.textContent='Reading delivery log...';
+ adminApiClientLog();
+}
+function adminApiClientLog(){
+ var m=el('adChanMsg');
+ var box=el('adChanLogBox');
+ adminApiCall('chan_log').then(function(j){
+  if(!j || !j.ok){ if(m) m.textContent=(j&&j.error)||'failed'; return; }
+  if(m) m.textContent='Channel: '+(j.channel||'none')+' | feed '+(j.channel_on?'on':'off')+' | waiting to send: '+j.pending;
+  var lg=j.log||[];
+  if(!box) return;
+  if(!lg.length){ box.textContent='No delivery attempts recorded yet.'; return; }
+  var lines=[];
+  lg.forEach(function(e){
+   lines.push((e.ok?'OK   ':'FAIL ')+fmtAgo(e.t)+' - '+(e.w||'')+(e.ok?'':(' : '+e.e)));
+  });
+  box.textContent=lines.join(String.fromCharCode(10));
+ });
+}
 function adminChanToggle(){
  state.chanOn=!state.chanOn;
  var t=el('adChanToggle');
@@ -2605,6 +2811,38 @@ function adminSaveWdMethods(){
   toast(j&&j.ok ? ('saved '+j.count+' methods') : ((j&&j.error)||'failed'));
  });
 }
+var teamKind='equal';
+function pickPlan(k){
+ teamKind=k;
+ var e=el('planEq'), s=el('planSub');
+ if(e){ if(k==='equal'){ e.classList.add('on'); } else { e.classList.remove('on'); } }
+ if(s){ if(k==='sub'){ s.classList.add('on'); } else { s.classList.remove('on'); } }
+ var b=el('adTeamAdd');
+ if(b) b.textContent = (k==='equal') ? 'OK - add as Equal admin' : 'OK - add as Sub admin';
+ var m=el('adTeamMsg'); if(m) m.textContent='';
+ sfx('click');
+ applyTeamSlots();
+}
+function teamCounts(){
+ return { eq: (state.teamEq||0), sub: (state.teamSub||0) };
+}
+function applyTeamSlots(){
+ var c=teamCounts();
+ var se=el('slotEq'), ss=el('slotSub');
+ if(se) se.textContent = c.eq+' of 2 used';
+ if(ss) ss.textContent = c.sub+' of 10 used';
+ var pe=el('planEq'), ps=el('planSub');
+ if(pe){ if(c.eq>=2){ pe.classList.add('full'); } else { pe.classList.remove('full'); } }
+ if(ps){ if(c.sub>=10){ ps.classList.add('full'); } else { ps.classList.remove('full'); } }
+ var b=el('adTeamAdd');
+ var blocked = (teamKind==='equal' && c.eq>=2) || (teamKind==='sub' && c.sub>=10);
+ if(b){ b.disabled = !!blocked; }
+ var m=el('adTeamMsg');
+ if(m && blocked && !m.getAttribute('data-manual')){
+  m.textContent = (teamKind==='equal') ? 'Both equal admin slots are used. Remove one, or add as Sub admin.' : 'All 10 sub admin slots are used.';
+ }
+ return blocked;
+}
 function adminLoadTeam(){
  adminApiCall('admin_teams').then(function(j){
   var info=el('adTeamInfo');
@@ -2612,49 +2850,69 @@ function adminLoadTeam(){
   var eq=j.equal||[];
   var subs=j.sub||{};
   var keys=[]; for(var k in subs){ keys.push(k); }
-  if(info) info.textContent='Main: '+j.main+' | Equal: '+eq.length+'/2 | Sub: '+keys.length+'/10';
+  state.teamEq=eq.length; state.teamSub=keys.length;
+  if(info) info.textContent='Main admin: '+j.main+' | Equal: '+eq.length+'/2 | Sub: '+keys.length+'/10';
+  applyTeamSlots();
   var box=el('adTeamList'); if(!box) return;
   box.innerHTML='';
+  var mrow=document.createElement('div'); mrow.className='urow';
+  mrow.innerHTML='<div class="nm roleRow"><span class="roleEm">👑</span> Main admin '+esc(j.main)+'</div><div class="meta">Full access. This is the owner account and cannot be removed here.</div>';
+  box.appendChild(mrow);
   eq.forEach(function(id){
    var row=document.createElement('div'); row.className='urow';
-   row.innerHTML='<div class="nm">Equal admin '+esc(id)+'</div>';
+   row.innerHTML='<div class="nm roleRow"><span class="roleEm">👑</span> Equal admin '+esc(id)+'</div><div class="meta">Full access to everything in the admin panel.</div>';
    var r=document.createElement('div'); r.className='row';
-   var b=document.createElement('button'); b.type='button'; b.className='btn alt'; b.textContent='Remove';
-   b.addEventListener('click',function(){ adminDelTeam('equal',id); });
-   r.appendChild(b); row.appendChild(r); box.appendChild(row);
+   r.appendChild(mkBtn('Remove','gloss',function(){ adminDelTeam('equal',id); }));
+   row.appendChild(r); box.appendChild(row);
   });
   keys.forEach(function(id){
    var row=document.createElement('div'); row.className='urow';
    var pr=subs[id]&&subs[id].perms?subs[id].perms:{};
-   row.innerHTML='<div class="nm">Sub admin '+esc(id)+'</div>';
+   row.innerHTML='<div class="nm roleRow"><span class="roleEm">🛡</span> Sub admin '+esc(id)+'</div><div class="meta">Only the switched-on sections below are available to them.</div>';
    var r=document.createElement('div'); r.className='row';
-   [['users','Users'],['deposits','Deposits'],['withdraws','Withdraws'],['games','Games']].forEach(function(pk){
+   [['users','👥 Users'],['deposits','📥 Deposits'],['withdraws','📤 Withdraws'],['games','🎮 Games']].forEach(function(pk){
     var on=pr[pk[0]]===true;
-    var b=document.createElement('button'); b.type='button'; b.className='btn alt';
-    b.textContent= pk[1]+': '+(on?'on':'off');
+    var b=document.createElement('button');
+    b.type='button';
+    b.className='permBtn '+(on?'on':'off');
+    b.textContent= (on?'✓ ':'✗ ')+pk[1];
     b.addEventListener('click',function(){
      var cur={};
      for(var kk in pr){ cur[kk]=pr[kk]; }
      cur[pk[0]]=!on;
+     b.disabled=true;
      adminApiCall('admin_sub_perms',{ target:String(id), perms:cur }).then(function(j2){
-      toast(j2&&j2.ok?'permission updated':((j2&&j2.error)||'failed'));
-      if(j2&&j2.ok) adminLoadTeam();
+      b.disabled=false;
+      if(j2&&j2.ok){ toast(pk[1]+' '+(on?'off':'on')+' for '+id); sfx('click'); adminLoadTeam(); }
+      else { toast((j2&&j2.error)||'failed'); }
      });
     });
     r.appendChild(b);
    });
-   var del=document.createElement('button'); del.type='button'; del.className='btn alt'; del.textContent='Remove';
-   del.addEventListener('click',function(){ adminDelTeam('sub',id); });
-   r.appendChild(del); row.appendChild(r); box.appendChild(row);
+   r.appendChild(mkBtn('Remove','gloss',function(){ adminDelTeam('sub',id); }));
+   row.appendChild(r); box.appendChild(row);
   });
  });
 }
-function adminAddTeam(kind){
- var t=el('adTeamId'); var id=t?t.value:'';
- if(!id) return toast('Enter a Telegram ID');
+function adminAddTeam(){
+ var t=el('adTeamId'); var m=el('adTeamMsg');
+ var raw=String((t&&t.value)||'');
+ var id='';
+ for(var i=0;i<raw.length;i++){ var ch=raw.charAt(i); if(ch>='0' && ch<='9'){ id=id+ch; } }
+ if(m){ m.removeAttribute('data-manual'); }
+ if(id.length<5){ if(m) m.textContent='Enter the full Telegram ID (numbers only, at least 5 digits)'; return; }
+ if(applyTeamSlots()){ return; }
+ var kind=teamKind;
+ if(m) m.textContent='Adding '+id+' as '+kind+' admin...';
  adminApiCall('admin_add_team',{ kind:kind, target:id }).then(function(j){
-  toast(j&&j.ok ? ('added '+kind) : ((j&&j.error)||'failed'));
-  if(j&&j.ok){ var x=el('adTeamId'); if(x) x.value=''; adminLoadTeam(); }
+  if(j && j.ok){
+   if(m) m.textContent='Added '+id+' as '+kind+' admin.';
+   if(t) t.value='';
+   toast('Added '+kind+' admin'); burst('👑',12); sfx('coinin');
+   adminLoadTeam();
+  } else {
+   if(m) m.textContent=(j&&j.error)||'could not add';
+  }
  });
 }
 function adminDelTeam(kind,id){
@@ -2755,6 +3013,8 @@ function boot(){
  on('adBonusSave',adminBonusSave);
  on('adEventsSave',adminEventsSave);
  on('adChanSave',adminChanSave);
+ on('adChanTest',adminChanTest);
+ on('adChanLog',adminChanLog);
  on('adChanToggle',adminChanToggle);
  var dgs=document.querySelectorAll('[data-go]');
  for(var gi=0; gi<dgs.length; gi++){
@@ -2800,12 +3060,14 @@ function boot(){
  on('adWdBtn',adminLoadWds);
  on('adDepSave',adminSaveDepMethods);
  on('adWdSave',adminSaveWdMethods);
- on('adTeamEq',function(){ adminAddTeam('equal'); });
- on('adTeamSub',function(){ adminAddTeam('sub'); });
+ on('planEq',function(){ pickPlan('equal'); });
+ on('planSub',function(){ pickPlan('sub'); });
+ on('adTeamAdd',function(){ adminAddTeam(); });
  showGate(true);
  gateMode('login');
  call('session').then(function(j){
   if(j && j.ok){
+   try{ call('chan_flush',{ pid:'' }); }catch(exf){}
    state.ver=parseInt(j.v||0)||0;
    state.isAdmin=!!j.is_admin;
    state.isFull=!!j.is_full;
